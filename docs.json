@@ -1,102 +1,788 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Dify Enterprise Docs",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#346DDB",
+    "light": "#688FE8",
+    "dark": "#346DDB"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/dify-logo.png",
+  "logo": {
+    "light": "/logo/dify-logo.svg",
+    "dark": "/logo/dify-logo.svg"
+  },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "Guides",
+        "language": "en",
+        "href": "/en-us/introduction",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Introduction",
             "pages": [
-              "introduction",
-              "quickstart",
-              "development"
+              "introduction"
             ]
           },
           {
-            "group": "Essentials",
+            "group": "Administrator Guide",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+              "en-us/administrator-guide/workspace-management",
+              "en-us/administrator-guide/members-management",
+              {
+                "group": "Identity Authentication",
+                "pages": [
+                  "en-us/administrator-guide/authentication",
+                  {
+                    "group": "SSO",
+                    "pages": [
+                      "en-us/administrator-guide/sso/introduction",
+                      {
+                        "group": "Okta",
+                        "pages": [
+                          "en-us/administrator-guide/sso/okta/oidc",
+                          "en-us/administrator-guide/sso/okta/saml",
+                          "en-us/administrator-guide/sso/okta/oauth2"
+                        ]
+                      },
+                      {
+                        "group": "Azure",
+                        "pages": [
+                          "en-us/administrator-guide/sso/azure/saml"
+                        ]
+                      },
+                      {
+                        "group": "GitHub",
+                        "pages": [
+                          "en-us/administrator-guide/sso/github/oauth2"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "en-us/administrator-guide/admin-apis",
+              "en-us/administrator-guide/system-settings",
+              "en-us/administrator-guide/faq"
+            ]
+          },
+          {
+            "group": "User Guide",
+            "pages": [
+              "en-us/user-guide/welcome",
+              {
+                "group": "Model",
+                "pages": [
+                  "en-us/user-guide/models/model-configuration",
+                  "en-us/user-guide/models/new-provider",
+                  "en-us/user-guide/models/predefined-model",
+                  "en-us/user-guide/models/customizable-model",
+                  "en-us/user-guide/models/interfaces",
+                  "en-us/user-guide/models/schema",
+                  "en-us/user-guide/models/load-balancing"
+                ]
+              },
+              {
+                "group": "Application Orchestration",
+                "pages": [
+                  "en-us/user-guide/build-app/chatbot",
+                  "en-us/user-guide/build-app/text-generator",
+                  "en-us/user-guide/build-app/agent",
+                  {
+                    "group": "Chatflow & Workflow",
+                    "pages": [
+                      "en-us/user-guide/build-app/flow-app/concepts",
+                      "en-us/user-guide/build-app/flow-app/create-flow-app",
+                      "en-us/user-guide/build-app/flow-app/variables",
+                      {
+                        "group": "Nodes",
+                        "pages": [
+                          "en-us/user-guide/build-app/flow-app/nodes/start",
+                          "en-us/user-guide/build-app/flow-app/nodes/end",
+                          "en-us/user-guide/build-app/flow-app/nodes/answer",
+                          "en-us/user-guide/build-app/flow-app/nodes/llm",
+                          "en-us/user-guide/build-app/flow-app/nodes/knowledge-retrieval",
+                          "en-us/user-guide/build-app/flow-app/nodes/question-classifier",
+                          "en-us/user-guide/build-app/flow-app/nodes/ifelse",
+                          "en-us/user-guide/build-app/flow-app/nodes/code",
+                          "en-us/user-guide/build-app/flow-app/nodes/template",
+                          "en-us/user-guide/build-app/flow-app/nodes/doc-extractor",
+                          "en-us/user-guide/build-app/flow-app/nodes/list-operator",
+                          "en-us/user-guide/build-app/flow-app/nodes/variable-aggregator",
+                          "en-us/user-guide/build-app/flow-app/nodes/variable-assigner",
+                          "en-us/user-guide/build-app/flow-app/nodes/iteration",
+                          "en-us/user-guide/build-app/flow-app/nodes/parameter-extractor",
+                          "en-us/user-guide/build-app/flow-app/nodes/http-request",
+                          "en-us/user-guide/build-app/flow-app/nodes/tools"
+                        ]
+                      },
+                      "en-us/user-guide/build-app/flow-app/shotcut-key",
+                      "en-us/user-guide/build-app/flow-app/orchestrate-node",
+                      "en-us/user-guide/build-app/flow-app/file-upload",
+                      "en-us/user-guide/build-app/flow-app/additional-features"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Debug and Preview",
+                "pages": [
+                  {
+                    "group": "Chatflow & Workflow",
+                    "pages": [
+                      "en-us/user-guide/debug-app/chatflow-and-workflow/preview-and-run",
+                      "en-us/user-guide/debug-app/chatflow-and-workflow/step-run",
+                      "en-us/user-guide/debug-app/chatflow-and-workflow/log",
+                      "en-us/user-guide/debug-app/chatflow-and-workflow/checklist",
+                      "en-us/user-guide/debug-app/chatflow-and-workflow/history"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Application Publishing",
+                "pages": [
+                  {
+                    "group": "Publish as a Single-page Web App",
+                    "pages": [
+                      "en-us/user-guide/application-publishing/launch-your-webapp-quickly/web-app-settings",
+                      "en-us/user-guide/application-publishing/launch-your-webapp-quickly/text-generator",
+                      "en-us/user-guide/application-publishing/launch-your-webapp-quickly/conversation-application"
+                    ]
+                  },
+                  "en-us/user-guide/application-publishing/embedding-in-websites",
+                  "en-us/user-guide/application-publishing/developing-with-apis",
+                  "en-us/user-guide/application-publishing/based-on-frontend-templates"
+                ]
+              },
+              {
+                "group": "Management",
+                "pages": [
+                  "en-us/user-guide/management/app-management",
+                  "en-us/user-guide/management/team-members-management",
+                  "en-us/user-guide/management/personal-account-management"
+                ]
+              },
+              {
+                "group": "Monitoring",
+                "pages": [
+                  "en-us/user-guide/monitoring/analysis",
+                  "en-us/user-guide/monitoring/logs",
+                  "en-us/user-guide/monitoring/annotation-reply",
+                  {
+                    "group": "Integrate External Ops Tools",
+                    "pages": [
+                      "en-us/user-guide/monitoring/integrate-external-ops-tools/integrate-langfuse",
+                      "en-us/user-guide/monitoring/integrate-external-ops-tools/integrate-langsmith"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Knowledge Base",
+                "pages": [
+                  {
+                    "group": "Create Knowledge Base",
+                    "pages": [
+                      "en-us/user-guide/knowledge-base/knowledge-base-creation/upload-documents",
+                      "en-us/user-guide/knowledge-base/knowledge-base-creation/sync-from-notion",
+                      "en-us/user-guide/knowledge-base/knowledge-base-creation/sync-from-website",
+                      "en-us/user-guide/knowledge-base/knowledge-base-creation/connect-external-knowledge"
+                    ]
+                  },
+                  "en-us/user-guide/knowledge-base/retrieval-test-and-citation",
+                  "en-us/user-guide/knowledge-base/knowledge-and-documents-maintenance",
+                  "en-us/user-guide/knowledge-base/integrate-knowledge-within-application",
+                  "en-us/user-guide/knowledge-base/faq"
+                ]
+              },
+              {
+                "group": "Tools",
+                "pages": [
+                  "en-us/user-guide/tools/introduction",
+                  {
+                    "group": "Tool Configuration",
+                    "pages": [
+                      {
+                        "group": "Dify Official Tools",
+                        "pages": [
+                          "en-us/user-guide/tools/dify/google",
+                          "en-us/user-guide/tools/dify/bing",
+                          "en-us/user-guide/tools/dify/perplexity",
+                          "en-us/user-guide/tools/dify/stable-diffusion"
+                        ]
+                      },
+                      {
+                        "group": "Community Tools",
+                        "pages": [
+                          "en-us/user-guide/tools/community/searchapi",
+                          "en-us/user-guide/tools/community/alphavantage",
+                          "en-us/user-guide/tools/community/comfyui",
+                          "en-us/user-guide/tools/community/searxng",
+                          "en-us/user-guide/tools/community/serper",
+                          "en-us/user-guide/tools/community/siliconflow"
+                        ]
+                      }
+                    ]
+                  },
+                  "en-us/user-guide/tools/quick-tool-integration",
+                  "en-us/user-guide/tools/advanced-tool-integration"
+                ]
+              },
+              {
+                "group": "API",
+                "pages": [
+                  "en-us/user-guide/api-documentation/text-generator",
+                  "en-us/user-guide/api-documentation/chatbot",
+                  "en-us/user-guide/api-documentation/workflow",
+                  "en-us/user-guide/api-documentation/maintain-dataset-via-api",
+                  "en-us/user-guide/api-documentation/external-knowledge-api-documentation"
+                ]
+              },
+              {
+                "group": "FAQ",
+                "pages": [
+                  "en-us/faq/llm-using"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "API Reference",
+        "language": "cn",
+        "href": "/zh-cn/introduction",
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "简介",
             "pages": [
-              "api-reference/introduction"
+              "zh-cn/introduction"
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "管理员手册",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "zh-cn/administrator-guide/workspace-management",
+              "zh-cn/administrator-guide/members-management",
+              {
+                "group": "身份认证",
+                "pages": [
+                  "zh-cn/administrator-guide/authentication",
+                  {
+                    "group": "企业 SSO",
+                    "pages": [
+                      "zh-cn/administrator-guide/sso/introduction",
+                      {
+                        "group": "Okta",
+                        "pages": [
+                          "zh-cn/administrator-guide/sso/okta/oidc",
+                          "zh-cn/administrator-guide/sso/okta/saml",
+                          "zh-cn/administrator-guide/sso/okta/oauth2"
+                        ]
+                      },
+                      {
+                        "group": "Azure",
+                        "pages": [
+                          "zh-cn/administrator-guide/sso/azure/saml"
+                        ]
+                      },
+                      {
+                        "group": "GitHub",
+                        "pages": [
+                          "zh-cn/administrator-guide/sso/github/oauth2"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "zh-cn/administrator-guide/admin-apis",
+              "zh-cn/administrator-guide/system-settings",
+              "zh-cn/administrator-guide/faq"
+            ]
+          },
+          {
+            "group": "用户手册",
+            "pages": [
+              "zh-cn/user-guide/welcome",
+              {
+                "group": "接入模型",
+                "pages": [
+                  "zh-cn/user-guide/models/model-configuration",
+                  "zh-cn/user-guide/models/new-provider",
+                  "zh-cn/user-guide/models/predefined-model",
+                  "zh-cn/user-guide/models/customizable-model",
+                  "zh-cn/user-guide/models/interfaces",
+                  "zh-cn/user-guide/models/schema",
+                  "zh-cn/user-guide/models/load-balancing"
+                ]
+              },
+              {
+                "group": "构建应用",
+                "pages": [
+                  "zh-cn/user-guide/build-app/chatbot",
+                  "zh-cn/user-guide/build-app/text-generator",
+                  "zh-cn/user-guide/build-app/agent",
+                  {
+                    "group": "Chatflow & Workflow",
+                    "pages": [
+                      "zh-cn/user-guide/build-app/flow-app/concepts",
+                      "zh-cn/user-guide/build-app/flow-app/create-flow-app",
+                      "zh-cn/user-guide/build-app/flow-app/variables",
+                      {
+                        "group": "节点说明",
+                        "pages": [
+                          "zh-cn/user-guide/build-app/flow-app/nodes/start",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/end",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/answer",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/llm",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/knowledge-retrieval",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/question-classifier",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/ifelse",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/code",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/template",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/doc-extractor",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/list-operator",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/variable-aggregation",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/variable-assigner",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/iteration",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/parameter-extractor",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/http-request",
+                          "zh-cn/user-guide/build-app/flow-app/nodes/tools"
+                        ]
+                      },
+                      "zh-cn/user-guide/build-app/flow-app/orchestrate-node",
+                      "zh-cn/user-guide/build-app/flow-app/file-upload",
+                      "zh-cn/user-guide/build-app/flow-app/additional-feature"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "调试应用",
+                "pages": [
+                  {
+                    "group": "Chatflow & Workflow",
+                    "pages": [
+                      "zh-cn/user-guide/debug-app/chatflow-and-workflow/preview-and-run",
+                      "zh-cn/user-guide/debug-app/chatflow-and-workflow/step-run",
+                      "zh-cn/user-guide/debug-app/chatflow-and-workflow/log",
+                      "zh-cn/user-guide/debug-app/chatflow-and-workflow/checklist",
+                      "zh-cn/user-guide/debug-app/chatflow-and-workflow/history"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "发布应用",
+                "pages": [
+                  {
+                    "group": "发布为公开 Web 站点",
+                    "pages": [
+                      "zh-cn/user-guide/application-publishing/launch-your-webapp-quickly/web-app-settings",
+                      "zh-cn/user-guide/application-publishing/launch-your-webapp-quickly/text-generator",
+                      "zh-cn/user-guide/application-publishing/launch-your-webapp-quickly/conversation-application"
+                    ]
+                  },
+                  "zh-cn/user-guide/application-publishing/embedding-in-websites",
+                  "zh-cn/user-guide/application-publishing/developing-with-apis",
+                  "zh-cn/user-guide/application-publishing/based-on-frontend-templates"
+                ]
+              },
+              {
+                "group": "管理",
+                "pages": [
+                  "zh-cn/user-guide/management/app-management",
+                  "zh-cn/user-guide/management/team-members-management",
+                  "zh-cn/user-guide/management/personal-account-management"
+                ]
+              },
+              {
+                "group": "应用监测",
+                "pages": [
+                  "zh-cn/user-guide/monitoring/analysis",
+                  "zh-cn/user-guide/monitoring/logs",
+                  "zh-cn/user-guide/monitoring/annotation-reply",
+                  {
+                    "group": "集成外部与 Ops 工具",
+                    "pages": [
+                      "zh-cn/user-guide/monitoring/integrate-external-ops-tools/integrate-langfuse",
+                      "zh-cn/user-guide/monitoring/integrate-external-ops-tools/integrate-langsmith"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "知识库",
+                "pages": [
+                  {
+                    "group": "创建知识库",
+                    "pages": [
+                      "zh-cn/user-guide/knowledge-base/knowledge-base-creation/upload-documents",
+                      "zh-cn/user-guide/knowledge-base/knowledge-base-creation/sync-from-notion",
+                      "zh-cn/user-guide/knowledge-base/knowledge-base-creation/sync-from-website",
+                      "zh-cn/user-guide/knowledge-base/knowledge-base-creation/connect-external-knowledge-base"
+                    ]
+                  },
+                  {
+                    "group": "索引与检索",
+                    "pages": [
+                      "zh-cn/user-guide/knowledge-base/indexing-and-retrieval/retrieval-augment",
+                      "zh-cn/user-guide/knowledge-base/indexing-and-retrieval/hybrid-search",
+                      "zh-cn/user-guide/knowledge-base/indexing-and-retrieval/rerank",
+                      "zh-cn/user-guide/knowledge-base/indexing-and-retrieval/retrieval"
+                    ]
+                  },
+                  "zh-cn/user-guide/knowledge-base/retrieval-test-and-citation",
+                  "zh-cn/user-guide/knowledge-base/knowledge-and-documents-maintenance",
+                  "zh-cn/user-guide/knowledge-base/integrate-knowledge-within-application",
+                  "zh-cn/user-guide/knowledge-base/faq"
+                ]
+              },
+              {
+                "group": "工具扩展",
+                "pages": [
+                  "zh-cn/user-guide/tools/introduction",
+                  {
+                    "group": "工具配置",
+                    "pages": [
+                      {
+                        "group": "Dify 官方工具",
+                        "pages": [
+                          "zh-cn/user-guide/tools/dify/google",
+                          "zh-cn/user-guide/tools/dify/bing",
+                          "zh-cn/user-guide/tools/dify/perplexity",
+                          "zh-cn/user-guide/tools/dify/stable-diffusion"
+                        ]
+                      },
+                      {
+                        "group": "社区工具",
+                        "pages": [
+                          "zh-cn/user-guide/tools/community/searchapi",
+                          "zh-cn/user-guide/tools/community/alphavantage",
+                          "zh-cn/user-guide/tools/community/comfyui",
+                          "zh-cn/user-guide/tools/community/searxng",
+                          "zh-cn/user-guide/tools/community/serper",
+                          "zh-cn/user-guide/tools/community/siliconflow"
+                        ]
+                      }
+                    ]
+                  },
+                  "zh-cn/user-guide/tools/quick-tool-integration",
+                  "zh-cn/user-guide/tools/advanced-tool-integration",
+                  {
+                    "group": "API 扩展",
+                    "pages": [
+                      "zh-cn/user-guide/tools/extensions/api-based/api-based-extension",
+                      "zh-cn/user-guide/tools/extensions/api-based/external-data-tool",
+                      "zh-cn/user-guide/tools/extensions/api-based/cloudflare-workers",
+                      "zh-cn/user-guide/tools/extensions/api-based/moderation"
+                    ]
+                  },
+                  {
+                    "group": "代码扩展",
+                    "pages": [
+                      "zh-cn/user-guide/tools/extensions/code-based/external-data-tool",
+                      "zh-cn/user-guide/tools/extensions/code-based/moderation"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "API 文档",
+                "pages": [
+                  "zh-cn/user-guide/api-documentation/text-generator",
+                  "zh-cn/user-guide/api-documentation/chatbot",
+                  "zh-cn/user-guide/api-documentation/workflow",
+                  "zh-cn/user-guide/api-documentation/knowledge-base",
+                  "zh-cn/user-guide/api-documentation/external-knowledge-api-documentation"
+                ]
+              },
+              {
+                "group": "常见问题",
+                "pages": [
+                  "zh-cn/user-guide/faq/llm-using"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "ja",
+        "href": "/ja-jp/introduction",
+        "groups": [
+          {
+            "group": "はじめに",
+            "pages": [
+              "ja-jp/introduction"
+            ]
+          },
+          {
+            "group": "管理人ガイド",
+            "pages": [
+              "ja-jp/administrator-guide/workspace-management",
+              "ja-jp/administrator-guide/members-management",
+              {
+                "group": "認証",
+                "pages": [
+                  "ja-jp/administrator-guide/authentication",
+                  {
+                    "group": "エンタープライズ SSO",
+                    "pages": [
+                      "ja-jp/administrator-guide/sso/introduction",
+                      {
+                        "group": "Okta",
+                        "pages": [
+                          "ja-jp/administrator-guide/sso/okta/oidc",
+                          "ja-jp/administrator-guide/sso/okta/saml",
+                          "ja-jp/administrator-guide/sso/okta/oauth2"
+                        ]
+                      },
+                      {
+                        "group": "Azure",
+                        "pages": [
+                          "ja-jp/administrator-guide/sso/azure/saml"
+                        ]
+                      },
+                      {
+                        "group": "GitHub",
+                        "pages": [
+                          "ja-jp/administrator-guide/sso/github/oauth2"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "ja-jp/administrator-guide/admin-apis",
+              "ja-jp/administrator-guide/system-settings",
+              "ja-jp/administrator-guide/faq"
+            ]
+          },
+          {
+            "group": "ユーザーマニュアル",
+            "pages": [
+              "ja-jp/user-guide/welcome",
+              {
+                "group": "モデルの接続",
+                "pages": [
+                  "ja-jp/user-guide/models/model-configuration",
+                  "ja-jp/user-guide/models/new-provider",
+                  "ja-jp/user-guide/models/predefined-model",
+                  "ja-jp/user-guide/models/customizable-model",
+                  "ja-jp/user-guide/models/interfaces",
+                  "ja-jp/user-guide/models/schema",
+                  "ja-jp/user-guide/models/load-balancing"
+                ]
+              },
+              {
+                "group": "アプリの構築",
+                "pages": [
+                  "ja-jp/user-guide/build-app/chatbot",
+                  "ja-jp/user-guide/build-app/text-generator",
+                  "ja-jp/user-guide/build-app/agent",
+                  {
+                    "group": "チャットフロー & ワークフロー",
+                    "pages": [
+                      "ja-jp/user-guide/build-app/flow-app/concepts",
+                      "ja-jp/user-guide/build-app/flow-app/create-flow-app",
+                      "ja-jp/user-guide/build-app/flow-app/variables",
+                      {
+                        "group": "ノードの説明",
+                        "pages": [
+                          "ja-jp/user-guide/build-app/flow-app/nodes/start",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/end",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/answer",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/llm",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/knowledge-retrieval",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/question-classifier",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/ifelse",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/code",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/template",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/doc-extractor",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/list-operator",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/variable-aggregation",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/variable-assigner",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/iteration",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/parameter-extractor",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/http-request",
+                          "ja-jp/user-guide/build-app/flow-app/nodes/tools"
+                        ]
+                      },
+                      "ja-jp/user-guide/build-app/flow-app/orchestrate-node",
+                      "ja-jp/user-guide/build-app/flow-app/file-upload",
+                      "ja-jp/user-guide/build-app/flow-app/additional-feature"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "アプリのデバッグ",
+                "pages": [
+                  {
+                    "group": "チャットフロー & ワークフロー",
+                    "pages": [
+                      "ja-jp/user-guide/debug-app/chatflow-and-workflow/preview-and-run",
+                      "ja-jp/user-guide/debug-app/chatflow-and-workflow/step-run",
+                      "ja-jp/user-guide/debug-app/chatflow-and-workflow/log",
+                      "ja-jp/user-guide/debug-app/chatflow-and-workflow/checklist",
+                      "ja-jp/user-guide/debug-app/chatflow-and-workflow/history"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "アプリの発表",
+                "pages": [
+                  {
+                    "group": "公開Webアプリとしてのリリース",
+                    "pages": [
+                      "ja-jp/user-guide/application-publishing/launch-your-webapp-quickly/web-app-settings",
+                      "ja-jp/user-guide/application-publishing/launch-your-webapp-quickly/text-generator",
+                      "ja-jp/user-guide/application-publishing/launch-your-webapp-quickly/conversation-application"
+                    ]
+                  },
+                  "ja-jp/user-guide/application-publishing/embedding-in-websites",
+                  "ja-jp/user-guide/application-publishing/developing-with-apis",
+                  "ja-jp/user-guide/application-publishing/based-on-frontend-templates"
+                ]
+              },
+              {
+                "group": "管理",
+                "pages": [
+                  "ja-jp/user-guide/management/app-management",
+                  "ja-jp/user-guide/management/team-members-management",
+                  "ja-jp/user-guide/management/personal-account-management"
+                ]
+              },
+              {
+                "group": "アプリのモニタリング",
+                "pages": [
+                  "ja-jp/user-guide/monitoring/analysis",
+                  "ja-jp/user-guide/monitoring/logs",
+                  "ja-jp/user-guide/monitoring/annotation-reply",
+                  {
+                    "group": "外部ツールとOpsツールの統合",
+                    "pages": [
+                      "ja-jp/user-guide/monitoring/integrate-external-ops-tools/integrate-langfuse",
+                      "ja-jp/user-guide/monitoring/integrate-external-ops-tools/integrate-langsmith"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "ナレッジベース",
+                "pages": [
+                  {
+                    "group": "ナレッジベースの作成",
+                    "pages": [
+                      "ja-jp/user-guide/knowledge-base/knowledge-base-creation/upload-documents",
+                      "ja-jp/user-guide/knowledge-base/knowledge-base-creation/sync-from-notion",
+                      "ja-jp/user-guide/knowledge-base/knowledge-base-creation/sync-from-website",
+                      "ja-jp/user-guide/knowledge-base/knowledge-base-creation/connect-external-knowledge-base"
+                    ]
+                  },
+                  {
+                    "group": "インデックスと検索",
+                    "pages": [
+                      "ja-jp/user-guide/knowledge-base/indexing-and-retrieval/retrieval-augment",
+                      "ja-jp/user-guide/knowledge-base/indexing-and-retrieval/hybrid-search",
+                      "ja-jp/user-guide/knowledge-base/indexing-and-retrieval/rerank",
+                      "ja-jp/user-guide/knowledge-base/indexing-and-retrieval/retrieval"
+                    ]
+                  },
+                  "ja-jp/user-guide/knowledge-base/retrieval-test-and-citation",
+                  "ja-jp/user-guide/knowledge-base/knowledge-and-documents-maintenance",
+                  "ja-jp/user-guide/knowledge-base/integrate-knowledge-within-application",
+                  "ja-jp/user-guide/knowledge-base/faq"
+                ]
+              },
+              {
+                "group": "ツール拡張",
+                "pages": [
+                  "ja-jp/user-guide/tools/introduction",
+                  {
+                    "group": "ツールの構成",
+                    "pages": [
+                      {
+                        "group": "Difyオフィシャルツール",
+                        "pages": [
+                          "ja-jp/user-guide/tools/dify/google",
+                          "ja-jp/user-guide/tools/dify/bing",
+                          "ja-jp/user-guide/tools/dify/dall-e",
+                          "ja-jp/user-guide/tools/dify/perplexity",
+                          "ja-jp/user-guide/tools/dify/stable-diffusion"
+                        ]
+                      },
+                      {
+                        "group": "コミュニティツール",
+                        "pages": [
+                          "ja-jp/user-guide/tools/community/searchapi",
+                          "ja-jp/user-guide/tools/community/alphavantage",
+                          "ja-jp/user-guide/tools/community/comfyui",
+                          "ja-jp/user-guide/tools/community/searxng",
+                          "ja-jp/user-guide/tools/community/serper",
+                          "ja-jp/user-guide/tools/community/siliconflow"
+                        ]
+                      }
+                    ]
+                  },
+                  "ja-jp/user-guide/tools/quick-tool-integration",
+                  "ja-jp/user-guide/tools/advanced-tool-integration",
+                  {
+                    "group": "API 拡張子",
+                    "pages": [
+                      "ja-jp/user-guide/tools/extensions/api-based/api-based-extension",
+                      "ja-jp/user-guide/tools/extensions/api-based/external-data-tool",
+                      "ja-jp/user-guide/tools/extensions/api-based/cloudflare-workers",
+                      "ja-jp/user-guide/tools/extensions/api-based/moderation"
+                    ]
+                  },
+                  {
+                    "group": "コード拡張子",
+                    "pages": [
+                      "ja-jp/user-guide/tools/extensions/code-based/external-data-tool",
+                      "ja-jp/user-guide/tools/extensions/code-based/moderation"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "API ドキュメント",
+                "pages": [
+                  "ja-jp/user-guide/api-documentation/text-generator",
+                  "ja-jp/user-guide/api-documentation/chatbot",
+                  "ja-jp/user-guide/api-documentation/workflow",
+                  "ja-jp/user-guide/api-documentation/knowledge-base",
+                  "ja-jp/user-guide/api-documentation/external-knowledge-api-documentation"
+                ]
+              },
+              {
+                "group": "FAQ",
+                "pages": [
+                  "ja-jp/user-guide/faq/llm-using"
+                ]
+              }
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    ]
   },
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:support@dify.ai"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/dify_ai",
+      "github": "https://github.com/langgenius/dify",
+      "linkedin": "https://www.linkedin.com/company/langgenius"
     }
   }
 }
