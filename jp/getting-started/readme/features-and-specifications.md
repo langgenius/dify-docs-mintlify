@@ -1,0 +1,18 @@
+---
+description: >-
+  LLMアプリケーションの技術スタックに精通している方々にとって、このドキュメントはDify独自の強みを理解するための近道となります。これにより、的確な比較と選択が可能になり、同僚や友人への推奨もしやすくなるでしょう。
+---
+
+# 特徴と技術仕様
+
+{% hint style="info" %}
+Difyでは、製品の仕様に関する透明性の高いポリシーを採用しています。これにより、製品を十分に理解した上で意思決定を行うことができます。この透明性は、技術選定に役立つだけでなく、コミュニティのメンバーが製品をより深く理解し、積極的に貢献することを促進します。
+{% endhint %}
+
+### プロジェクトの基本情報
+
+<table data-header-hidden data-full-width="false"><thead><tr><th width="156"></th><th></th></tr></thead><tbody><tr><td>プロジェクト設立</td><td>2023年3月</td></tr><tr><td>オープンソースライセンス</td><td><a href="../../policies/open-source.md">Apache License 2.0（商用ライセンスあり）</a></td></tr><tr><td>公式開発チーム</td><td>15名以上のフルタイム従業員</td></tr><tr><td>コミュニティ貢献者</td><td><a href="https://ossinsight.io/analyze/langgenius/dify">290人以上(2024年Q2時点)</a></td></tr><tr><td>バックエンド技術</td><td>Python / Flask / PostgreSQL</td></tr><tr><td>フロントエンド技術</td><td>Next.js</td></tr><tr><td>コードベースサイズ</td><td>13万行以上</td></tr><tr><td>リリース頻度</td><td>平均週1回</td></tr></tbody></table>
+
+### 技術特徴
+
+<table data-header-hidden><thead><tr><th width="258"></th><th></th></tr></thead><tbody><tr><td>LLM推論エンジン</td><td>Dify Runtime（v0.4以降、LangChainを除去）</td></tr><tr><td>商用モデル対応</td><td><p><strong>10社以上</strong>（OpenAIとAnthropicを含む）</p><p>新しい主要モデルは通常48時間以内に対応</p></td></tr><tr><td>MaaSベンダー対応</td><td><strong>7社</strong>（Hugging Face、Replicate、AWS Bedrock、NVIDIA、GroqCloud、together.ai、OpenRouter）</td></tr><tr><td>ローカルモデル対応</td><td>6<strong>社</strong>（Xoribits[推奨]、OpenLLM、LocalAI、ChatGLM、Ollama、NVIDIA TIS）</td></tr><tr><td>OpenAIインターフェース標準モデル統合</td><td><strong>∞</strong></td></tr><tr><td>マルチモーダル機能</td><td><p>音声認識（ASR）モデル</p><p>GPT-4o水準のリッチテキストモデル</p></td></tr><tr><td>内製アプリタイプ</td><td><p>チャットボット、チャットフロー、テキスト生成、エージェント、ワークフロー</p></td></tr><tr><td>Prompt-as-a-Serviceオーケストレーション</td><td><p>高評価のビジュアルオーケストレーションインターフェース、プロンプトの編集と効果のプレビューを一箇所で実行可能<br></p><p><strong>オーケストレーションモード</strong></p><ul><li>シンプルオーケストレーション</li><li>アシスタントオーケストレーション</li><li>フローオーケストレーション</li></ul><p><strong>プロンプト変数タイプ</strong></p><ul><li>文字列</li><li>ラジオボタン列挙型</li><li>外部API</li><li>ファイル（2024年Q3にリリース予定）</li></ul></td></tr><tr><td>エージェント型ワークフロー機能</td><td><p>業界をリードするビジュアルワークフローオーケストレーションインターフェース、ノードデバッグはライブ編集可能、モジュール式DSL、ネイティブコードランタイムを提供。より複雑で信頼性が高く安定したLLMアプリケーションの構築に対応</p><p><strong>利用可能なノード</strong></p><ul><li>LLM</li><li>知識取得</li><li>質問分類器</li><li>条件分岐</li><li>コード実行</li><li>テンプレート</li><li>HTTPリクエスト</li><li>ツール</li></ul></td></tr><tr><td>RAG機能</td><td><p>ビジュアル化された画期的なナレッジベース管理インターフェースを提供。チャンクのプレビューやリコールテストをサポート<br><br><strong>インデックス方式</strong></p><ul><li>キーワード</li><li>テキストベクトル</li><li>LLMによるQ&Aセグメント化</li></ul><p><strong>検索方式</strong></p><ul><li>キーワード</li><li>テキスト類似度マッチング</li><li>ハイブリッド検索</li><li>N選択1（レガシー）</li><li>マルチパス探索</li></ul><p><strong>回答精度の最適化</strong></p><ul><li>ReRankモデルを使用</li></ul></td></tr><tr><td>ETL技術</td><td><p>TXT、MARKDOWN、PDF、HTML、XLSX、XLS、DOCX、CSV形式の自動的クリーニングをサポート。Unstructuredのサービスによる最大限のサポートを実現</p><p><li>Notionのドキュメントをナレッジベースとして同期可能</li><li>ウェブページをナレッジベースとして同期可能</li></td></tr><tr><td>対応ベクトルデータベース</td><td>Qdrant（推奨）、Weaviate、Zilliz/Milvus、Pgvector、Pgvector-rs、Chroma、OpenSearch、TiDB、Tencent Vector、Oracle、Relyt、Analyticdb, Couchbase</td></tr><tr><td>エージェント技術</td><td><p>ReAct、Function Call<br></p><p><strong>ツールサポート</strong></p><ul><li>OpenAIプラグイン標準のツールを呼び出し可能</li><li>OpenAPI Specification APIを直接ツールとしてロード可能</li></ul><p><strong>内蔵ツール</strong></p><ul><li>40種類以上（2024年Q2時点）</li></ul></td></tr><tr><td>ログ機能</td><td>あり、ログに基づくアノテーション</td></tr><tr><td>アノテーション返答</td><td>人間がアノテーションしたQ&Aペアに基づく類似度ベースの返答<br>モデルのファインチューニング用データ形式としてエクスポート可能</td></tr><tr><td>コンテンツモデレーション</td><td>OpenAI Moderationまたは外部API</td></tr><tr><td>チームコラボレーション</td><td>ワークスペース、複数メンバー管理</td></tr><tr><td>API仕様</td><td>RESTful、ほとんどの機能をカバー</td></tr><tr><td>デプロイ方法</td><td>Docker、Helm</td></tr></tbody></table>

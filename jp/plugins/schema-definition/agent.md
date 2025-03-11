@@ -1,0 +1,400 @@
+# エージェント
+
+**エージェント戦略の概要**
+
+エージェント戦略とは、標準的な入力コンテンツと出力形式を定義する拡張可能なテンプレートです。特定のエージェント戦略インターフェースを開発することで、CoT（Chain of Thought：思考の連鎖）、ToT（Tree of Thought：思考の木）、GoT（Graph of Thought：思考のグラフ）、BoT（Backbone of Thought：思考のバックボーン）といった様々なエージェント戦略を実装したり、[Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) のような複雑な戦略を実現したりできます。
+
+### **マニフェストへのフィールド追加**
+
+プラグインにエージェント戦略を追加するには、manifest.yamlファイルに`plugins.agent_strategies`フィールドを追加し、エージェントプロバイダーを定義します。以下にコード例を示します。
+
+```yaml
+version: 0.0.2
+type: plugin
+author: "langgenius"
+name: "agent"
+plugins:
+  agent_strategies:
+    - "provider/agent.yaml"
+```
+
+マニフェストファイル内の関連性のないフィールドは省略されています。詳細なマニフェスト形式については、[Manifest](manifest.md)を参照してください。
+
+### **エージェントプロバイダーの定義**
+
+基本的なエージェントプロバイダー情報を含むagent.yamlファイルを作成します。
+
+```yaml
+identity:
+  author: langgenius
+  name: agent
+  label:
+    en_US: Agent
+    zh_Hans: Agent
+    pt_BR: Agent
+  description:
+    en_US: Agent
+    zh_Hans: Agent
+    pt_BR: Agent
+  icon: icon.svg
+strategies:
+  - strategies/function_calling.yaml
+```
+
+### **エージェント戦略の定義と実装**
+
+#### **定義**
+
+エージェント戦略のコードを定義するために、function\_calling.yamlファイルを作成します。
+
+```yaml
+identity:
+  name: function_calling
+  author: Dify
+  label:
+    en_US: FunctionCalling
+    zh_Hans: FunctionCalling
+    pt_BR: FunctionCalling
+description:
+  en_US: Function Calling is a basic strategy for agent, model will use the tools provided to perform the task.
+parameters:
+  - name: model
+    type: model-selector
+    scope: tool-call&llm
+    required: true
+    label:
+      en_US: Model
+  - name: tools
+    type: array[tools]
+    required: true
+    label:
+      en_US: Tools list
+  - name: query
+    type: string
+    required: true
+    label:
+      en_US: Query
+  - name: max_iterations
+    type: number
+    required: false
+    default: 5
+    label:
+      en_US: Max Iterations
+    max: 50
+    min: 1
+extra:
+  python:
+    source: strategies/function_calling.py
+```
+
+このコード形式は[Tool](tool.md)の標準形式に似ており、最も基本的なエージェント戦略を実装するために、`model`、`tools`、`query`、`max_iterations`の4つのパラメーターを定義しています。これにより、ユーザーは以下のことが可能になります。
+
+*   使用するモデルを選択する
+*   利用するツールを選択する
+*   最大反復回数を設定する
+*   エージェントの実行を開始するためのクエリを入力する
+
+これらのパラメーターはすべて連携して、エージェントがタスクを処理し、選択されたツールやモデルとどのように対話するかを定義します。
+
+#### **機能実装**
+
+**パラメーターの取得**
+
+前述の4つのパラメーターに基づき、モデルタイプのパラメーターはmodel-selector、ツールタイプのパラメーターは特別なarray\[tools]です。取得したパラメーターは、SDKに組み込まれているAgentModelConfigとlist\[ToolEntity]を使用して変換できます。
+
+```python
+from dify_plugin.interfaces.agent import AgentModelConfig, AgentStrategy, ToolEntity
+
+class FunctionCallingParams(BaseModel):
+    query: str
+    model: AgentModelConfig
+    tools: list[ToolEntity] | None
+    maximum_iterations: int = 3
+    
+ class FunctionCallingAgentStrategy(AgentStrategy):
+    def _invoke(self, parameters: dict[str, Any]) -> Generator[AgentInvokeMessage]:
+        """
+        Run FunctionCall agent application
+        """
+        fc_params = FunctionCallingParams(**parameters)
+```
+
+**モデルの呼び出し**
+
+特定モデルの呼び出しは、エージェントプラグインの不可欠な機能です。SDKのsession.model.invoke()関数を使用してモデルを呼び出します。必要な入力パラメーターはモデルから取得できます。
+
+モデルを呼び出すメソッドの例：
+
+```python
+def invoke(
+        self,
+        model_config: LLMModelConfig,
+        prompt_messages: list[PromptMessage],
+        tools: list[PromptMessageTool] | None = None,
+        stop: list[str] | None = None,
+        stream: bool = True,
+    ) -> Generator[LLMResultChunk, None, None] | LLMResult:
+```
+
+モデル情報（model\_config）、プロンプト情報（prompt\_messages）、ツール情報（tools）を渡す必要があります。prompt\_messagesパラメーターは以下のコード例を参照できますが、tool\_messagesには特定の変換が必要です。
+
+モデル呼び出しのコード例を参照してください。
+
+```python
+from collections.abc import Generator
+from typing import Any
+
+from pydantic import BaseModel
+
+from dify_plugin.entities.agent import AgentInvokeMessage
+from dify_plugin.entities.model.llm import LLMModelConfig
+from dify_plugin.entities.model.message import (
+    PromptMessageTool,
+    SystemPromptMessage,
+    UserPromptMessage,
+)
+from dify_plugin.entities.tool import ToolParameter
+from dify_plugin.interfaces.agent import AgentModelConfig, AgentStrategy, ToolEntity
+
+class FunctionCallingParams(BaseModel):
+    query: str
+    instruction: str | None
+    model: AgentModelConfig
+    tools: list[ToolEntity] | None
+    maximum_iterations: int = 3
+
+class FunctionCallingAgentStrategy(AgentStrategy):
+    def _invoke(self, parameters: dict[str, Any]) -> Generator[AgentInvokeMessage]:
+        """
+        Run FunctionCall agent application
+        """
+        # init params
+        fc_params = FunctionCallingParams(**parameters)
+        query = fc_params.query
+        model = fc_params.model
+        stop = fc_params.model.completion_params.get("stop", []) if fc_params.model.completion_params else []
+        prompt_messages = [
+            SystemPromptMessage(content="your system prompt message"),
+            UserPromptMessage(content=query),
+        ]
+        tools = fc_params.tools
+        prompt_messages_tools = self._init_prompt_tools(tools)
+
+        # invoke llm
+        chunks = self.session.model.llm.invoke(
+            model_config=LLMModelConfig(**model.model_dump(mode="json")),
+            prompt_messages=prompt_messages,
+            stream=True,
+            stop=stop,
+            tools=prompt_messages_tools,
+        )
+
+    def _init_prompt_tools(self, tools: list[ToolEntity] | None) -> list[PromptMessageTool]:
+        """
+        Init tools
+        """
+
+        prompt_messages_tools = []
+        for tool in tools or []:
+            try:
+                prompt_tool = self._convert_tool_to_prompt_message_tool(tool)
+            except Exception:
+                # api tool may be deleted
+                continue
+
+            # save prompt tool
+            prompt_messages_tools.append(prompt_tool)
+
+        return prompt_messages_tools
+
+    def _convert_tool_to_prompt_message_tool(self, tool: ToolEntity) -> PromptMessageTool:
+        """
+        convert tool to prompt message tool
+        """
+        message_tool = PromptMessageTool(
+            name=tool.identity.name,
+            description=tool.description.llm if tool.description else "",
+            parameters={
+                "type": "object",
+                "properties": {},
+                "required": [],
+            },
+        )
+
+        parameters = tool.parameters
+        for parameter in parameters:
+            if parameter.form != ToolParameter.ToolParameterForm.LLM:
+                continue
+
+            parameter_type = parameter.type
+            if parameter.type in {
+                ToolParameter.ToolParameterType.FILE,
+                ToolParameter.ToolParameterType.FILES,
+            }:
+                continue
+            enum = []
+            if parameter.type == ToolParameter.ToolParameterType.SELECT:
+                enum = [option.value for option in parameter.options] if parameter.options else []
+
+            message_tool.parameters["properties"][parameter.name] = {
+                "type": parameter_type,
+                "description": parameter.llm_description or "",
+            }
+
+            if len(enum) > 0:
+                message_tool.parameters["properties"][parameter.name]["enum"] = enum
+
+            if parameter.required:
+                message_tool.parameters["required"].append(parameter.name)
+
+        return message_tool
+```
+
+**ツールの呼び出し**
+
+ツールの呼び出しも、エージェントプラグインの重要な機能です。ツールを呼び出すには、self.session.tool.invoke()を使用します。
+
+ツールを呼び出すメソッドの例：
+
+```python
+def invoke(
+        self,
+        provider_type: ToolProviderType,
+        provider: str,
+        tool_name: str,
+        parameters: dict[str, Any],
+    ) -> Generator[ToolInvokeMessage, None, None]
+```
+
+必要なパラメーターには、provider\_type、provider、tool\_name、parametersが含まれます。通常、tool\_nameとparametersは関数呼び出し中にLLMによって生成されます。
+
+ツールを呼び出すコード例：
+
+```python
+from dify_plugin.entities.tool import ToolProviderType
+
+class FunctionCallingAgentStrategy(AgentStrategy):
+    def _invoke(self, parameters: dict[str, Any]) -> Generator[AgentInvokeMessage]:
+        """
+        Run FunctionCall agent application
+        """
+        fc_params = FunctionCallingParams(**parameters)
+        
+        # tool_call_name と tool_call_args パラメータはLLMの出力から取得されます。
+        tool_instances = {tool.identity.name: tool for tool in fc_params.tools} if fc_params.tools else {}
+        tool_instance = tool_instances[tool_call_name]
+        tool_invoke_responses = self.session.tool.invoke(
+            provider_type=ToolProviderType.BUILT_IN,
+            provider=tool_instance.identity.provider,
+            tool_name=tool_instance.identity.name,
+            # デフォルト値を追加
+            parameters={**tool_instance.runtime_parameters, **tool_call_args},
+        )
+```
+
+self.session.tool.invoke()関数の出力はジェネレーターであり、ストリーム解析が必要です。
+
+解析については、以下の関数を参照してください。
+
+```python
+import json
+from collections.abc import Generator
+from typing import cast
+
+from dify_plugin.entities.agent import AgentInvokeMessage
+from dify_plugin.entities.tool import ToolInvokeMessage
+
+def parse_invoke_response(tool_invoke_responses: Generator[AgentInvokeMessage]) -> str:
+    result = ""
+    for response in tool_invoke_responses:
+        if response.type == ToolInvokeMessage.MessageType.TEXT:
+            result += cast(ToolInvokeMessage.TextMessage, response.message).text
+        elif response.type == ToolInvokeMessage.MessageType.LINK:
+            result += (
+                f"result link: {cast(ToolInvokeMessage.TextMessage, response.message).text}."
+                + " please tell user to check it."
+            )
+        elif response.type in {
+            ToolInvokeMessage.MessageType.IMAGE_LINK,
+            ToolInvokeMessage.MessageType.IMAGE,
+        }:
+            result += (
+                "image has been created and sent to user already, "
+                + "you do not need to create it, just tell the user to check it now."
+            )
+        elif response.type == ToolInvokeMessage.MessageType.JSON:
+            text = json.dumps(cast(ToolInvokeMessage.JsonMessage, response.message).json_object, ensure_ascii=False)
+            result += f"tool response: {text}."
+        else:
+            result += f"tool response: {response.message!r}."
+    return result
+```
+
+**ログ**
+
+エージェントの思考プロセスを表示するために、通常のメッセージの戻り値に加えて、専用のインターフェースを使用して、エージェントの思考プロセス全体をツリー構造で表示できます。
+
+**ログの作成**
+
+*   このインターフェースは、ログツリー内のノードを表す`AgentLogMessage`を作成して返します。
+*   親が渡された場合、このノードに親ノードがあることを示します。
+*   デフォルトのステータスは「Success」です。ただし、タスク実行プロセスをより適切に表示したい場合は、最初にステータスを「start」に設定して「進行中」のログを表示し、タスク完了後にログステータスを「Success」に更新できます。これにより、ユーザーは最初から最後までプロセス全体を明確に把握できます。
+*   ラベルは、ユーザーに表示されるログタイトルとして使用されます。
+
+```python
+def create_log_message(
+    self,
+    label: str,
+    data: Mapping[str, Any],
+    status: AgentInvokeMessage.LogMessage.LogStatus = AgentInvokeMessage.LogMessage.LogStatus.SUCCESS,
+    parent: AgentInvokeMessage | None = None,
+) -> AgentInvokeMessage
+```
+
+**ログの完了**
+
+以前に初期ステータスとして「start」を設定した場合、ログ完了エンドポイントを使用してステータスを変更できます。
+
+```python
+def finish_log_message(
+    self,
+    log: AgentInvokeMessage,
+    status: AgentInvokeMessage.LogMessage.LogStatus = AgentInvokeMessage.LogMessage.LogStatus.SUCCESS,
+    error: Optional[str] = None,
+) -> AgentInvokeMessage
+```
+
+**実装例**
+
+この例では、簡単な2段階の実行プロセスを示します。最初に「考え中」の状態のログを出力し、次に実際のタスク処理を完了します。
+
+```python
+class FunctionCallingAgentStrategy(AgentStrategy):
+    def _invoke(self, parameters: dict[str, Any]) -> Generator[AgentInvokeMessage]:
+        thinking_log = self.create_log_message(
+            data={"Query": parameters.get("query")},
+            label="Thinking",
+            status=AgentInvokeMessage.LogMessage.LogStatus.START,
+        )
+
+        yield thinking_log
+
+        llm_response = self.session.model.llm.invoke(
+            model_config=LLMModelConfig(
+                provider="openai",
+                model="gpt-4o-mini",
+                mode="chat",
+                completion_params={},
+            ),
+            prompt_messages=[
+                SystemPromptMessage(content="you are a helpful assistant"),
+                UserPromptMessage(content=parameters.get("query")),
+            ],
+            stream=False,
+            tools=[],
+        )
+
+        thinking_log = self.finish_log_message(log=thinking_log)
+        yield thinking_log
+        yield self.create_text_message(text=llm_response.message.content)
+```

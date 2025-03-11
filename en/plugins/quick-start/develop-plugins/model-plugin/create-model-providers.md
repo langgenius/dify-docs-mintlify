@@ -1,0 +1,225 @@
+# Create Model Providers
+
+Creating a Model Type Plugin The first step in creating a Model type plugin is to initialize the plugin project and create the model provider file, followed by integrating specific predefined/custom models.
+
+### **Prerequisites**
+
+* Dify plugin scaffolding tool
+* Python environment, version ≥ 3.12
+
+For detailed instructions on preparing the plugin development scaffolding tool, please refer to [Initializing Development Tools](../initialize-development-tools.md).
+
+### **Create New Project**
+
+In the current path, run the CLI tool to create a new dify plugin project:
+
+```bash
+./dify-plugin-darwin-arm64 plugin init
+```
+
+If you have renamed the binary file to `dify` and copied it to the `/usr/local/bin` path, you can run the following command to create a new plugin project:
+
+```bash
+dify plugin init
+```
+
+### **Choose Model Plugin Template**
+
+Plugins are divided into three types: tools, models, and extensions. All templates in the scaffolding tool provide complete code projects. This example will use an `LLM` type plugin.
+
+![Plugin type: llm](https://assets-docs.dify.ai/2024/12/8efe646e9174164b9edbf658b5934b86.png)
+
+#### **Configure Plugin Permissions**
+
+Configure the following permissions for this LLM plugin:
+
+* Models
+* LLM
+* Storage
+
+![Model Plugin Permission](https://assets-docs.dify.ai/2024/12/10f3b3ee6c03a1215309f13d712455d4.png)
+
+#### **Model Type Configuration**
+
+Model providers support three configuration methods:
+
+1. **predefined-model**: Common large model types, only requiring unified provider credentials to use predefined models under the provider. For example, OpenAI provider offers a series of predefined models like gpt-3.5-turbo-0125 and gpt-4o-2024-05-13. For detailed development instructions, refer to Integrating Predefined Models.
+2. **customizable-model**: You need to manually add credential configurations for each model. For example, Xinference supports both LLM and Text Embedding, but each model has a unique model\_uid. To integrate both, you need to configure a model\_uid for each model. For detailed development instructions, refer to Integrating Custom Models.
+
+These configuration methods can coexist, meaning a provider can support predefined-model + customizable-model or predefined-model + fetch-from-remote combinations.
+
+### **Adding a New Model Provider**
+
+Here are the main steps to add a new model provider:
+
+1.  **Create Model Provider Configuration YAML File**
+
+    Add a YAML file in the provider directory to describe the provider's basic information and parameter configuration. Write content according to ProviderSchema requirements to ensure consistency with system specifications.
+2.  **Write Model Provider Code**
+
+    Create provider class code, implementing a Python class that meets system interface requirements for connecting with the provider's API and implementing core functionality.
+
+***
+
+Here are the full details of how to do each step.
+
+#### **1. Create Model Provider Configuration File**
+
+Manifest is a YAML format file that declares the model provider's basic information, supported model types, configuration methods, and credential rules. The plugin project template will automatically generate configuration files under the `/providers` path.
+
+Here's an example of the `anthropic.yaml` configuration file for `Anthropic`:
+
+```yaml
+provider: anthropic
+label:
+ en_US: Anthropic
+description:
+ en_US: Anthropic's powerful models, such as Claude 3.
+icon_small:
+ en_US: icon_s_en.svg
+icon_large:
+ en_US: icon_l_en.svg
+background: "#F0F0EB"
+help:
+ title:
+   en_US: Get your API Key from Anthropic
+ url:
+   en_US: https://console.anthropic.com/account/keys
+supported_model_types:
+ - llm
+configurate_methods:
+ - predefined-model
+provider_credential_schema:
+ credential_form_schemas:
+   - variable: anthropic_api_key
+     label:
+       en_US: API Key
+     type: secret-input
+     required: true
+     placeholder:
+       en_US: Enter your API Key
+   - variable: anthropic_api_url
+     label:
+       en_US: API URL
+     type: text-input
+     required: false
+     placeholder:
+       en_US: Enter your API URL
+models:
+ llm:
+   predefined:
+     - "models/llm/*.yaml"
+   position: "models/llm/_position.yaml"
+extra:
+ python:
+   provider_source: provider/anthropic.py
+   model_sources:
+     - "models/llm/llm.py"
+```
+
+If the accessing vendor provides a custom model, such as `OpenAI` provides a fine-tuned model, you need to add the `model_credential_schema` field.
+
+The following is sample code for the `OpenAI` family of models:
+
+```yaml
+model_credential_schema:
+model:
+ label:
+   en_US: Model Name
+ placeholder:
+   en_US: Enter your model name
+ credential_form_schemas:
+   - variable: openai_api_key
+     label:
+       en_US: API Key
+     type: secret-input
+     required: true
+     placeholder:
+       en_US: Enter your API Key
+   - variable: openai_organization
+     label:
+       en_US: Organization
+     type: text-input
+     required: false
+     placeholder:
+       en_US: Enter your Organization ID
+   - variable: openai_api_base
+     label:
+       en_US: API Base
+     type: text-input
+     required: false
+     placeholder:
+       en_US: Enter your API Base
+```
+
+For a more complete look at the Model Provider YAML specification, see [Schema](../../schema-definition/) for details.
+
+#### 2. **Write model provider code**
+
+Create a python file with the same name, e.g. `anthropic.py`, in the `/providers` folder and implement a `class` that inherits from the `__base.provider.Provider` base class, e.g. `AnthropicProvider`. The following is the `Anthropic` sample code:
+
+```python
+import logging
+from dify_plugin.entities.model import ModelType
+from dify_plugin.errors.model import CredentialsValidateFailedError
+from dify_plugin import ModelProvider
+
+logger = logging.getLogger(__name__)
+
+
+class AnthropicProvider(ModelProvider):
+    def validate_provider_credentials(self, credentials: dict) -> None:
+        """
+        Validate provider credentials
+
+        if validate failed, raise exception
+
+        :param credentials: provider credentials, credentials form defined in `provider_credential_schema`.
+        """
+        try:
+            model_instance = self.get_model_instance(ModelType.LLM)
+            model_instance.validate_credentials(model="claude-3-opus-20240229", credentials=credentials)
+        except CredentialsValidateFailedError as ex:
+            raise ex
+        except Exception as ex:
+            logger.exception(f"{self.get_provider_schema().provider} credentials validate failed")
+            raise ex
+```
+
+Vendors need to inherit the `__base.model_provider.ModelProvider` base class and implement the `validate_provider_credentials` vendor uniform credentials validation method, see AnthropicProvider.
+
+```python
+def validate_provider_credentials(self, credentials: dict) -> None:
+    """
+    Validate provider credentials
+    You can choose any validate_credentials method of model type or implement validate method by yourself,
+    such as: get model list api
+
+    if validate failed, raise exception
+
+    :param credentials: provider credentials, credentials form defined in `provider_credential_schema`.
+    """
+```
+
+Of course, it is also possible to reserve the `validate_provider_credentials` implementation first and reuse it directly after the model credentials verification method is implemented. For other types of model providers, please refer to the following configuration methods.
+
+#### **Custom Model Providers**
+
+For custom model providers like `Xinference`, you can skip the full implementation step. Simply create an empty class called `XinferenceProvider` and implement an empty `validate_provider_credentials` method in it.
+
+**Detailed Explanation:**
+
+• `XinferenceProvider` is a placeholder class used to identify custom model providers.
+
+• While the `validate_provider_credentials` method won't be actually called, it must exist because its parent class is abstract and requires all child classes to implement this method. By providing an empty implementation, we can avoid instantiation errors that would occur from not implementing the abstract method.
+
+```python
+class XinferenceProvider(Provider):
+    def validate_provider_credentials(self, credentials: dict) -> None:
+        pass
+```
+
+After initializing the model provider, the next step is to integrate specific llm models provided by the provider. For detailed instructions, please refer to:
+
+* [Develop Predefined Models](../../../../guides/model-configuration/predefined-model.md)
+* [Develop Custom Models](../../../../guides/model-configuration/customizable-model.md)

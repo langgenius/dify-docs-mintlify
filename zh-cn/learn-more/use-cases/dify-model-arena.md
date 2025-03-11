@@ -1,0 +1,40 @@
+# 如何在 Dify 内体验大模型“竞技场”？以 DeepSeek R1 VS o1 为例
+
+## 概述
+
+Dify 聊天助手类型应用内预置的 [“多模型调试”](/zh_CN/guides/application-orchestrate/multiple-llms-debugging.md) 可以让你同时观测不同大模型对于同一问题的回答效果。本文将以 DeepSeek R1 VS o1 示例，演示在 Dify 内直观地比较各个不同大模型的回答质量。
+
+![](https://assets-docs.dify.ai/2025/02/dd2a54e05cf5bfa252ac980ec478e3d5.png)
+
+## 前置准备
+
+- Dify.AI 云端版/社区版
+- DeepSeek R1 API
+- OpenAI o1 API
+
+## 快速开始
+
+### 1. 配置 LLM API Key
+
+开始测试前，点击 **“右上角” → [“增加新供应商”](https://docs.dify.ai/zh-hans/guides/model-configuration)**，按照提示手动添加多个模型的 API Key。
+
+### 2. 创建应用
+
+创建 Chatbot 类型应用，填写应用名称和描述完成创建。
+
+![](https://assets-docs.dify.ai/2025/02/7246807cbd0776564b76e1ef37dcbd4d.png)
+
+### 3. 选择大模型
+
+点击应用右上角的大模型选择页，选择 `o1` 模型后，轻点 **“多个模型进行调试”** 并添加 `deepseek-reasoner` 模型。 
+
+![](https://assets-docs.dify.ai/2025/02/61d8ba00a8a89052ac7a5a9d8fb54f58.png)
+
+### 4. 对比效果
+
+在对话框中输入问题后，即可同时查看不同模型对于当前问题的响应情况。
+
+![](https://assets-docs.dify.ai/2025/02/03ac1c1da6705d76b01f5867a1e24e32.gif)
+
+如需了解更多内容，或遇到使用问题，请参考[多模型调试](/zh_CN/guides/application-orchestrate/multiple-llms-debugging.md)。
+

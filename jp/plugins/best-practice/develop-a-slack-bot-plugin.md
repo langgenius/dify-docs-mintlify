@@ -1,0 +1,322 @@
+# Slack ボットプラグインの開発
+
+**この記事では、以下の内容を理解できます。**
+
+Slack Bot の構築方法を深く理解し、AI を活用した Slack チャットボットを作成して、Slack プラットフォーム上でユーザーの質問にインテリジェントに応答する方法を学びます。
+
+### プロジェクトの背景
+
+Dify プラグインエコシステムは、よりシンプルで使いやすいアクセス方法のサポートに注力しています。この記事では、Slack を例に、Slack Bot プラグインの開発方法を詳しく紹介し、チームメンバーが Slack プラットフォーム内で直接 LLM と対話できるようにすることで、AI サービスの利用効率を向上させます。
+
+Dify プラグインエコシステムは、よりシンプルで便利なアクセス方法を提供することを目指しています。この記事では、Slack を例に、Slack Bot プラグインの開発方法を詳しく解説し、チームメンバーが Slack プラットフォームで直接 AI アプリを利用できるようにすることで、業務効率を向上させます。
+
+Slack は、豊富な API を備えた自由でオープンなリアルタイムオフィスコミュニプラットフォームです。特に、イベントメカニズムに基づいた Webhook 機能は、簡単に開発を始めることができます。このメカニズムを利用して Slack Bot プラグインを作成します。その原理は以下の図に示すとおりです。
+
+![Slack Bot の原理図](https://assets-docs.dify.ai/2025/01/a0865d18f1ca4051601ca53fa6f92db2.png)
+
+> 混乱を避けるため、以下に概念の説明をします。
+>
+> *   **Slack Bot** は、Slack プラットフォーム上のチャットボットであり、仮想的な役割と見なすことができ、チャットを通じてインタラクションできます。
+> *   **Slack Bot プラグイン** は、Dify Marketplace のプラグインであり、Dify アプリと Slack プラットフォームを接続するために使用されます。この記事では、主にこのプラグインの開発について説明します。
+
+**原理の概要：**
+
+1.  **Slack Bot にメッセージを送信**
+
+    ユーザーが Slack で Bot にメッセージを送信すると、Slack Bot は Dify プラットフォームに Webhook リクエストを送信します。
+2.  **メッセージを Slack Bot プラグインに転送**
+
+    ユーザーが Slack Bot と対話する際、メッセージを Dify アプリに転送する必要があります。メールシステムで受信者のメールアドレスが必要なように、Slack の API を使用して Slack Webhook のアドレスを設定し、それを Slack Bot プラグインに入力して接続を確立します。
+3.  **プラグインがメッセージを受信した後、特定の Dify アプリに送信**
+
+    Slack Bot プラグインは Slack リクエストを処理し、Dify のアプリに送信します。LLM がユーザーの入力を分析し、応答を提供します。
+4.  **Dify アプリが応答した後、メッセージを Slack Bot に返し、ユーザーに応答**
+
+    Slack Bot は Dify アプリからの応答を取得した後、プラグインを介してメッセージを Slack Bot に返します。これにより、ユーザーは Dify アプリと直接やり取りできます。
+
+### 事前準備
+
+*   Dify プラグインスキャフォールディングツール。詳細については、[開発ツールの初期化](../initialize-development-tools.md)を参照してください。
+*   Python 環境。バージョンは 3.12 以上である必要があります。詳細については、[Pythonインストールチュートリアル](https://pythontest.com/python/installing-python-3-11/)を参照するか、LLM に完全なインストールチュートリアルを問い合わせてください。
+*   Slack App を作成し、OAuth トークンを取得します。
+
+[Slack API](https://api.slack.com/apps) プラットフォームにアクセスし、scratch 方式で Slack App を作成し、アプリをデプロイする Slack ワークスペースを選択します。
+
+![Slack APIトークン](https://assets-docs.dify.ai/2025/01/8217c23ee16c47c586a1387a442ea6f0.png)
+
+;Webhooks 機能を有効にします。
+
+![Webhooks機能を有効にする](https://assets-docs.dify.ai/2025/01/fc9d7797608422219a01248f7151fc81.png)
+
+App を Slack ワークスペースにインストールします。
+
+![ワークスペースにインストール](https://assets-docs.dify.ai/2025/01/6ab7226078f88853fc7f4d3520245d63.png)
+
+今後のプラグイン開発に使用する OAuth トークンを取得します。
+
+![OAuthトークンを取得](https://assets-docs.dify.ai/2025/01/f08052044c8c17eebbffacdc9b2558e6.png)
+
+### 1. プラグイン開発
+
+それでは、実際にプラグインのコーディング作業を始めましょう。その前に、[クイックスタート：Extensionプラグインの開発](../extension-plugin.md) をお読みいただくか、Difyプラグインの開発経験があることをご確認ください。
+
+#### プロジェクトの初期化
+
+以下のコマンドを実行して、プラグイン開発プロジェクトを初期化します。
+
+```bash
+dify plugin init
+```
+
+プロンプトに従い、プロジェクトの基本情報を入力し、`extension` テンプレートを選択してください。そして、`Apps` と `Endpoints` の2つの権限を付与します。
+
+プラグインからDifyプラットフォームの機能を呼び出す方法については、[逆呼び出し：App](../../../schema-definition/reverse-invocation-of-the-dify-service/app.md) を参照してください。
+
+![Plugins permission](https://assets-docs.dify.ai/2024/12/d89a6282c5584fc43a9cadeddf09c0de.png)
+
+#### 1. 設定フォームの編集
+
+このプラグインでは、どのDifyのAppを使って応答するかを指定する必要があり、さらに、応答時にSlackのAppトークンを使用する必要があるため、プラグインフォームにこれらの2つのフィールドを追加します。
+
+`group` ディレクトリにあるyamlファイルを編集します。例：`group/slack.yaml`。フォーム設定ファイルの名前は、プラグイン作成時に入力した基本情報によって決まります。対応するyamlファイルを変更してください。
+
+**サンプルコード：**
+
+`slack.yaml`
+
+```yaml
+settings:
+  - name: bot_token
+    type: secret-input
+    required: true
+    label:
+      en_US: Bot Token
+      zh_Hans: Bot Token
+      pt_BR: Token do Bot
+      ja_JP: Bot Token
+    placeholder:
+      en_US: Please input your Bot Token
+      zh_Hans: 请输入你的 Bot Token
+      pt_BR: Por favor, insira seu Token do Bot
+      ja_JP: ボットトークンを入力してください
+  - name: allow_retry
+    type: boolean
+    required: false
+    label:
+      en_US: Allow Retry
+      zh_Hans: 允许重试
+      pt_BR: Permitir Retentativas
+      ja_JP: 再試行を許可
+    default: false
+  - name: app
+    type: app-selector
+    required: true
+    label:
+      en_US: App
+      zh_Hans: 应用
+      pt_BR: App
+      ja_JP: アプリ
+    placeholder:
+      en_US: the app you want to use to answer Slack messages
+      zh_Hans: 你想要用来回答 Slack 消息的应用
+      pt_BR: o app que você deseja usar para responder mensagens do Slack
+      ja_JP: あなたが Slack メッセージに回答するために使用するアプリ
+endpoints:
+  - endpoints/slack.yaml
+```
+
+コードデータ構造の説明：
+
+```
+  - name: app
+    type: app-selector
+    scope: chat
+```
+
+*   `type` フィールドは、`app-selector` フィールドとして設定してください。
+
+    これにより、ユーザーはプラグイン利用時に特定の Dify アプリにアクセスし、メッセージ転送を行えるようになります。
+*   `scope` フィールドは、`chat` フィールドとして設定してください。
+
+    `agent`、`chatbot`、`chatflow` などのタイプのアプリのみが利用可能です。
+
+最後に、`endpoints/slack.yaml` ファイルのリクエストパスとリクエストメソッドを修正し、`method` を `POST` に変更する必要があります。
+
+**サンプルコード：**
+
+`endpoints/slack.yaml`
+
+```yaml
+path: "/"
+method: "POST"
+extra:
+  python:
+    source: "endpoints/slack.py"
+```
+
+#### 2. 機能コードの編集
+
+`endpoints/slack.py` ファイルを修正し、以下のコードを追加してください：
+
+````python
+import json
+import traceback
+from typing import Mapping
+from werkzeug import Request, Response
+from dify_plugin import Endpoint
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
+
+
+class SlackEndpoint(Endpoint):
+    def _invoke(self, r: Request, values: Mapping, settings: Mapping) -> Response:
+        """
+        Invokes the endpoint with the given request.
+        """
+        retry_num = r.headers.get("X-Slack-Retry-Num")
+        if (not settings.get("allow_retry") and (r.headers.get("X-Slack-Retry-Reason") == "http_timeout" or ((retry_num is not None and int(retry_num) > 0)))):
+            return Response(status=200, response="ok")
+        data = r.get_json()
+
+        # Slack URL検証チャレンジを処理する
+        if data.get("type") == "url_verification":
+            return Response(
+                response=json.dumps({"challenge": data.get("challenge")}),
+                status=200,
+                content_type="application/json"
+            )
+        
+        if (data.get("type") == "event_callback"):
+            event = data.get("event")
+            if (event.get("type") == "app_mention"):
+                message = event.get("text", "")
+                if message.startswith("<@"):
+                    message = message.split("> ", 1)[1] if "> " in message else message
+                    channel = event.get("channel", "")
+                    blocks = event.get("blocks", [])
+                    blocks[0]["elements"][0]["elements"] = blocks[0].get("elements")[0].get("elements")[1:]
+                    token = settings.get("bot_token")
+                    client = WebClient(token=token)
+                    try: 
+                        response = self.session.app.chat.invoke(
+                            app_id=settings["app"]["app_id"],
+                            query=message,
+                            inputs={},
+                            response_mode="blocking",
+                        )
+                        try:
+                            blocks[0]["elements"][0]["elements"][0]["text"] = response.get("answer")
+                            result = client.chat_postMessage(
+                                channel=channel,
+                                text=response.get("answer"),
+                                blocks=blocks
+                            )
+                            return Response(
+                                status=200,
+                                response=json.dumps(result),
+                                content_type="application/json"
+                            )
+                        except SlackApiError as e:
+                            raise e
+                    except Exception as e:
+                        err = traceback.format_exc()
+                        return Response(
+                            status=200,
+                            response="Sorry, I'm having trouble processing your request. Please try again later." + str(err),
+                            content_type="text/plain",
+                        )
+                else:
+                    return Response(status=200, response="ok")
+            else:
+                return Response(status=200, response="ok")
+        else:
+            return Response(status=200, response="ok")
+
+````
+
+プラグインのテストを容易にするため、現在はユーザーの入力をそのまま返すだけで、Difyアプリは呼び出さない設定になっています。
+
+### 2. プラグインのデバッグ
+
+Difyプラットフォームにアクセスし、Difyプラグインのリモートデバッグに必要な接続アドレスとキーを取得します。
+
+![](https://assets-docs.dify.ai/2025/01/8d24006f0cabf5bf61640a9023c45db8.png)
+
+プラグインプロジェクトに戻り、`.env.example`ファイルをコピーして`.env`にリネームします。
+
+```bash
+INSTALL_METHOD=remote
+REMOTE_INSTALL_HOST=remote-url
+REMOTE_INSTALL_PORT=5003
+REMOTE_INSTALL_KEY=****-****-****-****-****
+```
+
+`python -m main`コマンドを実行してプラグインを起動します。プラグインページで、ワークスペースにこのプラグインがインストールされていることを確認できます。他のチームメンバーもこのプラグインを利用できます。
+
+```bash
+python -m main
+```
+
+#### プラグインのエンドポイントを設定する
+
+Difyのプラグイン管理ページで、自動インストールされたテストプラグインを見つけます。次に、新しいエンドポイントを作成し、名前、Botトークンを入力し、接続するアプリを選択します。
+
+![テストプラグイン](https://assets-docs.dify.ai/2025/01/07f87e8a2786d6f5f05195961c5630c3.png)
+
+保存すると、POSTリクエストアドレスが生成されます。
+
+![POSTリクエストアドレスの生成](https://assets-docs.dify.ai/2025/01/e6952a5798a7ae793b3fe7df6f76ea73.png)
+
+次に、Slack Appの設定を完了する必要があります。
+
+1. イベントサブスクリプションを有効にする
+
+![](https://assets-docs.dify.ai/2025/01/1d33bb9cde78a1b5656ad6a0b8350195.png)
+
+ここに、上記で生成したプラグインのPOSTリクエストアドレスを貼り付けます。
+
+![](https://assets-docs.dify.ai/2025/01/65aa41f37c3800af49e944f9ff28e121.png)
+
+Slack Appに必要な権限にチェックを入れます。
+
+![](https://assets-docs.dify.ai/2025/01/25c38a2cf10ec6c55ae54970d790f37e.png)
+
+### 3. プラグインの効果を検証する
+
+コードでは、`self.session.app.chat.invoke`を使ってDifyプラットフォーム内のAppを呼び出し、`app_id`や`query`などの情報を渡します。そして、レスポンスの内容をSlack Botに返します。`python -m main`コマンドを実行してプラグインを再起動し、デバッグを行います。Slack BotがDify Appからの応答メッセージを正しく出力できるか確認します。
+
+![](https://assets-docs.dify.ai/2025/01/6fc872d1343ce8503d63c5222f7f26f9.png)
+
+### 4. プラグインのパッケージ化（オプション）
+
+プラグインが正常に動作することを確認したら、次のコマンドラインツールを使ってプラグインをパッケージ化して名前を付けることができます。実行すると、現在のフォルダに`slack_bot.difypkg`ファイルが作成されます。これが最終的なプラグインパッケージです。
+
+```bash
+dify plugin package ./slack_bot
+```
+
+おめでとうございます！プラグインの完全な開発、テスト、パッケージ化のプロセスが完了しました。
+
+### 5. プラグインの公開（オプション）
+
+作成したプラグインを [Dify Marketplace リポジトリ](https://github.com/langgenius/dify-plugins) にアップロードして公開できます。ただし、公開する前に、プラグインが[プラグイン公開仕様](https://docs.dify.ai/zh-hans/plugins/publish-plugins/publish-to-dify-marketplace)に準拠しているか確認してください。
+
+### 参考資料
+
+Difyプラグインの完全なプロジェクトコードを確認するには、[Githubコードリポジトリ](https://github.com/langgenius/dify-plugins)にアクセスしてください。他のプラグインの完全なコードや詳細も確認できます。
+
+プラグインの詳細については、以下を参照してください。
+
+**クイックスタート：**
+
+* [拡張タイププラグインの開発](../extension-plugin.md)
+* [モデルタイププラグインの開発](../model-plugin/)
+* [バンドルタイププラグイン：複数のプラグインをパッケージ化](../bundle.md)
+
+**プラグインインターフェースドキュメント：**
+
+* [マニフェスト](../../schema-definition/manifest.md)
+* [エンドポイント](../../schema-definition/endpoint.md)
+* [Difyサービスの逆呼び出し](../../schema-definition/reverse-invocation-of-the-dify-service/)
+* [ツール](../../../guides/tools/)
+* [モデル](../../schema-definition/model/model-schema.md)

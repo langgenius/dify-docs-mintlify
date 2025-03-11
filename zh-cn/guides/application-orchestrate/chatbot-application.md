@@ -1,0 +1,79 @@
+# 聊天助手
+
+对话型应用采用一问一答模式与用户持续对话。
+
+### 适用场景
+
+对话型应用可以用在客户服务、在线教育、医疗保健、金融服务等领域。这些应用可以帮助组织提高工作效率、减少人工成本和提供更好的用户体验。
+
+### 如何编排
+
+对话型应用的编排支持：对话前提示词，变量，上下文，开场白和下一步问题建议。
+
+下面边以做一个 **面试官** 的应用为例来介绍编排对话型应用。
+
+#### 创建应用
+
+在首页点击 “创建应用” 按钮创建应用。填上应用名称，应用类型选择**聊天助手**。
+
+![](https://assets-docs.dify.ai/2024/12/572b246b74431dd550c5b61d9215dbaa.png)
+
+#### 编排应用
+
+创建应用后会自动跳转到应用概览页。点击左侧菜单 **编排** 来编排应用。
+
+![应用编排](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/application-orchestrate/f19f991c1295c2ed3230ef27fc47818e.png)
+
+**填写提示词**
+
+提示词用于约束 AI 给出专业的回复，让回应更加精确。你可以借助内置的提示生成器，编写合适的提示词。提示词内支持插入表单变量，例如 `{{input}}`。提示词中的变量的值会替换成用户填写的值。
+
+示例：
+
+1. 输入提示指令，要求给出一段面试场景的提示词。
+2. 右侧内容框将自动生成提示词。
+3. 你可以在提示词内插入自定义变量。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/application-orchestrate/9dbd67eacb701500c64e61978d35b812.png)
+
+为了更好的用户体验，可以加上对话开场白：`你好，{{name}}。我是你的面试官，Bob。你准备好了吗？`。点击页面底部的 “添加功能” 按钮，打开 “对话开场白” 的功能：
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/application-orchestrate/9c81c98c4b58f894ed92e06a4b9bcf87.png)
+
+编辑开场白时，还可以添加数个开场问题：
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/application-orchestrate/c74a502465c8f68b0c65d40abb4c71d4.png)
+
+#### 添加上下文
+
+如果想要让 AI 的对话范围局限在[知识库](../knowledge-base/)内，例如企业内的客服话术规范，可以在“上下文”内引用知识库。
+
+![](<../../.gitbook/assets/image (108) (1).png>)
+
+#### 添加文件上传
+
+部分多模态 LLM 已原生支持处理文件，例如 [Claude 3.5 Sonnet](https://docs.anthropic.com/en/docs/build-with-claude/pdf-support) 或 [Gemini 1.5 Pro](https://ai.google.dev/api/files)。你可以在 LLM 的官方网站了解文件上传能力的支持情况。
+
+选择具备读取文件的 LLM，开启 “文档” 功能。无需复杂配置即可让当前 Chatbot 具备文件识别能力。
+
+![](https://assets-docs.dify.ai/2024/11/823399d85e8ced5068dc9da4f693170e.png)
+
+#### 调试
+
+在右侧填写用户输入项，输入内容进行调试。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/application-orchestrate/21640904df527d7487b4ac646738971b.png)
+
+若 LLM 给出的回答结果不理想，你可以调整提示词或切换不同底层模型进行效果对比。如需更进一步，同时查看不同模型对于同一个问题的回答情况，请参考[多模型调试](./multiple-llms-debugging.md)。
+
+#### 发布应用
+
+调试好应用后，点击右上角的 **“发布”** 按钮生成独立的 AI 应用。除了通过公开 URL 体验该应用，你也进行基于 APIs 的二次开发、嵌入至网站内等操作。详情请参考[发布](https://docs.dify.ai/v/zh-hans/guides/application-publishing)。
+
+如果想定制已发布的应用，可以 Fork 我们的开源的 [WebApp 的模版](https://github.com/langgenius/webapp-conversation)。基于模版改成符合你的情景与风格需求的应用。
+
+### 常见问题
+
+**如何在聊天助手内添加第三方工具？**
+
+聊天助手类型应用不支持添加第三方工具，你可以在 [Agent 类型](https://docs.dify.ai/v/zh-hans/guides/application-orchestrate/agent)应用内添加第三方工具。
