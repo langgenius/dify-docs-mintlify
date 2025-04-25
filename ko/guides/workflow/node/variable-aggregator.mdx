@@ -1,0 +1,45 @@
+---
+title: 变量聚合
+---
+
+### 定义
+
+将多路分支的变量聚合为一个变量，以实现下游节点统一配置。
+
+变量聚合节点（原变量赋值节点）是工作流程中的一个关键节点，它负责整合不同分支的输出结果，确保无论哪个分支被执行，其结果都能通过一个统一的变量来引用和访问。这在多分支的情况下非常有用，可将不同分支下相同作用的变量映射为一个输出变量，避免下游节点重复定义。
+
+***
+
+### 场景
+
+通过变量聚合，可以将诸如问题分类或条件分支等多路输出聚合为单路，供流程下游的节点使用和操作，简化了数据流的管理。
+
+**问题分类后的多路聚合**
+
+未添加变量聚合，分类1 和 分类 2 分支经不同的知识库检索后需要重复定义下游的 LLM 和直接回复节点。
+
+<Frame caption="问题分类（无变量聚合）">
+  <img src="https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/7a7c91663c3799ce9d056b013d5df29c.png" alt="问题分类无变量聚合的流程图" />
+</Frame>
+
+添加变量聚合，可以将两个知识检索节点的输出聚合为一个变量。
+
+<Frame caption="问题分类后的多路聚合">
+  <img src="https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/78e088e16a409cc18552b21bec98bc01.png" alt="问题分类后添加变量聚合的流程图" />
+</Frame>
+
+**IF/ELSE 条件分支后的多路聚合**
+
+<Frame caption="IF/ELSE 条件分支后的多路聚合">
+  <img src="https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/da33064c784fc44c19b532a6d873cfaf.png" alt="IF/ELSE 条件分支后添加变量聚合的流程图" />
+</Frame>
+
+### 格式要求
+
+变量聚合器支持聚合多种数据类型，包括字符串（`String`）、数字（`Number`）、文件（`File`）对象（`Object`）以及数组（`Array`）
+
+**变量聚合器只能聚合同一种数据类型的变量**。若第一个添加至变量聚合节点内的变量数据格式为 `String`，后续连线时会自动过滤可添加变量为 `String` 类型。
+
+**聚合分组**
+
+开启聚合分组后，变量聚合器可以聚合多组变量，各组内聚合时要求同一种数据类型。

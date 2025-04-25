@@ -1,0 +1,599 @@
+---
+title: 环境变量说明
+---
+
+### 公共变量
+
+#### CONSOLE_API_URL
+
+控制台 API 后端 URL，用于拼接授权回调，传空则为同域。范例：`https://api.console.dify.ai`。
+
+#### CONSOLE_WEB_URL
+
+控制台 web **前端** URL，用于拼接部分前端地址，以及 CORS 配置使用，传空则为同域。范例：`https://console.dify.ai`
+
+#### SERVICE_API_URL
+
+Service API URL，用于 **前端** 展示 Service API Base URL，传空则为同域。范例：`https://api.dify.ai`
+
+#### APP_API_URL
+
+WebApp API 后端 URL，用于声明 **前端** API 后端地址，传空则为同域。范例：`https://app.dify.ai`
+
+#### APP_WEB_URL
+
+WebApp URL，用于预览文件、**前端** 展示下载用的 URL，以及作为多模型输入接口，传空则为同域。范例：`https://udify.app/`
+
+#### FILES_URL
+
+文件预览或下载 URL 前缀，用于将文件预览或下载 URL 给前端展示或作为多模态模型输入； 为了防止他人伪造，图片预览 URL 是带有签名的，并且有 5 分钟过期时间。
+
+***
+
+### 服务端
+
+#### MODE
+
+启动模式，仅使用 Docker 启动时可用，源码启动无效。
+
+*   api
+
+    启动 API Server。
+*   worker
+
+    启动异步队列 worker。
+
+#### DEBUG
+
+调试模式，默认 false，建议本地开发打开该配置，可防止 monkey patch 导致的一些问题出现。
+
+#### FLASK_DEBUG
+
+Flask 调试模式，开启可在接口输出 trace 信息，方便调试。
+
+#### SECRET_KEY
+
+一个用于安全地签名会话 cookie 并在数据库上加密敏感信息的密钥。初次启动需要设置改变量。可以运行 `openssl rand -base64 42` 生成一个强密钥。
+
+#### DEPLOY_ENV
+
+部署环境。
+
+*   PRODUCTION（默认）
+
+    生产环境。
+*   TESTING
+
+    测试环境，前端页面会有明显颜色标识，该环境为测试环境。
+
+#### LOG_LEVEL
+
+日志输出等级，默认为 INFO。生产建议设置为 ERROR。
+
+#### MIGRATION_ENABLED
+
+当设置为 true 时，会在容器启动时自动执行数据库迁移，仅使用 Docker 启动时可用，源码启动无效。源码启动需要在 api 目录手动执行 `flask db upgrade`。
+
+#### CHECK_UPDATE_URL
+
+是否开启检查版本策略，若设置为 false，则不调用 `https://updates.dify.ai` 进行版本检查。由于目前国内无法直接访问基于 CloudFlare Worker 的版本接口，设置该变量为空，可以屏蔽该接口调用。
+
+#### TEXT_GENERATION_TIMEOUT_MS
+
+默认 60000，单位为 ms，用于指定文本生成和工作流的超时时间，防止因某些进程运行超时而导致整体服务不可用。
+
+#### CSP_WHITELIST
+
+内容安全策略（CSP）白名单，默认不开启。在此变量中填写被放行的域名列表后即视为开启，有助于减少潜在的 XSS 攻击。开启后，白名单将自动包含以下域名：
+
+```url
+*.sentry.io http://localhost:* http://127.0.0.1:* https://analytics.google.com https://googletagmanager.com https://api.github.com
+```
+
+#### 容器启动相关配置
+
+仅在使用 Docker 镜像或者 Docker-compose 启动时有效。
+
+*   DIFY_BIND_ADDRESS
+
+    API 服务绑定地址，默认：0.0.0.0，即所有地址均可访问。
+*   DIFY_PORT
+
+    API 服务绑定端口号，默认 5001。
+*   SERVER_WORKER_AMOUNT
+
+    API 服务 Server worker 数量，即 gevent worker 数量，公式：`cpu 核心数 x 2 + 1` 可参考[文档](https://docs.gunicorn.org/en/stable/design.html#how-many-workers)
+
+*   SERVER_WORKER_CLASS
+
+    默认为 gevent，若为 windows，可以切换为 sync 或 solo。
+*   GUNICORN_TIMEOUT
+
+    请求处理超时时间，默认 200，建议 360，以支持更长的 sse 连接时间。
+*   CELERY_WORKER_CLASS
+
+    和 `SERVER_WORKER_CLASS` 类似，默认 gevent，若为 windows，可以切换为 sync 或 solo。
+*   CELERY_WORKER_AMOUNT
+
+    Celery worker 数量，默认为 1，按需设置。
+*   HTTP_PROXY
+
+    HTTP 代理地址，用于解决国内无法访问 OpenAI、HuggingFace 的问题。注意，若代理部署在宿主机 (例如 `http://127.0.0.1:7890`)，此处代理地址应当和接入本地模型时一样，使用 Docker 容器内部的宿主机地址（例如 `http://192.168.1.100:7890` 或 `http://172.17.0.1:7890`）。
+*   HTTPS_PROXY
+
+    HTTPS 代理地址，用于解决国内无法访问 OpenAI、HuggingFace 的问题。同上。
+
+#### 数据库配置
+
+数据库使用 PostgreSQL，请使用 public schema。
+
+* DB_USERNAME：用户名
+* DB_PASSWORD：密码
+* DB_HOST：数据库 host
+* DB_PORT：数据库端口号，默认 5432
+* DB_DATABASE：数据库 database
+* SQLALCHEMY_POOL_SIZE：数据库连接池大小，默认 30 个连接数，可适当增加。
+* SQLALCHEMY_POOL_RECYCLE：数据库连接池回收时间，默认 3600 秒。
+* SQLALCHEMY_ECHO：是否打印 SQL，默认 false。
+
+#### Redis 配置
+
+该 Redis 配置用于缓存以及对话时的 pub/sub。
+
+* REDIS_HOST：Redis host
+* REDIS_PORT：Redis port，默认 6379
+* REDIS_DB：Redis Database，默认为 0，请和 Session Redis、Celery Broker 分开用不同 Database。
+* REDIS_USERNAME：Redis 用户名，默认为空
+* REDIS_PASSWORD：Redis 密码，默认为空，强烈建议设置密码。
+* REDIS_USE_SSL：是否使用 SSL 协议进行连接，默认 false
+* REDIS_USE_SENTINEL：使用 Redis Sentinel 连接 Redis 服务器
+* REDIS_SENTINELS：哨兵节点，格式：`<sentinel1_ip>:<sentinel1_port>,<sentinel2_ip>:<sentinel2_port>,<sentinel3_ip>:<sentinel3_port>`
+* REDIS_SENTINEL_SERVICE_NAME：哨兵服务名，同 Master Name
+* REDIS_SENTINEL_USERNAME：哨兵的用户名
+* REDIS_SENTINEL_PASSWORD：哨兵的密码
+* REDIS_SENTINEL_SOCKET_TIMEOUT：哨兵超时时间，默认值：0.1，单位：秒
+
+#### Celery 配置
+
+*   CELERY_BROKER_URL
+
+    格式如下（直连模式）：
+
+    ```
+    redis://<redis_username>:<redis_password>@<redis_host>:<redis_port>/<redis_database>
+    ```
+
+    范例：`redis://:difyai123456@redis:6379/1`
+
+    哨兵模式：
+
+    ```
+      sentinel://<sentinel_username>:<sentinel_password>@<sentinel_host>:<sentinel_port>/<redis_database>
+    ```
+
+    范例：`sentinel://localhost:26379/1;sentinel://localhost:26380/1;sentinel://localhost:26381/1`
+    
+*   BROKER_USE_SSL
+
+    若设置为 true，则使用 SSL 协议进行连接，默认 false。
+
+*   CELERY_USE_SENTINEL
+
+    若设置为 true，则启用哨兵模式，默认 false。
+
+*   CELERY_SENTINEL_MASTER_NAME
+
+    哨兵的服务名，即 Master Name。
+
+*   CELERY_SENTINEL_SOCKET_TIMEOUT
+
+    哨兵连接超时时间，默认值：0.1，单位：秒。
+
+#### CORS 配置
+
+用于设置前端跨域访问策略。
+
+*   CONSOLE_CORS_ALLOW_ORIGINS
+
+    控制台 CORS 跨域策略，默认为 `*`，即所有域名均可访问。
+*   WEB_API_CORS_ALLOW_ORIGINS
+
+    WebAPP CORS 跨域策略，默认为 `*`，即所有域名均可访问。
+
+详细配置可参考：[跨域 / 身份相关指南](/zh-hans/learn-more/faq/install-faq#3-安装时后无法登录，登录成功，但后续接口均提示-401？)
+
+#### 文件存储配置
+
+用于存储知识库上传的文件、团队 / 租户的加密密钥等等文件。
+
+*   STORAGE_TYPE
+
+    存储设施类型
+
+    *   local（默认）
+
+        本地文件存储，若选择此项则需要设置下方 `STORAGE_LOCAL_PATH` 配置。
+    *   s3
+
+        S3 对象存储，若选择此项则需要设置下方 S3_ 开头的配置。
+    *   azure-blob
+
+        Azure Blob 存储，若选择此项则需要设置下方 AZURE_BLOB_ 开头的配置。
+    *   huawei-obs
+
+        Huawei OBS 存储，若选择此项则需要设置下方 HUAWEI_OBS_ 开头的配置。
+    *   volcengine-tos
+
+        Volcengine TOS 存储，若选择此项则需要设置下方 VOLCENGINE_TOS_ 开头的配置。
+*   STORAGE_LOCAL_PATH
+
+    默认为 storage，即存储在当前目录的 storage 目录下。若使用 Docker 或 Docker-compose 进行部署，请务必将两个容器中 `/app/api/storage` 目录挂载到同一个本机目录，否则可能会出现文件找不到的报错。
+* S3_ENDPOINT：S3 端点地址
+* S3_BUCKET_NAME：S3 桶名称
+* S3_ACCESS_KEY：S3 Access Key
+* S3_SECRET_KEY：S3 Secret Key
+* S3_REGION：S3 地域信息，如：us-east-1
+* AZURE_BLOB_ACCOUNT_NAME: your-account-name 如 'difyai'
+* AZURE_BLOB_ACCOUNT_KEY: your-account-key 如 'difyai'
+* AZURE_BLOB_CONTAINER_NAME: your-container-name 如 'difyai-container'
+* AZURE_BLOB_ACCOUNT_URL: 'https://\<your_account_name>.blob.core.windows.net'
+* ALIYUN_OSS_BUCKET_NAME: your-bucket-name 如 'difyai'
+* ALIYUN_OSS_ACCESS_KEY: your-access-key 如 'difyai'
+* ALIYUN_OSS_SECRET_KEY: your-secret-key 如 'difyai'
+* ALIYUN_OSS_ENDPOINT: https://oss-ap-southeast-1-internal.aliyuncs.com # 参考[文档](https://help.aliyun.com/zh/oss/user-guide/regions-and-endpoints)
+* ALIYUN_OSS_REGION: ap-southeast-1 # 参考[文档](https://help.aliyun.com/zh/oss/user-guide/regions-and-endpoints)
+* ALIYUN_OSS_AUTH_VERSION: v4
+* ALIYUN_OSS_PATH: your-path # 路径不要使用斜线 "/" 开头，阿里云 OSS 不支持。参考[文档](https://api.aliyun.com/troubleshoot?q=0016-00000005)
+* HUAWEI_OBS_BUCKET_NAME: your-bucket-name 如 'difyai'
+* HUAWEI_OBS_SECRET_KEY: your-secret-key 如 'difyai'
+* HUAWEI_OBS_ACCESS_KEY: your-access-key 如 'difyai'
+* HUAWEI_OBS_SERVER: your-server-url # 参考[文档](https://support.huaweicloud.com/sdk-python-devg-obs/obs_22_0500.html)。
+* VOLCENGINE_TOS_BUCKET_NAME: your-bucket-name 如 'difyai'。
+* VOLCENGINE_TOS_SECRET_KEY: your-secret-key 如 'difyai'。
+* VOLCENGINE_TOS_ACCESS_KEY: your-access-key 如 'difyai'。
+* VOLCENGINE_TOS_REGION: your-region 如 'cn-guangzhou' # 参考[文档]( https://www.volcengine.com/docs/6349/107356)。
+* VOLCENGINE_TOS_ENDPOINT: your-endpoint 如 'tos-cn-guangzhou.volces.com' # 参考[文档](https://www.volcengine.com/docs/6349/107356)。
+
+#### 向量数据库配置
+
+*   VECTOR_STORE
+
+    **可使用的枚举类型包括：**
+
+    * `weaviate`
+    * `qdrant`
+    * `milvus`
+    * `zilliz` 与 `milvus` 一致
+    * `myscale`
+    * `pinecone` (暂未开放)
+    * `tidb_vector`
+    * `analyticdb`
+    * `couchbase`
+*   WEAVIATE_ENDPOINT
+
+    Weaviate 端点地址，如：`http://weaviate:8080`。
+*   WEAVIATE_API_KEY
+
+    连接 Weaviate 使用的 api-key 凭据。
+*   WEAVIATE_BATCH_SIZE
+
+    Weaviate 批量创建索引 Object 的数量，默认 100。可参考此[文档](https://weaviate.io/developers/weaviate/manage-data/import#how-to-set-batch-parameters)。
+*   WEAVIATE_GRPC_ENABLED
+
+    是否使用 gRPC 方式与 Weaviate 进行交互，开启后性能会大大增加，本地可能无法使用，默认为 true。
+*   QDRANT_URL
+
+    Qdrant 端点地址，如：`https://your-qdrant-cluster-url.qdrant.tech/`
+*   QDRANT_API_KEY
+
+    连接 Qdrant 使用的 api-key 凭据。
+*   PINECONE_API_KEY
+
+    连接 Pinecone 使用的 api-key 凭据。
+*   PINECONE_ENVIRONMENT
+
+    Pinecone 所在的额环境，如：`us-east4-gcp`
+*   MILVUS_URI
+
+    Milvus 的 URI 配置。例如：`http://host.docker.internal:19530`。对于 [Zilliz Cloud](https://docs.zilliz.com.cn/docs/free-trials)，请将 URI 和 TOKEN 分别设置为 Public Endpoint 和 API Key。
+*   MILVUS_TOKEN
+
+    Milvus TOKEN 配置，默认为空。
+*   MILVUS_USER
+
+    Milvus 用户名配置，默认为空。
+*   MILVUS_PASSWORD
+
+    Milvus 密码配置，默认为空。
+*   MYSCALE_HOST
+
+    MyScale host 配置。
+*   MYSCALE_PORT
+
+    MyScale port 配置。
+*   MYSCALE_USER
+
+    MyScale 用户名配置，默认为 `default`。
+*   MYSCALE_PASSWORD
+
+    MyScale 密码配置，默认为空。
+*   MYSCALE_DATABASE
+
+    MyScale 数据库配置，默认为 `default`。
+*   MYSCALE_FTS_PARAMS
+
+    MyScale 全文搜索配置，如需多语言支持，请参考 [MyScale 文档](https://myscale.com/docs/en/text-search/#understanding-fts-index-parameters)，默认为空（仅支持英语）。
+
+* TIDB_VECTOR_HOST
+
+  TiDB Vector host 配置，如：`xxx.eu-central-1.xxx.tidbcloud.com`
+* TIDB_VECTOR_PORT
+
+  TiDB Vector 端口号配置，如：`4000`
+* TIDB_VECTOR_USER
+
+  TiDB Vector 用户配置，如：`xxxxxx.root`
+* TIDB_VECTOR_PASSWORD
+
+  TiDB Vector 密码配置
+* TIDB_VECTOR_DATABASE
+
+  TiDB Vector 数据库配置，如：`dify`
+
+*   ANALYTICDB_KEY_ID
+
+    用于阿里云 OpenAPI 认证的访问密钥 ID。请阅读 [Analyticdb 文档](https://help.aliyun.com/zh/analyticdb/analyticdb-for-postgresql/support/create-an-accesskey-pair) 来创建你的 AccessKey。
+
+*   ANALYTICDB_KEY_SECRET
+
+    用于阿里云 OpenAPI 认证的访问密钥秘密。
+
+*   ANALYTICDB_INSTANCE_ID
+
+    你的 AnalyticDB 实例的唯一标识符，例如 `gp-xxxxxx`。请阅读 [Analyticdb 文档](https://help.aliyun.com/zh/analyticdb/analyticdb-for-postgresql/getting-started/create-an-instance-1) 来创建你的实例。
+
+*   ANALYTICDB_REGION_ID
+
+    AnalyticDB 实例所在区域的标识符，例如 `cn-hangzhou`。
+
+*   ANALYTICDB_ACCOUNT
+
+    用于连接 AnalyticDB 实例的账户名称。请阅读 [Analyticdb 文档](https://help.aliyun.com/zh/analyticdb/analyticdb-for-postgresql/getting-started/createa-a-privileged-account) 来创建账户。
+
+*   ANALYTICDB_PASSWORD
+
+    用于连接 AnalyticDB 实例的账户密码。
+
+*   ANALYTICDB_NAMESPACE
+
+    在 AnalyticDB 实例内要操作的命名空间 (schema)，例如 `dify`。如果此命名空间不存在，将自动创建。
+
+*   ANALYTICDB_NAMESPACE_PASSWORD
+
+    命名空间 (schema) 的密码。如果命名空间不存在，将使用此密码进行创建。
+
+-   COUCHBASE_CONNECTION_STRING
+
+    Couchbase 集群的连接 string 字符串。
+
+-   COUCHBASE_USER
+
+    数据库用户名。
+
+-   COUCHBASE_PASSWORD
+
+    数据库密码。
+
+-   COUCHBASE_BUCKET_NAME
+
+     Bucket 名称。
+
+-   COUCHBASE_SCOPE_NAME
+
+     Scope 名称。
+
+#### 知识库配置
+
+*   UPLOAD_FILE_SIZE_LIMIT
+
+    上传文件大小限制，默认 15M。
+*   UPLOAD_FILE_BATCH_LIMIT
+
+    每次上传文件数上限，默认 5 个。
+*   ETL_TYPE
+
+    **可使用的枚举类型包括：**
+
+    *   dify
+
+        Dify 自研文件 Extract 方案
+    *   Unstructured
+
+        Unstructured.io 文件 Extract 方案
+*   UNSTRUCTURED_API_URL
+
+    Unstructured API 路径，当 ETL_TYPE 为 Unstructured 需要配置。
+
+    如：`http://unstructured:8000/general/v0/general`
+
+#### 多模态模型配置
+
+*   MULTIMODAL_SEND_IMAGE_FORMAT
+
+    多模态模型输入时，发送图片的格式，默认为 `base64`，可选 `url`。 `url` 模式下，调用的延迟会比 `base64` 模式下低，一般建议使用兼容更好的 `base64` 模式。 若配置为 `url`，则需要将 `FILES_URL` 配置为外部可访问的地址，以便多模态模型可以访问到图片。
+*   UPLOAD_IMAGE_FILE_SIZE_LIMIT
+
+    上传图片文件大小限制，默认 10M。
+
+#### Sentry 配置
+
+用于应用监控和错误日志跟踪。
+
+*   SENTRY_DSN
+
+    Sentry DSN 地址，默认为空，为空时则所有监控信息均不上报 Sentry。
+*   SENTRY_TRACES_SAMPLE_RATE
+
+    Sentry events 的上报比例，若为 0.01，则为 1%。
+*   SENTRY_PROFILES_SAMPLE_RATE
+
+    Sentry profiles 的上报比例，若为 0.01，则为 1%。
+
+#### Notion 集成配置
+
+Notion 集成配置，变量可通过申请 Notion integration 获取：[https://www.notion.so/my-integrations](https://www.notion.so/my-integrations)
+
+* NOTION_CLIENT_ID
+* NOTION_CLIENT_SECRET
+
+#### 邮件相关配置
+
+* MAIL_TYPE
+  * resend
+    * MAIL_DEFAULT_SEND_FROM\
+      发件人的电子邮件名称，例如：no-reply [no-reply@dify.ai](mailto:no-reply@dify.ai)，非必需。
+    * RESEND_API_KEY\
+      用于 Resend 邮件提供程序的 API 密钥，可以从 API 密钥获取。
+  * smtp
+    * SMTP_SERVER\
+      SMTP 服务器地址
+    * SMTP_PORT\
+      SMTP 服务器端口号
+    * SMTP_USERNAME\
+      SMTP 用户名
+    * SMTP_PASSWORD\
+      SMTP 密码
+    * SMTP_USE_TLS\
+      是否使用 TLS，默认为 false
+    * MAIL_DEFAULT_SEND_FROM\
+      发件人的电子邮件名称，例如：no-reply [no-reply@dify.ai](mailto:no-reply@dify.ai)，非必需。
+
+#### 模型供应商 & 工具 位置配置
+
+用于指定应用中可以使用的模型供应商和工具。你可以自定义哪些工具和模型供应商可用，以及它们在应用界面中的顺序和包含 / 排除情况。
+
+详见可用的 [工具](https://github.com/langgenius/dify/blob/main/api/core/tools/provider/_position.yaml) 和 [模型供应商](https://github.com/langgenius/dify/blob/main/api/core/model_runtime/model_providers/_position.yaml)。
+
+* POSITION_TOOL_PINS
+
+    将列出的工具固定在列表顶部，确保它们在界面中置顶出现。（使用逗号分隔的值，**中间不留空格**。）
+
+    示例: `POSITION_TOOL_PINS=bing,google`
+
+* POSITION_TOOL_INCLUDES
+
+    指定要在应用中包含的工具。只有此处列出的工具才可用。如果未设置，则除非在 POSITION_TOOL_EXCLUDES 中指定，否则所有工具都会包含在内。（使用逗号分隔的值，**中间不留空格**。）
+
+    示例: `POSITION_TOOL_INCLUDES=bing,google`
+
+* POSITION_TOOL_EXCLUDES
+
+    排除在应用中显示或使用的特定工具。此处列出的工具将从可用选项中省略，除非它们被固定。（使用逗号分隔的值，**中间不留空格**。）
+
+    示例: `POSITION_TOOL_EXCLUDES=yahoo,wolframalpha`
+
+* POSITION_PROVIDER_PINS
+
+    将列出的模型供应商固定在列表顶部，确保它们在界面中置顶出现。（使用逗号分隔的值，**中间不留空格**。）
+
+    示例: `POSITION_PROVIDER_PINS=openai,openllm`
+
+* POSITION_PROVIDER_INCLUDES
+
+    指定要在应用中包含的模型供应商。只有此处列出的供应商才可用。如果未设置，则除非在 POSITION_PROVIDER_EXCLUDES 中指定，否则所有供应商都会包含在内。（使用逗号分隔的值，**中间不留空格**。）
+
+    示例: `POSITION_PROVIDER_INCLUDES=cohere,upstage`
+
+* POSITION_PROVIDER_EXCLUDES
+
+    排除在应用中显示特定模型供应商。此处列出的供应商将从可用选项中移除，除非它们被置顶。（使用逗号分隔的值，**中间不留空格**。）
+
+    示例: `POSITION_PROVIDER_EXCLUDES=openrouter,ollama`
+
+#### 其他
+
+* INVITE_EXPIRY_HOURS：成员邀请链接有效时间（小时），默认：72。
+* HTTP_REQUEST_NODE_MAX_TEXT_SIZE：workflow 工作流中 HTTP 请求节点的最大文本大小，默认 1MB。
+* HTTP_REQUEST_NODE_MAX_BINARY_SIZE：workflow 工作流中 HTTP 请求节点的最大二进制大小，默认 10MB。
+
+***
+
+### Web 前端
+
+#### SENTRY_DSN
+
+Sentry DSN 地址，默认为空，为空时则所有监控信息均不上报 Sentry。
+
+## 已废弃
+
+#### CONSOLE_URL
+
+> ⚠️ 修改于 0.3.8，于 0.4.9 废弃，替代为：`CONSOLE_API_URL` 和 `CONSOLE_WEB_URL`。
+
+控制台 URL，用于拼接授权回调、控制台前端地址，以及 CORS 配置使用，传空则为同域。范例：`https://console.dify.ai`。
+
+#### API_URL
+
+> ⚠️ 修改于 0.3.8，于 0.4.9 废弃，替代为 `SERVICE_API_URL`。
+
+API Url，用于给前端展示 Service API Base Url，传空则为同域。范例：`https://api.dify.ai`
+
+#### APP_URL
+
+> ⚠️ 修改于 0.3.8，于 0.4.9 废弃，替代为 `APP_API_URL` 和 `APP_WEB_URL`。
+
+WebApp Url，用于显示文件预览或下载 URL 到前端作为多模型输入，传空则为同域。范例：`https://udify.app/`
+
+#### Session 配置
+
+> ⚠️ 该配置从 0.3.24 版本起废弃。
+
+仅 API 服务使用，用于验证接口身份。
+
+* SESSION_TYPE： Session 组件类型
+  *   redis（默认）
+
+      选择此项，则需要设置下方 SESSION_REDIS_ 开头的环境变量。
+  *   sqlalchemy
+
+      选择此项，则使用当前数据库连接，并使用 sessions 表进行读写 session 记录。
+* SESSION_REDIS_HOST：Redis host
+* SESSION_REDIS_PORT：Redis port，默认 6379
+* SESSION_REDIS_DB：Redis Database，默认为 0，请和 Redis、Celery Broker 分开用不同 Database。
+* SESSION_REDIS_USERNAME：Redis 用户名，默认为空
+* SESSION_REDIS_PASSWORD：Redis 密码，默认为空，强烈建议设置密码。
+* SESSION_REDIS_USE_SSL：是否使用 SSL 协议进行连接，默认 false
+
+#### Cookie 策略配置
+
+> ⚠️ 该配置从 0.3.24 版本起废弃。
+
+用于设置身份校验的 Session Cookie 浏览器策略。
+
+*   COOKIE_HTTPONLY
+
+    Cookie HttpOnly 配置，默认为 true。
+*   COOKIE_SAMESITE
+
+    Cookie SameSite 配置，默认为 Lax。
+*   COOKIE_SECURE
+
+    Cookie Secure 配置，默认为 false。
+
+### 文档分段长度配置
+
+#### MAXIMUM_CHUNK_TOKEN_LENGTH 
+
+文档分段长度配置，用于控制处理长文本时的分段大小。默认值：500。最大值：4000。
+
+**较大分段**
+- 可在单个分段内保留更多上下文，适合需要处理复杂或上下文相关任务的场景。
+- 分段数量减少，从而降低处理时间和存储需求。
+
+**较小分段**
+- 提供更高的粒度，适合精确提取或总结文本内容。
+- 减少超出模型 token 限制的风险，更适配限制严格的模型。
+
+**配置建议**
+- 较大分段：适合上下文依赖性强的任务，例如情感分析或长文档总结。
+- 较小分段：适合精细分析场景，例如关键词提取或段落级内容处理。

@@ -1,0 +1,90 @@
+---
+title: DeepSeek 与 Dify 集成指南：打造具备多轮思考的 AI 应用
+---
+
+
+## 概述
+
+[DeepSeek](https://www.deepseek.com/) 作为具备多轮推理能力的开源大语言模型，以**高性能、低成本、易部署**的特性成为智能应用开发的理想基座。通过其 API 服务，开发者可快速调用 DeepSeek 的复杂逻辑推理与内容生成能力。在传统开发模式下，构建生产级 AI 应用往往需要独立完成模型适配、接口开发、交互设计等环节。
+
+Dify 作为同样开源的生成式 AI 应用开发平台，能够帮助开发者基于 DeepSeek 大模型快速开发出更加智能的 AI 应用，你可以在 Dify 平台内获得以下开发体验：
+
+* **可视化构建** - 通过可视化编排界面，3 分钟搭建基于 DeepSeek R1 的 AI 应用
+* **知识库增强** - 关联内部文档，开启 RAG 能力并构建精准问答系统
+* **工作流扩展** - 提供多种第三方工具插件、可视化拖拽式编排应用功能节点，实现复杂业务逻辑
+* **数据洞察力** - 内置总对话数、应用使用用户数等数据监控模块，支持与更加专业的监控平台集成 ...
+
+本文将详解 DeepSeek API 与 Dify 的集成步骤，助你快速实现两大核心场景：
+
+* **智能对话机器人开发** - 直接调用 DeepSeek R1 的思维链推理能力
+* **知识增强型应用构建** - 通过私有知识库实现精准信息检索与生成
+
+> 针对金融、法律等高合规需求场景，Dify 提供 [**本地私有化部署 DeepSeek + Dify**](broken-reference)，支持 DeepSeek 模型与 Dify 平台同步部署至内网
+
+通过 Dify × DeepSeek 的技术组合，开发者可跳过底层架构搭建，跃迁至**场景化 AI 能力落地阶段**，让大模型技术快速转化为业务生产力。
+
+## 前置准备
+
+### 1. 申请 DeepSeek API
+
+访问 [DeepSeek API 开放平台](https://platform.deepseek.com/)，按照页面提示进行申请 API Key。
+
+> 若提示链接无法访问，你也可以考虑在本地部署 DeepSeek 模型。详细说明请参考 [本地部署指南](broken-reference)
+
+### 2. 注册 Dify
+
+Dify 是一个能够帮助你快速搭建生成式 AI 应用的平台，通过接入 DeepSeek API，你可以快速搭建出一个能够易于使用的 DeepSeek AI 应用。
+
+## 集成步骤
+
+### 1. 将 DeepSeek 接入至 Dify
+
+访问 Dify 平台，点击右上角**头像 → 设置 → 模型供应商**，找到 DeepSeek，将上文获取的 API Key 粘贴至其中。点击保存，校验通过后将出现成功提示。
+
+![](https://assets-docs.dify.ai/2025/01/a7d6b4e05a3c9d85d0cb42f4dd018bc8.png)
+
+### 2. 搭建 DeepSeek AI 应用
+
+1. 轻点 Dify 平台首页左侧的"创建空白应用"，选择"聊天助手"类型应用并进行简单的命名。
+
+![](https://assets-docs.dify.ai/2025/01/7f56bc3c836c7248043b656fa95e474e.png)
+
+2. 选择 `deepseek-reasoner` 模型
+
+> deepseek-reasoner 模型又称为 deepseek-r1 模型。
+
+![](https://assets-docs.dify.ai/2025/01/de134c6285985fe1552223eb33641b9f.png)
+
+配置完成后即可在聊天框中进行互动。
+
+![](https://assets-docs.dify.ai/2025/01/3760e9a0cb7c2070978134d8f7f13929.png)
+
+### 3. 为 AI 应用启用文本分析能力
+
+[RAG（检索增强生成）](https://docs.dify.ai/zh-hans/learn-more/extended-reading/retrieval-augment)是一种先进的信息处理技术，它通过检索相关知识，向 LLM 提供必要的上下文信息，融入 LLM 的内容生成过程，提升回答的准确性和专业度。当你上传内部文档或专业资料后，AI 能够基于这些知识提供更有针对性的解答。
+
+#### 3.1 创建知识库
+
+将需要 AI 分析处理的文档上传至知识库中。为确保 DeepSeek 模型能够准确理解文档内容，建议使用"父子分段"模式进行文本处理 - 这种模式能够更好地保留文档的层级结构和上下文关系。如需了解详细的配置步骤，请参考：[创建知识库](https://docs.dify.ai/zh-hans/guides/knowledge-base/create-knowledge-and-upload-documents)。
+
+![](https://assets-docs.dify.ai/2025/01/f38af53d2b124391e2ea32f29da7d87d.png)
+
+#### 3.2 将知识库集成至 AI 应用
+
+在 AI 应用的"上下文"内添加知识库，在对话框内输入相关问题。LLM 将首先从知识库内获取与问题相关上下文，在此基础上进行总结并给出更高质量的回答。
+
+![](https://assets-docs.dify.ai/2025/01/4254ec131fece172a59304414a060f4e.png)
+
+### 4. 分享 AI 应用
+
+构建完成后，你可以将该 AI 应用分享给他人使用或集成至其它网站内。
+
+![](https://assets-docs.dify.ai/2025/01/d32857964683b48027d20d029e7e06c0.png)
+
+## 阅读更多
+
+除了构建简单的 AI 应用外，你还可以创建 Chatflow / Workflow 搭建更多复杂功能的应用（例如具备文件识别、图像识别、语音识别等能力）。详细说明请参考以下文档：
+
+* [工作流](https://docs.dify.ai/zh-hans/guides/workflow)
+* [文件上传](https://docs.dify.ai/zh-hans/guides/workflow/file-upload)
+* [本地部署 DeepSeek + Dify，构建你的专属私有 AI 助手](broken-reference)

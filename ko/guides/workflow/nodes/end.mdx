@@ -1,0 +1,31 @@
+---
+title: 结束
+---
+
+### 定义
+
+定义一个工作流程结束的最终输出内容。每一个工作流在完整执行后都需要至少一个结束节点，用于输出完整执行的最终结果。
+
+结束节点为流程终止节点，后面无法再添加其他节点，工作流应用中只有运行到结束节点才会输出执行结果。若流程中出现条件分叉，则需要定义多个结束节点。
+
+结束节点需要声明一个或多个输出变量，声明时可以引用任意上游节点的输出变量。
+
+> **注意**
+> Chatflow 内不支持结束节点
+
+***
+
+### 场景
+
+在以下[长故事生成工作流](/zh-hans/guides/workflow/nodes/iteration#示例-2：长文章迭代生成器（另一种编排方式）)中，结束节点声明的变量 `Output` 为上游代码节点的输出，即该工作流会在 Code3 节点执行完成之后结束，并输出 Code3 的执行结果。
+
+![结束节点-长故事生成示例](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/50152cf67089446181819755a5fa2dcb.png)
+
+**单路执行示例：**
+
+![单路执行示例](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/04cddaa15398cd7c905275234494ead7.png)
+
+**多路执行示例：**
+
+![多路执行示例](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/3cb3f5fea376265bede0a4ac5bcc1ddc.png)
+

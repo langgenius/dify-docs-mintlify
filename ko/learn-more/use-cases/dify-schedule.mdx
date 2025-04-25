@@ -1,0 +1,139 @@
+---
+title: 构建 Dify 应用定时任务助手
+---
+
+
+> 作者：[Leo\_chen](https://github.com/leochen-g)，[Dify Schedule](https://github.com/leochen-g/dify-schedule) 与 [智能微秘书](https://github.com/leochen-g/wechat-assistant-pro) 开源项目作者
+
+## 概述
+
+Dify 定时任务管理工具是一个基于 GitHub Actions 的自动化解决方案，用于实现 Dify Workflow 的定时执行和状态监控。无需再为缺乏定时任务支持而感到困扰，本工具可以帮助设置自动执行任务并获取实时通知，优化你的工作效率。
+
+> 注意：本工具仅支持 Dify Workflow 类型应用
+
+## 🌟 核心功能
+
+* 🔄 支持多 Workflow 并行自动执行
+* ⏰ 灵活的定时配置（默认执行时间：UTC+8 06:30）
+* 📱 多渠道消息通知集成
+  * 企业级通知：企业微信、钉钉、飞书
+  * 个人通知：微信、邮件、Server 酱、Pushplus
+* 🔒 基于 GitHub Actions 的安全执行环境
+* 🐲 支持青龙面板部署方案
+
+## 🚀 快速开始
+
+你可以通过以下两种方式设置和运行 Dify 定时任务助手：
+
+1. **在线方式（GitHub Actions）**
+2. **本地部署（青龙面板）**
+
+### 方案一：GitHub Actions 部署
+
+按照以下简单步骤快速配置你的自动化 Workflow：
+
+1. **Fork 仓库** 访问 [Dify Workflow 定时助手代码仓库](https://github.com/leochen-g/dify-schedule)，点击 Fork 按钮，创建副本到你的 GitHub 账户。
+2.  **配置密钥** 进入 Fork 代码仓库，依次点击 **Settings -> Secrets -> New repository secret**，添加以下密钥：
+
+    | 密钥名称            | 填写内容                                 | 是否必填 |
+    | --------------- | ------------------------------------ | ---- |
+    | `DIFY_BASE_URL` | Dify 接口地址（默认：https://api.dify.ai/v1） | 否    |
+    | `DIFY_TOKENS`   | Dify Workflow API 密钥（多个用 `;` 分隔）     | 是    |
+    | `DIFY_INPUTS`   | Workflow 所需变量（JSON 格式）               | 否    |
+
+    **通知配置（可选，推荐设置）**
+
+    如果希望通过通知及时了解任务状态，可添加以下产品服务的密钥：
+
+    | 密钥名称                     | 填写内容                                                                 | 用途     |
+    | ------------------------ | -------------------------------------------------------------------- | ------ |
+    | `EMAIL_USER`             | 发件人邮箱（需开启 SMTP）                                                      | 邮件通知   |
+    | `EMAIL_PASS`             | 邮箱 SMTP 密码                                                           | 邮件通知   |
+    | `EMAIL_TO`               | 收件人邮箱（多个用 `,` 分隔）                                                    | 邮件通知   |
+    | `PUSHPLUS_TOKEN`         | [Pushplus](http://www.pushplus.plus/) 的 token                        | 微信通知   |
+    | `SERVERPUSHKEY`          | [Server 酱](https://sct.ftqq.com/) 的密钥                                | 微信通知   |
+    | `DINGDING_WEBHOOK`       | 钉钉机器人 webhook 地址                                                     | 钉钉通知   |
+    | `WEIXIN_WEBHOOK`         | 企业微信机器人 webhook 地址                                                   | 企业微信通知 |
+    | `FEISHU_WEBHOOK`         | 飞书机器人 webhook 地址                                                     | 飞书通知   |
+    | `AIBOTK_KEY`             | [智能微秘书](https://wechat.aibotk.com/?r=dBL0Bn\&f=difySchedule) API Key | 微信通知   |
+    | `AIBOTK_ROOM_RECIVER`    | 智能微秘书群聊名称                                                            | 微信群通知  |
+    | `AIBOTK_CONTACT_RECIVER` | 智能微秘书联系人昵称                                                           | 微信私聊通知 |
+3. **启用 Workflow** 前往 **Actions**标签页，启用 Workflow 以启动定时任务。
+
+### 方案二：本地部署
+
+> 青龙面板是一款开源的定时任务管理工具，[项目地址](https://github.com/whyour/qinglong)。
+
+如果你的环境无法使用 GitHub Actions，你可以选择本地部署方案。通过在青龙面板中设置定时任务实现 Dify 应用的定时触发。
+
+1. **安装青龙面板**
+
+详细说明请参考 [项目地址](https://github.com/whyour/qinglong)。
+
+2. **添加订阅**
+
+在服务器中执行以下命令添加 [Dify 定时任务项目](https://github.com/leochen-g/dify-schedule) 的订阅任务：
+
+```bash
+ql repo https://github.com/leochen-g/dify-schedule.git "ql_" "utils" "sdk"
+```
+
+3. **依赖安装**
+   * 导航至【依赖管理】->【NodeJS】
+   * 安装 `axios` 依赖包
+4. **环境变量配置**
+   * `DIFY_TOKENS`：Workflow API 密钥（必填）
+   * `DIFY_BASE_URL`：API 接口地址（可选）
+   * 多个 token 使用分号 `;` 分隔
+5. **通知配置**
+   * 直接使用青龙面板内置的通知系统
+
+## 📸 通知效果预览
+
+<table>
+  <thead>
+    <tr>
+      <th>微信通知示例</th>
+      <th>邮件通知示例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>!<a href="https://assets-docs.dify.ai/2025/01/854f7a601a7dc277f8df095f06b2d5f0.png">微信</a></td>
+      <td>!<a href="https://assets-docs.dify.ai/2025/01/192e3ec292686129198a45562fad26cf.png">邮件</a></td>
+    </tr>
+  </tbody>
+</table>
+## ❓ 故障排查指南
+
+### API 密钥获取流程
+
+1. 登录 Dify 控制台
+2. 进入目标 Workflow 应用
+3. 访问 API 参考页面
+4. 获取 API 密钥
+
+![](https://assets-docs.dify.ai/2025/01/f7239b198b4aeac98d209bfcebae153d.png)
+
+## 常见问题
+
+1. **连接问题**
+   * 确保私有部署的 Dify 实例具有公网访问能力
+   * 验证网络连接和防火墙配置
+2. **执行错误**
+   * 验证应用类型是否为 Workflow
+   * 检查 `DIFY_INPUTS` 配置格式（JSON）
+   * 分析执行日志，确认所需变量配置完整
+
+如遇其他问题，欢迎在 GitHub Issues 中反馈（请注意脱敏处理）。
+
+## 🤝 贡献指南
+
+我们欢迎社区贡献，包括但不限于：
+
+* 功能优化建议
+* Bug 修复
+* 文档完善
+* 新功能开发
+
+请通过 Pull Request 或 Issue 参与项目建设。

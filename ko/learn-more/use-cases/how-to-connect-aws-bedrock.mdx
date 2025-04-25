@@ -1,0 +1,170 @@
+---
+title: 如何连接 AWS Bedrock 知识库？
+---
+
+
+本文将简要介绍如何通过外部知识库 API 将 Dify 平台与 AWS Bedrock 知识库相连接，使得 Dify 平台内的 AI 应用能够直接获取存储在 AWS Bedrock 知识库中的内容，扩展新的信息来源渠道。
+
+### 前置准备
+
+* AWS Bedrock Knowledge Base
+* Dify SaaS 服务 / Dify 社区版
+* 后端 API 开发基础知识
+
+### 1. 注册并创建 AWS Bedrock Knowledge Base
+
+访问 [AWS Bedrock](https://aws.amazon.com/bedrock/)，创建 Knowledge Base 服务。
+
+![创建 AWS Bedrock Knowledge Base](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/1bf24647a5ffeba4accecd1052011980.png)
+
+### 2. 构建后端 API 服务
+
+Dify 平台尚不能直接连接 AWS Bedrock Knowledge Base，需要开发团队参考 Dify 关于外部知识库连接的 [API 定义](../../guides/knowledge-base/external-knowledge-api-documentation)，手动创建后端 API 服务，建立与 AWS Bedrock 的连接。具体架构示意图请参考：
+
+![构建后端 API 服务](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/c57ce0a77ee668268f53e91497bd5c2b.png)
+
+你可以参考以下 2 个代码文件，构建后端服务 API。
+
+`knowledge.py`
+
+```python
+from flask import request
+from flask_restful import Resource, reqparse
+
+from bedrock.knowledge_service import ExternalDatasetService
+
+
+class BedrockRetrievalApi(Resource):
+    # url : <your-endpoint>/retrieval
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument("retrieval_setting", nullable=False, required=True, type=dict, location="json")
+        parser.add_argument("query", nullable=False, required=True, type=str,)
+        parser.add_argument("knowledge_id", nullable=False, required=True, type=str)
+        args = parser.parse_args()
+
+        # Authorization check
+        auth_header = request.headers.get("Authorization")
+        if " " not in auth_header:
+            return {
+                "error_code": 1001,
+                "error_msg": "Invalid Authorization header format. Expected 'Bearer <api-key>' format."
+            }, 403
+        auth_scheme, auth_token = auth_header.split(None, 1)
+        auth_scheme = auth_scheme.lower()
+        if auth_scheme != "bearer":
+            return {
+                "error_code": 1001,
+                "error_msg": "Invalid Authorization header format. Expected 'Bearer <api-key>' format."
+            }, 403
+        if auth_token:
+            # process your authorization logic here
+            pass
+
+        # Call the knowledge retrieval service
+        result = ExternalDatasetService.knowledge_retrieval(
+            args["retrieval_setting"], args["query"], args["knowledge_id"]
+        )
+        return result, 200
+```
+
+`knowledge_service.py`
+
+```python
+import boto3
+
+
+class ExternalDatasetService:
+    @staticmethod
+    def knowledge_retrieval(retrieval_setting: dict, query: str, knowledge_id: str):
+        # get bedrock client
+        client = boto3.client(
+            "bedrock-agent-runtime",
+            aws_secret_access_key="AWS_SECRET_ACCESS_KEY",
+            aws_access_key_id="AWS_ACCESS_KEY_ID",
+            # example: us-east-1
+            region_name="AWS_REGION_NAME",
+        )
+        # fetch external knowledge retrieval
+        response = client.retrieve(
+            knowledgeBaseId=knowledge_id,
+            retrievalConfiguration={
+                "vectorSearchConfiguration": {"numberOfResults": retrieval_setting.get("top_k"), "overrideSearchType": "HYBRID"}
+            },
+            retrievalQuery={"text": query},
+        )
+        # parse response
+        results = []
+        if response.get("ResponseMetadata") and response.get("ResponseMetadata").get("HTTPStatusCode") == 200:
+            if response.get("retrievalResults"):
+                retrieval_results = response.get("retrievalResults")
+                for retrieval_result in retrieval_results:
+                    # filter out results with score less than threshold
+                    if retrieval_result.get("score") < retrieval_setting.get("score_threshold", .0):
+                        continue
+                    result = {
+                        "metadata": retrieval_result.get("metadata"),
+                        "score": retrieval_result.get("score"),
+                        "title": retrieval_result.get("metadata").get("x-amz-bedrock-kb-source-uri"),
+                        "content": retrieval_result.get("content").get("text"),
+                    }
+                    results.append(result)
+        return {
+            "records": results
+        }
+```
+
+在此过程中，你可以构建 API 接口地址以及用于鉴权的 API Key 并用于后续的连接。
+
+### 3. 获取 AWS Bedrock Knowledge Base ID
+
+登录 AWS Bedrock Knowledge 后台，获取已创建 Knowledge Base 的 ID。此参数将会在[后续步骤](how-to-connect-aws-bedrock.md#id-5.-lian-jie-wai-bu-zhi-shi-ku)用于与 Dify 平台的连接。
+
+![获取 AWS Bedrock Knowledge Base ID](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/03fd7e383daf419765bbfd05c3742923.png)
+
+### 4. 关联外部知识 API
+
+前往 Dify 平台中的 **“知识库”** 页，点击右上角的 **“外部知识库 API”**，轻点 **“添加外部知识库 API”**。
+
+按照页面提示，依次填写以下内容：
+
+* 知识库的名称，允许自定义名称，用于区分 Dify 平台内所连接的不同外部知识 API；
+* API 接口地址，外部知识库的连接地址，可在[第二步](how-to-connect-aws-bedrock.md#id-2.-gou-jian-hou-duan-api-fu-wu)中自定义。示例 `api-endpoint/retrieval`；
+* API Key，外部知识库连接密钥，可在[第二步](how-to-connect-aws-bedrock.md#id-2.-gou-jian-hou-duan-api-fu-wu)中自定义。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/4f2ce69f8c59e788beb91303c68db571.png)
+
+### 5. 连接外部知识库
+
+前往 **“知识库”** 页，点击添加知识库卡片下方的 **“连接外部知识库”** 跳转至参数配置页面。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/c3c30c7ed923ee1d7986e92bb35186c6.png)
+
+填写以下参数：
+
+* **知识库名称与描述**
+*   **外部知识库 API**
+
+    选择在[第四步](how-to-connect-aws-bedrock.md#id-4.-guan-lian-wai-bu-zhi-shi-api)中关联的外部知识库 API
+*   **外部知识库 ID**
+
+    填写在[第三步](how-to-connect-aws-bedrock.md#id-3.-huo-qu-aws-bedrock-knowledge-base-id)中获取的 AWS Bedrock knowledge base ID
+*   **调整召回设置**
+
+    \*\*Top K：\*\*用户发起提问时，将请求外部知识 API 获取相关性较高的内容分段。该参数用于筛选与用户问题相似度较高的文本片段。默认值为 3，数值越高，召回存在相关性的文本分段也就越多。
+
+    \*\*Score 阈值：\*\*文本片段筛选的相似度阈值，只召回超过设置分数的文本片段，默认值为 0.5。数值越高说明对于文本与问题要求的相似度越高，预期被召回的文本数量也越少，结果也会相对而言更加精准。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/58c324c08c1c5fc23ab31e04967ae449.png)
+
+设置完成后即可建立与外部知识库 API 的连接。
+
+### 6. 测试外部知识库连接与召回
+
+建立与外部知识库的连接后，开发者可以在 **“召回测试”** 中模拟可能的问题关键词，预览从 AWS Bedrock Knowledge Base 召回的文本分段。
+
+![测试外部知识库的连接与召回](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/fbc64f060f9fda83847428439b07c247.png)
+
+若对于召回结果不满意，可以尝试修改召回参数或自行调整 AWS Bedrock Knowledge Base 的检索设置。
+
+![调整 AWS Bedrock Knowledge Base 文本处理参数](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/0984a89e4cf2a1150ec3160da14c656e.png)

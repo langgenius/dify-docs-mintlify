@@ -1,0 +1,175 @@
+---
+title: 迭代
+---
+
+### 定义
+
+对数组中的元素依次执行相同的操作步骤，直至输出所有结果，可以理解为任务批处理器。迭代节点通常配合数组变量使用。
+
+例如在长文翻译迭代节点内，如果将所有内容输入至 LLM 节点，有可能会达到单次对话限制。上游节点可以先将长文拆分为了多个片段，配合迭代节点对各个片段执行批量翻译，以避免达到 LLM 单次对话的消息限制。
+
+***
+
+### 功能简介
+
+使用迭代的条件是确保输入值已格式化为列表对象；迭代节点将依次处理迭代开始节点数组变量内的所有元素，每个元素遵循相同的处理步骤，每轮处理被称为一个迭代，最终输出处理结果。
+
+迭代节点的结构通常包含**输入变量**、**迭代工作流**、**输出变量**三个功能单元。
+
+**输入变量：** 仅接受 Array 数组变量类型数据。如果你不了解什么是数组变量，请阅读 [扩展阅读：数组](../../../learn-more/extended-reading/what-is-array-variable)。
+
+**迭代工作流：** 你可以在迭代节点中使用多个工作流节点，编排不同的任务步骤。
+
+**输出变量：** 仅支持输出数组变量 `Array[List]`。如果你想要输出其它变量格式，请阅读 [扩展阅读：如何将数组转换为文本](#如何将数组转换为文本)。
+
+![迭代节点原理图](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/2b26dc5f5b088304b65190e14f58423a.png)
+
+### 场景
+
+#### **示例1：长文章迭代生成器**
+
+![长故事生成器](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/91091e9c5297944edb57f509a7294714.png)
+
+1. 在 **开始节点** 内添加输入故事标题、大纲变量，提示用户手动输入初始信息
+2. 使用 **LLM 节点** 基于用户输入的故事标题和大纲，让 LLM 开始编写内容
+3. 使用 **参数提取节点** 将 LLM 输出的完整内容转换成数组格式
+4. 通过 **迭代节点** 包裹的 **LLM 节点** 循环多次生成各章节内容
+5. 将 **直接回复** 节点添加在迭代节点内部，实现在每轮迭代生成之后流式输出
+
+**具体配置步骤**
+
+1. 在 **开始节点** 配置故事标题（title）和大纲（outline）；
+
+![开始节点配置](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/1b371ec3fc8a97831745e530fe8ad50f.png)
+
+2. 选择 **LLM 节点** 基于用户输入的故事标题和大纲，让 LLM 开始编写文本；
+
+![模板节点](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/55e2b509c4a7b271a71156dc677e6fb8.png)
+
+3. 选择 **参数提取节点**，将故事文本转换成为数组（Array）结构。提取参数为 `sections` ，参数类型为 `Array[Object]`
+
+![参数提取](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/89419f8b96db401014ca399e931e61d0.png)
+
+<Info>
+参数提取效果受模型推理能力和指令影响，使用推理能力更强的模型，在**指令**内增加示例可以提高参数提取的效果。
+</Info>
+
+4. 将数组格式的故事大纲作为迭代节点的输入，在迭代节点内部使用 **LLM 节点** 进行处理
+
+![配置迭代节点](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/eb7735d04b1cb6a6ebde76fe7f0da701.png)
+
+在 LLM 节点内配置输入变量 `GenerateOverallOutline/output` 和 `Iteration/item`
+
+![配置 LLM 节点](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/fe17ddf24ec1689be1ab72200804ed0c.png)
+
+<Info>
+迭代的内置变量：`items[object]` 和 `index[number]`
+
+`items[object] 代表以每轮迭代的输入条目；`
+
+`index[number] 代表当前迭代的轮次；`
+</Info>
+
+5. 在迭代节点内部配置 **直接回复节点** ，可以实现在每轮迭代生成之后流式输出。
+
+![配置 Answer 节点](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/17fe8533d1649d541e47390db2d1cf92.png)
+
+6. 完整调试和预览
+
+![按故事章节多轮迭代生成](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/a032a01e49387e7bdc2e0038aa3650b3.png)
+
+#### **示例 2：长文章迭代生成器（另一种编排方式）**
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/6378e5eb85ce9760d7ef642ea555b268.png)
+
+* 在 **开始节点** 内输入故事标题和大纲
+* 使用 **LLM 节点** 生成文章小标题，以及小标题对应的内容
+* 使用 **代码节点** 将完整内容转换成数组格式
+* 通过 **迭代节点** 包裹的 **LLM 节点** 循环多次生成各章节内容
+* 使用 **模板转换** 节点将迭代节点输出的字符串数组转换为字符串
+* 在最后添加 **直接回复节点** 将转换后的字符串直接输出
+
+***
+
+### 高级功能
+
+**并行模式**
+
+迭代节点支持并行模式，开启后将有效提升迭代节点的整体运行效率。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/d412f5048cd544b90b829662f64f9593.png)
+
+下图是迭代节点开启或关闭并行模式的运行效果对比。
+
+![顺序与并行执行原理图](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/adbc49bfb14e0de6d1a72ccccc30cdd0.png)
+
+并行模式下的最高并行轮数为 10，这意味着单位时间内最多可以同时运行 10 个任务。如果需要处理超过  10 个任务，前 10 个元素将率先同时运行，前排任务处理完成后将继续处理剩余任务。
+
+<Info>
+开启并行模式后，不再建议在迭代节点内放置直接回答、变量赋值和工具节点。此举可能会造成异常情况。
+</Info>
+
+* **错误响应方法**
+
+迭代节点通常需要处理大量任务，有时会在处理某个元素时发生错误。为了避免某个元素异常而中断所有任务，你可以在**错误响应方法**中设置异常的应对方法：
+
+* 错误时终止。如果发现异常输出，终止迭代节点，输出错误信息。
+* 忽略错误并继续。忽略异常信息，继续处理剩余元素。输出的信息中包含正确信息，异常信息为空值。
+* 移除错误输出。忽略异常信息，继续处理剩余元素。输出的信息中仅包含正确信息。
+
+迭代节点的输入变量与输出变量相对应。例如输入变量为 \[1,2,3] ，则输出变量同样为 \[result-1, result-2, result-3]。
+
+如果选择了**忽略错误并继续，** 异常情况的输出值为 null 值，例如 \[result-1, null, result-3]；
+
+如果选择了**移除错误输出，** 将不会输出异常变量，例如 \[result-1, result-3]。
+
+### 扩展阅读
+
+[**什么是数组变量？**](../../../learn-more/extended-reading/what-is-array-variable)
+
+***
+
+#### 如何生成数组变量？
+
+你可以通过以下节点生成数组变量，用以充当迭代节点的输入变量：
+
+*   [代码节点](code)
+
+    ![code 节点输出 array](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/2faff6c41d45191307296a52a406b776.png)
+*   [参数提取](parameter-extractor)
+
+    ![参数提取节点输出 array](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/66ec57db7558ca372fe847834e201a52.png)
+* [知识库检索](knowledge-retrieval)
+* [迭代](iteration)
+* [工具](tools)
+* [HTTP 请求](http-request)
+
+***
+
+#### 如何将数组转换为文本
+
+迭代节点的输出变量为数组格式，无法直接输出 String 字符串内容。你可以使用一个简单的步骤将数组转换回文本。
+
+**使用代码节点转换**
+
+![代码节点转换](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/d6a2ca50f2484eedea2ff7ca5efb2bb5.png)
+
+代码示例：
+
+```python
+def main(articleSections: list):
+    data = articleSections
+    return {
+        "result": "\n".join(data)
+    }
+```
+
+**使用模板节点转换**
+
+![模板节点转换](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/node/ebc414466340c323d2eb1b6c7056360d.png)
+
+代码示例：
+
+```django
+{{ articleSections | join("\n") }}
+```

@@ -1,0 +1,70 @@
+---
+title: 常见问题
+---
+
+
+### 1. 长时间未收到密码重置邮件应如何处理？
+
+你需要在 `.env` 文件内配置 `Mail` 参数项，详细说明请参考 [《环境变量说明：邮件相关配置》](/zh-hans/getting-started/install-self-hosted/environments#you-jian-xiang-guan-pei-zhi)。
+
+修改配置后，运行以下命令重启服务。
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+如果依然没能收到邮件，请检查邮件服务是否正常，以及邮件是否进入了垃圾邮件列表。
+
+### 2. 如果 workflow 太复杂超出节点上限如何处理？
+
+在社区版你可以在`web/app/components/workflow/constants.ts` 手动调整 MAX\_TREE\_DEPTH 单条分支深度的上限，我们的默认值是 50，在这里要提醒自部署的情况下过深的分支可能会影响性能。
+
+### 3. 如何指定工作流各节点的运行时间？
+
+你可以在 `.env` 文件内修改 `TEXT_GENERATION_TIMEOUT_MS` 变量，调整各节点的运行时间，防止因某些进程运行超时而导致整体应用服务不可用。
+
+### 4. 如何重置管理员密码？
+
+如果你通过 Docker Compose 部署，你可以运行以下 Docker Compose 命令行重置密码。
+
+```bash
+docker exec -it docker-api-1 flask reset-password
+```
+
+请按照提示输入邮箱地址和新密码，例如：
+
+```bash
+dify@my-pc:~/hello/dify/docker$ docker compose up -d
+[+] Running 9/9
+ ✔ Container docker-web-1         Started                                                              0.1s 
+ ✔ Container docker-sandbox-1     Started                                                              0.1s 
+ ✔ Container docker-db-1          Started                                                              0.1s 
+ ✔ Container docker-redis-1       Started                                                              0.1s 
+ ✔ Container docker-weaviate-1    Started                                                              0.1s 
+ ✔ Container docker-ssrf_proxy-1  Started                                                              0.1s 
+ ✔ Container docker-api-1         Started                                                              0.1s 
+ ✔ Container docker-worker-1      Started                                                              0.1s 
+ ✔ Container docker-nginx-1       Started                                                              0.1s 
+dify@my-pc:~/hello/dify/docker$ docker exec -it docker-api-1 flask reset-password
+None of PyTorch, TensorFlow >= 2.0, or Flax have been found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+sagemaker.config INFO - Not applying SDK defaults from location: /etc/xdg/sagemaker/config.yaml
+sagemaker.config INFO - Not applying SDK defaults from location: /root/.config/sagemaker/config.yaml
+Email: hello@dify.ai
+New password: newpassword4567
+Password confirm: newpassword4567
+Password reset successfully.
+```
+
+### 5. 如何修改页面端口
+
+如果你使用 Docker Compose 部署，你可以通过修改`.env`配置来自定义 Dify 的访问端口。
+
+你需要修改 Nginx 相关配置：
+
+```bash
+EXPOSE_NGINX_PORT=80
+EXPOSE_NGINX_SSL_PORT=443
+```
+
+其他相关的部署问题请参考[本地部署相关](../../learn-more/faq/install-faq)。

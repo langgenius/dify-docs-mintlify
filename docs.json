@@ -1409,6 +1409,456 @@
             ]
           }
         ]
+      },
+      {
+        "language": "ko",
+        "href": "/ko/introduction",
+        "tabs": [
+          {
+            "tab": "韩语",
+            "groups": [
+              {
+                "group": "韩语入門",
+                "pages": [
+                  {
+                    "group": "韩语",
+                    "pages": [
+                      "ko/introduction",
+                      "ja-jp/getting-started/readme/features-and-specifications",
+                      "ja-jp/getting-started/readme/model-providers"
+                    ]
+                  },
+                "ja-jp/getting-started/cloud",
+                {
+                  "group": "Dify 社区版",
+                  "pages": [
+                    "ja-jp/getting-started/install-self-hosted/readme",
+                    "ja-jp/getting-started/install-self-hosted/docker-compose",
+                    "ja-jp/getting-started/install-self-hosted/local-source-code",
+                    "ja-jp/getting-started/install-self-hosted/bt-panel",
+                    "ja-jp/getting-started/install-self-hosted/start-the-frontend-docker-container",
+                    "ja-jp/getting-started/install-self-hosted/environments",
+                    "ja-jp/getting-started/install-self-hosted/faq"
+                  ]
+                },
+                "ja-jp/getting-started/dify-premium"
+                ]
+              },
+              {
+                "group": "マニュアル",
+                "pages": [
+                  {
+                    "group": "モデル",
+                    "pages": [
+                      "ja-jp/guides/model-configuration/readme",
+                      "ja-jp/guides/model-configuration/new-provider",
+                      "ja-jp/guides/model-configuration/predefined-model",
+                      "ja-jp/guides/model-configuration/customizable-model",
+                      "ja-jp/guides/model-configuration/interfaces",
+                      "ja-jp/guides/model-configuration/schema",
+                      "ja-jp/guides/model-configuration/load-balancing"
+                    ]
+                  },
+                  {
+                    "group": "アプリ・オーケストレーション",
+                    "pages": [
+                      "ja-jp/guides/application-orchestrate/readme",
+                      "ja-jp/guides/application-orchestrate/creating-an-application",
+                      {
+                        "group": "チャットボット",
+                        "pages": [
+                          "ja-jp/guides/application-orchestrate/chatbot-application",
+                          "ja-jp/guides/application-orchestrate/multiple-llms-debugging"
+                        ]
+                      },
+                      "ja-jp/guides/application-orchestrate/agent",
+                      {
+                        "group": "ツールキット",
+                        "pages": [
+                          "ja-jp/guides/application-orchestrate/app-toolkits/README",
+                          "ja-jp/guides/application-orchestrate/app-toolkits/moderation-tool"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "ワークフロー",
+                    "pages": [
+                          "ja-jp/guides/workflow/concepts",
+                          "ja-jp/guides/workflow/variables",
+                          {
+                            "group": "ノードの説明",
+                            "pages": [
+                              "ja-jp/guides/workflow/node/start",
+                              "ja-jp/guides/workflow/node/end",
+                              "ja-jp/guides/workflow/node/answer",
+                              "ja-jp/guides/workflow/node/llm",
+                              "ja-jp/guides/workflow/node/knowledge-retrieval",
+                              "ja-jp/guides/workflow/node/question-classifier",
+                              "ja-jp/guides/workflow/node/ifelse",
+                              "ja-jp/guides/workflow/node/code",
+                              "ja-jp/guides/workflow/node/template",
+                              "ja-jp/guides/workflow/node/doc-extractor",
+                              "ja-jp/guides/workflow/node/list-operator",
+                              "ja-jp/guides/workflow/node/variable-aggregator",
+                              "ja-jp/guides/workflow/node/variable-assigner",
+                              "ja-jp/guides/workflow/node/iteration",
+                              "ja-jp/guides/workflow/node/parameter-extractor",
+                              "ja-jp/guides/workflow/node/http-request",
+                              "ja-jp/guides/workflow/node/agent",
+                              "ja-jp/guides/workflow/node/tools",
+                              "ja-jp/guides/workflow/node/loop"
+                            ]
+                          },
+                          "ja-jp/guides/workflow/shortcut-key",
+                          "ja-jp/guides/workflow/orchestrate-node",
+                          "ja-jp/guides/workflow/file-upload",
+                          {
+                            "group": "エラー処理",
+                            "pages": [
+                              "ja-jp/guides/workflow/error-handling/readme",
+                              "ja-jp/guides/workflow/error-handling/predefined-node-failure-logic",
+                              "ja-jp/guides/workflow/error-handling/error-type"
+                            ]
+                          },
+                          "ja-jp/guides/workflow/additional-feature",
+                          {
+                            "group": "プレビューとデバッグ",
+                            "pages": [
+                              "ja-jp/guides/workflow/debug-and-preview/step-run",
+                              "ja-jp/guides/workflow/debug-and-preview/log",
+                              "ja-jp/guides/workflow/debug-and-preview/checklist",
+                              "ja-jp/guides/workflow/debug-and-preview/history"
+                            ]
+                          },
+                          "ja-jp/guides/workflow/publish",
+                          "ja-jp/guides/workflow/bulletin"
+                        ]
+                  },
+                  {
+                    "group": "ナレッジベース",
+                    "pages": [
+                      "ja-jp/guides/knowledge-base/readme",
+                      {
+                        "group": "ナレッジベース作成",
+                        "pages": [
+                          "ja-jp/guides/knowledge-base/knowledge-base-creation/introduction",
+                          {
+                            "group": "1. オンラインデータソースの活用",
+                            "pages": [
+                              "ja-jp/guides/knowledge-base/create-knowledge-and-upload-documents/import-content-data/readme",
+                              "ja-jp/guides/knowledge-base/create-knowledge-and-upload-documents/import-content-data/sync-from-notion",
+                              "ja-jp/guides/knowledge-base/create-knowledge-and-upload-documents/import-content-data/sync-from-website"
+                            ]
+                          },
+                          "ja-jp/guides/knowledge-base/create-knowledge-and-upload-documents/chunking-and-cleaning-text",
+                          "ja-jp/guides/knowledge-base/create-knowledge-and-upload-documents/setting-indexing-methods"
+                        ]
+                      },
+                      {
+                        "group": "ナレッジベースの管理",
+                        "pages": [
+                          "ja-jp/guides/knowledge-base/knowledge-and-documents-maintenance/introduction",
+                          "ja-jp/guides/knowledge-base/knowledge-and-documents-maintenance/maintain-knowledge-documents",
+                          "ja-jp/guides/knowledge-base/knowledge-and-documents-maintenance/maintain-dataset-via-api"
+                        ]
+                      },
+                      "ja-jp/guides/knowledge-base/metadata",
+                      "ja-jp/guides/knowledge-base/integrate-knowledge-within-application",
+                      "ja-jp/guides/knowledge-base/retrieval-test-and-citation",
+                      "ja-jp/guides/knowledge-base/connect-external-knowledge-base",
+                      "ja-jp/guides/knowledge-base/api-documentation/external-knowledge-api-documentation"
+                    ]
+                  },                  
+                  {
+                    "group": "アプリ公開",
+                    "pages": [
+                      {
+                        "group": "シングルページWebアプリとして公開",
+                        "pages": [
+                          "ja-jp/guides/application-publishing/launch-your-webapp-quickly/web-app-settings",
+                          "ja-jp/guides/application-publishing/launch-your-webapp-quickly/text-generator",
+                          "ja-jp/guides/application-publishing/launch-your-webapp-quickly/conversation-application"
+                        ]
+                      },
+                      "ja-jp/guides/application-publishing/embedding-in-websites",
+                      "ja-jp/guides/application-publishing/developing-with-apis",
+                      "ja-jp/guides/application-publishing/based-on-frontend-templates"
+                    ]
+                  },
+                  {
+                    "group": "アノテーション",
+                    "pages": [
+                      "ja-jp/guides/annotation/logs",
+                      "ja-jp/guides/annotation/annotation-reply"
+                    ]
+                  },
+                  {
+                    "group": "モニタリング",
+                    "pages": [
+                      "ja-jp/guides/monitoring/analysis",
+                      {
+                        "group": "外部Opsツール統合",
+                        "pages": [
+                          "ja-jp/guides/monitoring/integrate-external-ops-tools/integrate-langfuse",
+                          "ja-jp/guides/monitoring/integrate-external-ops-tools/integrate-langsmith"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "拡張",
+                    "pages": [
+                      {
+                        "group": "API 拡張",
+                        "pages": [
+                          "ja-jp/guides/extension/api-based-extension/README",
+                          "ja-jp/guides/extension/api-based-extension/cloudflare-workers",
+                          "ja-jp/guides/extension/api-based-extension/moderation"
+                        ]
+                      },
+                      {
+                        "group": "コード拡張",
+                        "pages": [
+                          "ja-jp/guides/extension/code-based-extension/external-data-tool",
+                          "ja-jp/guides/extension/code-based-extension/moderation"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "コラボレーション",
+                    "pages": [
+                      "ja-jp/guides/workspace/readme",
+                      "ja-jp/guides/workspace/app",
+                      "ja-jp/guides/workspace/invite-and-manage-members"
+                    ]
+                  },
+                  {
+                    "group": "管理",
+                    "pages": [
+                      "ja-jp/guides/management/app-management",
+                      "ja-jp/guides/management/team-members-management",
+                      "ja-jp/guides/management/personal-account-management",
+                      "ja-jp/guides/management/subscription-management",
+                      "ja-jp/guides/management/version-control"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "ハンドオン工房",
+                "pages": [
+                  {
+                    "group": "初級編",
+                    "pages": [
+                      "ja-jp/workshop/basic/README",
+                      "ja-jp/workshop/basic/build-ai-image-generation-app",
+                      "ja-jp/workshop/basic/travel-assistant"
+                    ]
+                  },
+                  {
+                    "group": "中級編",
+                    "pages": [
+                      "ja-jp/workshop/intermediate/article-reader",
+                      "ja-jp/workshop/intermediate/twitter-chatflow"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "コミュニティ",
+                "pages": [
+                  "ja-jp/community/support",
+                  "ja-jp/community/contribution",
+                  "ja-jp/community/docs-contribution"
+                ]
+              },
+              {
+                "group": "プラグイン",
+                "pages": [
+                  "ja-jp/plugins/introduction",
+                  {
+                    "group": "クイックスタート",
+                    "pages": [
+                      "ja-jp/plugins/quick-start/README",
+                      "ja-jp/plugins/quick-start/install-plugins",
+                      {
+                        "group": "プラグイン開発の入門",
+                        "pages": [
+                          "ja-jp/plugins/quick-start/develop-plugins/README",
+                          "ja-jp/plugins/quick-start/develop-plugins/initialize-development-tools",
+                          "ja-jp/plugins/quick-start/develop-plugins/tool-plugin",
+                          {
+                            "group": "モデル型プラグイン",
+                            "pages": [
+                              "ja-jp/plugins/quick-start/develop-plugins/model-plugin/README",
+                              "ja-jp/plugins/quick-start/develop-plugins/model-plugin/create-model-providers",
+                              "ja-jp/plugins/quick-start/develop-plugins/model-plugin/integrate-the-predefined-model",
+                              "ja-jp/plugins/quick-start/develop-plugins/model-plugin/customizable-model"
+                            ]
+                          },
+                          "ja-jp/plugins/quick-start/develop-plugins/agent-strategy-plugin",
+                          "ja-jp/plugins/quick-start/develop-plugins/extension-plugin",
+                          "ja-jp/plugins/quick-start/develop-plugins/bundle"
+                        ]
+                      },
+                      "ja-jp/plugins/quick-start/debug-plugin"
+                    ]
+                  },
+                  "ja-jp/plugins/manage-plugins",
+                  {
+                    "group": "スキーマ仕様",
+                    "pages": [
+                      "ja-jp/plugins/schema-definition/README",
+                      "ja-jp/plugins/schema-definition/manifest",
+                      "ja-jp/plugins/schema-definition/endpoint",
+                      "ja-jp/plugins/schema-definition/tool",
+                      "ja-jp/plugins/schema-definition/agent",
+                      {
+                        "group": "Model",
+                        "pages": [
+                          "ja-jp/plugins/schema-definition/model/README",
+                          "ja-jp/plugins/schema-definition/model/model-designing-rules",
+                          "ja-jp/plugins/schema-definition/model/model-schema"
+                        ]
+                      },
+                      "ja-jp/plugins/schema-definition/general-specifications",
+                      "ja-jp/plugins/schema-definition/persistent-storage",
+                      {
+                        "group": "Difyサービスの逆呼び出し",
+                        "pages": [
+                          "ja-jp/plugins/schema-definition/reverse-invocation-of-the-dify-service/README",
+                          "ja-jp/plugins/schema-definition/reverse-invocation-of-the-dify-service/app",
+                          "ja-jp/plugins/schema-definition/reverse-invocation-of-the-dify-service/model",
+                          "ja-jp/plugins/schema-definition/reverse-invocation-of-the-dify-service/tool",
+                          "ja-jp/plugins/schema-definition/reverse-invocation-of-the-dify-service/node"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "ベストプラクティス",
+                    "pages": [
+                      "ja-jp/plugins/best-practice/README",
+                      "ja-jp/plugins/best-practice/develop-a-slack-bot-plugin"
+                    ]
+                  },
+                  {
+                    "group": "プラグインの公開",
+                    "pages": [
+                      "ja-jp/plugins/publish-plugins/README",
+                      {
+                        "group": "Difyマーケットプレイスへの公開",
+                        "pages": [
+                          "ja-jp/plugins/publish-plugins/publish-to-dify-marketplace/README",
+                          "ja-jp/plugins/publish-plugins/publish-to-dify-marketplace/plugin-developer-guidelines",
+                          "ja-jp/plugins/publish-plugins/publish-to-dify-marketplace/plugin-privacy-protection-guidelines"
+                        ]
+                      },
+                      "ja-jp/plugins/publish-plugins/publish-plugin-on-personal-github-repo",
+                      "ja-jp/plugins/publish-plugins/package-plugin-file-and-publish"
+                    ]
+                  },
+                  "ja-jp/plugins/faq"
+                ]
+              },
+              {
+                "group": "開発",
+                "pages": [
+                  {
+                    "group": "バックエンド",
+                    "pages": [
+                      "ja-jp/development/backend/sandbox/README",
+                      "ja-jp/development/backend/sandbox/contribution"
+                    ]
+                  },
+                  {
+                    "group": "モデルの統合",
+                    "pages": [
+                      "ja-jp/development/models-integration/hugging-face",
+                      "ja-jp/development/models-integration/replicate",
+                      "ja-jp/development/models-integration/xinference",
+                      "ja-jp/development/models-integration/openllm",
+                      "ja-jp/development/models-integration/localai",
+                      "ja-jp/development/models-integration/ollama",
+                      "ja-jp/development/models-integration/litellm",
+                      "ja-jp/development/models-integration/gpustack",
+                      "ja-jp/development/models-integration/aws-bedrock-deepseek"
+                    ]
+                  },
+                  {
+                    "group": "移行",
+                    "pages": [
+                      "ja-jp/development/migration/migrate-to-v1"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "もっと読む",
+                "pages": [
+                  {
+                    "group": "活用事例",
+                    "pages": [
+                      "ja-jp/learn-more/use-cases/integrate-deepseek-to-build-an-ai-app",
+                      "ja-jp/learn-more/use-cases/private-ai-ollama-deepseek-dify",
+                      "ja-jp/learn-more/use-cases/create-a-midjoureny-prompt-word-robot-with-zero-code",
+                      "ja-jp/learn-more/use-cases/build-an-notion-ai-assistant",
+                      "ja-jp/learn-more/use-cases/create-an-ai-chatbot-with-business-data-in-minutes",
+                      "ja-jp/learn-more/use-cases/how-to-integrate-dify-chatbot-to-your-wix-website",
+                      "ja-jp/learn-more/use-cases/how-to-connect-aws-bedrock",
+                      "ja-jp/learn-more/use-cases/dify-model-arena",
+                      "ja-jp/learn-more/use-cases/dify-schedule",
+                      "ja-jp/learn-more/use-cases/building-an-ai-thesis-slack-bot"
+                    ]
+                  },
+                  {
+                    "group": "さらに読む",
+                    "pages": [
+                      "ja-jp/learn-more/extended-reading/what-is-llmops",
+                      "ja-jp/learn-more/extended-reading/what-is-array-variable",
+                      {
+                        "group": "检索增强生成（RAG）",
+                        "pages": [
+                          "ja-jp/learn-more/extended-reading/retrieval-augment/README",
+                          "ja-jp/learn-more/extended-reading/retrieval-augment/hybrid-search",
+                          "ja-jp/learn-more/extended-reading/retrieval-augment/rerank",
+                          "ja-jp/learn-more/extended-reading/retrieval-augment/retrieval"
+                        ]
+                      },
+                      "ja-jp/learn-more/extended-reading/how-to-use-json-schema-in-dify"
+                    ]
+                  },
+                  {
+                    "group": "常见问题",
+                    "pages": [
+                      "ja-jp/learn-more/faq/README",
+                      "ja-jp/learn-more/faq/install-faq",
+                      "ja-jp/learn-more/faq/llms-use-faq",
+                      "ja-jp/learn-more/faq/plugins"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "ポリシー",
+                "pages": [
+                  "ja-jp/policies/open-source",
+                  {
+                    "group": "ユーザ規約",
+                    "pages": [
+                      "ja-jp/policies/agreement/README",
+                      "https://dify.ai/terms",
+                      "https://dify.ai/privacy",
+                      "ja-jp/policies/agreement/get-compliance-report"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       }
     ]
   },

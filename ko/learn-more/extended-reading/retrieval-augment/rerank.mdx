@@ -1,0 +1,56 @@
+---
+title: 重排序
+---
+
+
+### 为什么需要重排序？
+
+混合检索能够结合不同检索技术的优势获得更好的召回结果，但在不同检索模式下的查询结果需要进行合并和归一化（将数据转换为统一的标准范围或分布，以便更好地进行比较、分析和处理），然后再一起提供给大模型。这时候我们需要引入一个评分系统：重排序模型（Rerank Model）。
+
+**重排序模型会计算候选文档列表与用户问题的语义匹配度，根据语义匹配度重新进行排序，从而改进语义排序的结果**。其原理是计算用户问题与给定的每个候选文档之间的相关性分数，并返回按相关性从高到低排序的文档列表。常见的 Rerank 模型如：Cohere rerank、bge-reranker 等。
+
+![混合检索+重排序](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/extended-reading/retrieval-augment/292a7f8e50b9b6be6ababd6b84ac322f.png)
+
+在大多数情况下，在重排序之前会有一次前置检索，这是由于计算查询与数百万个文档之间的相关性得分将会非常低效。所以，**重排序一般都放在搜索流程的最后阶段，非常适合用于合并和排序来自不同检索系统的结果**。
+
+不过，重排序并不是只适用于不同检索系统的结果合并，即使是在单一检索模式下，引入重排序步骤也能有效帮助改进文档的召回效果，比如我们可以在关键词检索之后加入语义重排序。
+
+在具体实践过程中，除了将多路查询结果进行归一化之外，在将相关的文本分段交给大模型之前，我们一般会限制传递给大模型的分段个数（即 TopK，可以在重排序模型参数中设置），这样做的原因是大模型的输入窗口存在大小限制（一般为 4K、8K、16K、128K 的 Token 数量），你需要根据选用的模型输入窗口的大小限制，选择合适的分段策略和 TopK 值。
+
+需要注意的是，即使模型上下文窗口很足够大，过多的召回分段会可能会引入相关度较低的内容，导致回答的质量降低，所以重排序的 TopK 参数并不是越大越好。
+
+重排序并不是搜索技术的替代品，而是一种用于增强现有检索系统的辅助工具。**它最大的优势是不仅提供了一种简单且低复杂度的方法来改善搜索结果，允许用户将语义相关性纳入现有的搜索系统中，而且无需进行重大的基础设施修改。**
+
+以 Cohere Rerank 为例，你只需要注册账户和申请 API ，接入只需要两行代码。另外，他们也提供了多语言模型，也就是说你可以将不同语言的文本查询结果进行一次性排序。\\
+
+### 如何配置 Rerank 模型？
+
+Dify 目前已支持 Cohere Rerank 模型，进入“模型供应商-> Cohere”页面填入 Rerank 模型的 API 秘钥：
+
+![在模型供应商内配置 Cohere Rerank 模型](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/extended-reading/retrieval-augment/5e113c2363a2d8de83ee235575898cb0.png)
+
+###
+
+### 如何获取 Cohere Rerank 模型？
+
+登录：[https://cohere.com/rerank](https://cohere.com/rerank)，在页内注册并申请 Rerank 模型的使用资格，获取 API 秘钥。
+
+###
+
+### 知识库检索模式中设置 Rerank 模型
+
+进入“知识库->创建知识库->检索设置”页面并在添加 Rerank 设置。除了在创建知识库可以设置 Rerank ，你也可以在已创建的知识库设置内更改 Rerank 配置，在应用编排的知识库召回模式设置中更改 Rerank 配置。
+
+![知识库检索模式中设置 Rerank 模型](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/extended-reading/retrieval-augment/34f4e4ffdfb188fa8a3705d10487b97e.png)
+
+**TopK：** 用于设置 Rerank 后返回相关文档的数量。
+
+**Score 阈值：** 用于设置 Rerank 后返回相关文档的最低分值。设置 Rerank 模型后，TopK 和 Score 阈值设置仅在 Rerank 步骤生效。
+
+### 知识库多路召回模式中设置 Rerank 模型
+
+进入“提示词编排->上下文->设置”页面中设置为多路召回模式时需开启 Rerank 模型。
+
+查看更多关于多路召回模式的说明，[《多路召回》](/zh-hans/guides/knowledge-base/integrate-knowledge-within-application#duo-lu-zhao-hui-tui-jian)。
+
+![知识库多路召回模式中设置 Rerank 模型](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/extended-reading/retrieval-augment/24e43084b10f144c718c5b8545c1e4b4.png)

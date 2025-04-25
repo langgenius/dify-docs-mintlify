@@ -1,0 +1,227 @@
+---
+title: 使用 Dify 和 Twilio 构建 WhatsApp 机器人
+---
+
+> 作者：Warren， [Microsoft 最有價值專家 (MVP)](https://mvp.microsoft.com/en-US/mvp/profile/476f41d3-6bd1-ea11-a812-000d3a8dfe0d)
+
+## 1. 概述
+
+随着世界通过消息应用程序变得越来越紧密地连接在一起，聊天机器人已成为企业与客户进行更个人化交流的关键工具。
+
+随着人工智能的崛起，聊天机器人变得更聪明，更个性化，更直观。在本文中，我们将向你展示如何使用使用Dify和Twilio将其与WhatsApp集成。
+
+你将首先使用FastAPI 接入Dify设置后端，然后，你将集成Twilio的WhatsApp消息API，允许客户与你的WhatsApp聊天机器人开始对话。
+
+使用Localtunnel，将FastAPI本地主机放在互联网上，使其可以供Twilio API通信。
+
+## 2. 準備工作
+
+* 安裝好Docker 和Docker Compose
+* Twilio帐户： 在[這裡](https://www.twilio.com/try-twilio) 創建一個免費Twilio帳戶
+* 一部安装了WhatsApp的智能手机，用于测试你的AI聊天机器人
+* 对FastAPI的基本理解，这是一个使用Python 3.6+构建API的框架
+
+## 3. 创建Dify基础编排聊天助手应用 （節錄自[手把手教你把 Dify 接入微信生态](dify-on-wechat))
+
+首先，登录[Dify官方应用平台](https://cloud.dify.ai/signin)，你可以选择使用Github登录或者使用Google登录。此外，你也可以参考Dify官方教程[Docker Compose 部署 | 中文 | Dify](/zh-hans/getting-started/install-self-hosted/docker-compose) 私有部署，Dify是开源项目，支持私有部署。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/08ece9f6dd15b6ba3c44eb187ea73bdd.jpeg)
+
+登录成功后，进入Dify页面，我们按照下方步骤创建一个基础编排聊天助手应用
+
+1. 点击页面上方的工作室
+2. 创建空白应用
+3. 应用类型选择聊天助手
+4. 聊天助手编排方式选择基础编排
+5. 选择应用图标并为应用填写一个名称，比如基础编排聊天助手
+6. 点击创建
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/312d1fbcd5c8f58ca41b9f8dc8131286.jpeg)
+
+创建成功后我们会跳转到上图所示页面，我们继续配置应用
+
+1. 选择模型，如gpt-3.5-turbo-0125
+2. 设置模型参数
+3. 填写应用提示词
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/410dc25f76beebf8659294b06c1a4d25.jpeg)
+
+在配置完成后，我们可以在右侧对话框进行测试，在测试完成后，进行如下操作
+
+1. 发布
+2. 更新
+3. 访问API
+
+**（4）生成基础编排聊天助手API密钥**
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/de85ada57a6f1a0029486dbdaea62fcf.jpeg)
+
+在点击"访问API"后，我们会跳转到上图的API管理页面，在这个页面我们按照如下步骤获取API密钥：
+
+1. 点击右上角API密钥
+2. 点击创建密钥
+3. 复制保存密钥
+
+在保存密钥后，还需要查看右上角的API服务器，如果是Dify官网的应用，API服务器地址为 "https://api.dify.ai/v1", 如果是私有部署的，请确认你自己的API服务器地址。
+
+至此，创建聊天助手的准备工作结束，在此小节中我们只需要保存好两个东西：**API密钥**与**API服务器地址**
+
+## 4. 獲取Twilio密钥
+
+转到\[Twilio控制台] 畫面應該會直接獲取到Account SID 和Auth Token，保存好這两个东西。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/f1586199a94ffefb18ffc4c8456a58d0.png)
+
+## 5. 创建你的聊天机器人
+
+在这一部分，你将使用FastAPI和Twilio编写一个基本的聊天机器人的代码。
+
+#### 5.1 下載代碼
+
+```
+git clone https://github.com/somethingwentwell/dify-twilio-whatsapp
+```
+
+#### 5.2 配置.env
+
+在项目根目录创建.env，內容如下:
+
+```
+TWILIO_NUMBER=+14155238886
+TWILIO_ACCOUNT_SID=<在(4)獲取的Twilio Account SID>
+TWILIO_AUTH_TOKEN=<在(4)獲取的Twilio Auth Token>
+DIFY_URL=<在(3)獲取的Dify API服务器地址>
+DIFY_API_KEY=<在(3)獲取的Dify API密钥>
+```
+
+#### 5.3 運行代码
+
+執行docker compose up
+
+```
+docker compose up
+```
+
+如果运行成功，你应该会看到
+
+```
+dify-whatsapp-1  | INFO:     Started server process [68]
+dify-whatsapp-1  | INFO:     Waiting for application startup.
+dify-whatsapp-1  | INFO:     Application startup complete.
+```
+
+在浏览器中打开 http://localhost:9000。你应该看到的结果是一个JSON响应，内容为 {"msg": "working"}。
+
+#### 5.4 使用Localtunnel 將本地项目放到公网访问
+
+Twilio需要向你的后端发送消息，你需要在公共服务器上托管你的应用。一个简单的方法是使用localtunnel。
+
+让FastAPI应用继续在9000端口运行，并在另一个终端窗口运行以下localtunnel命令：
+
+```
+npx localtunnel --port 9000
+```
+
+上述命令在你的本地服务器（运行在9000端口）和localtunnel创建的公共域之间建立了一个连接。一旦你有了localtunnel转发URL，任何来自客户端对该URL的请求都会自动被定向到你的FastAPI后端。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/73f585d06be68fc71c0d37622a5b6f6c.png)
+
+#### 5.5 代码解释
+
+**5.5.1 检查该号码是否已在白名单中，不在白名单的用户直接返回“你未注册此服务。”**
+
+```python
+enrolled_numbers = ['+14155238886']
+```
+
+对应
+
+```python
+    # Check if the number is enrolled
+    if whatsapp_number not in enrolled_numbers:
+        message = client.messages.create(  
+            from_=f"whatsapp:{twilio_number}",  
+            body="You are not enrolled in this service.",  
+            to=f"whatsapp:{whatsapp_number}"  
+        )
+        return ""
+```
+
+**5.5.2 将WhatsApp号码作为Dify会话ID，确保用户持续保持该会话**
+
+```python
+conversation_ids = {}
+```
+
+对应
+
+```python
+    url = dify_url
+    headers = {  
+        'Content-Type': 'application/json',  
+        'Authorization': f"Bearer {dify_api_key}",  
+    }  
+    data = {  
+        'inputs': {},  
+        'query': Body,  
+        'response_mode': 'streaming',  
+        'conversation_id': conversation_ids.get(whatsapp_number, ''),  
+        'user': whatsapp_number,  
+    }  
+    response = requests.post(url, headers=headers, data=json.dumps(data), stream=True)  
+    answer = []  
+    for line in response.iter_lines():  
+        if line:  
+            decoded_line = line.decode('utf-8')  
+            if decoded_line.startswith('data: '):  
+                decoded_line = decoded_line[6:]  
+            try:  
+                json_line = json.loads(decoded_line) 
+                if "conversation_id" in json_line:
+                    conversation_ids[whatsapp_number] = json_line["conversation_id"]
+                if json_line["event"] == "agent_thought":  
+                    answer.append(json_line["thought"])  
+            except json.JSONDecodeError: 
+                print(json_line)  
+                continue  
+
+    merged_answer = ''.join(answer)  
+```
+
+## 6. 配置你的Twilio沙箱以供WhatsApp使用
+
+#### 6.1 打开WhatsApp沙盒
+
+要使用Twilio的消息API使聊天机器人能与WhatsApp用户通信，你需要配置Twilio沙箱以供WhatsApp使用。以下是操作方法：
+
+转到[Twilio控制台](https://console.twilio.com/)并在左侧面板上选择消息选项卡。
+
+在“试试看”下，点击“发送WhatsApp消息”。你将默认进入沙盒选项卡，你会看到一个电话号码“+14155238886”，旁边有一个加入的代码，右边有一个二维码。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/1f966b36bd5c213e4006a057b1c70c04.png)
+
+要启用Twilio测试环境，将此代码的文本作为WhatsApp消息发送到显示的电话号码。如果你正在使用网络版本，可以点击超链接将你引导到WhatsApp聊天。
+
+#### 6.2 配置WhatsApp沙盒
+
+在“沙盒”选项卡旁边，选择“沙盒设置”选项卡。
+
+复制你的localtunnel URL并附加/message。将其粘贴到“当消息进入时”旁边的框中：
+
+Twilio沙盒webhook 完整的URL应如下所示：https://breezy-humans-help.loca.lt/message。
+
+你将在FastAPI应用程序中配置的端点是/message，如上所述。聊天机器人的逻辑将在此端点上。
+
+完成后，按“保存”按钮。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/6f810feee2a1eb07f718fc3f2be00b4b.png)
+
+## 7. WhatsApp測試
+
+掃6.1 頁面的二維碼進入WhatsApp 沙盒環境，然後发送WhatsApp消息，并等待你的AI聊天机器人的回复。尝试向AI聊天机器人提问你可以向Dify 聊天助手提问的任何问题。
+
+![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/learn-more/use-cases/36376da1b4699289e944355282656780.jpeg)
+
+## 8. 后记
+
+现在，你的AI聊天机器人在WhatsApp上运行良好。也许你的下一步是使用你自己的WhatsApp商业账户，而不是Twilio沙盒，并使用服务器托管而不是在本地构建，使这个WhatsApp助手在生产中运行。希望你喜欢这个教程，我们下次再见。

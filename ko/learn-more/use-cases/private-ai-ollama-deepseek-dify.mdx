@@ -1,0 +1,193 @@
+---
+title: 私有化部署 Ollama + DeepSeek + Dify，构建你的专属私人 AI 助手
+---
+
+
+## 概述
+
+DeepSeek 是一款开创性的开源大语言模型，凭借其先进的算法架构和反思链能力，为 AI 对话交互带来了革新性的体验。通过私有化部署，你可以充分掌控数据安全和使用安全。你还可以灵活调整部署方案，并实现便捷的自定义系统。
+
+Dify 作为同样开源的 AI 应用开发平台，提供完整的私有化部署方案。通过将本地部署的 DeepSeek 服务无缝集成到 Dify 平台，企业可以在确保数据隐私的前提下，在本地服务器环境内构建功能强大的 AI 应用。
+
+以下是私有化部署方案的优势：
+
+- **性能卓越**：提供媲美商业模型的对话交互体验
+- **环境隔离**：完全离线运行，杜绝数据外泄风险
+- **数据可控**：完全掌控数据资产，符合合规要求
+
+## 前置准备
+
+**硬件环境：**
+
+- CPU >= 2 Core
+- 显存/RAM ≥ 16 GiB（推荐）
+
+**软件环境：**
+
+- [Docker](https://www.docker.com/)
+- Docker Compose
+- [Ollama](https://ollama.com)
+- [Dify 社区版](https://github.com/langgenius/dify)
+
+## 开始部署
+
+### 1. 安装 Ollama
+
+[Ollama](https://ollama.com/) 是一款跨平台的大模型管理客户端（MacOS、Windows、Linux），旨在无缝部署大型语言模型 (LLM)，例如 DeepSeek、Llama、Mistral 等。Ollama 提供大模型一键部署，所有使用数据均会保存在本地机器内，提供全方面的数据隐私和安全性。
+
+访问 [Ollama 官网](https://ollama.com/)，根据提示下载并安装 Ollama 客户端。安装完成后，在终端内运行 `ollama -v` 命令将输出版本号。
+
+```bash
+➜  ~ ollama -v
+ollama version is 0.5.5
+```
+
+根据实际的环境配置，选择合适的 DeepSeek 尺寸模型进行部署。初次安装推荐安装 7B 尺寸模型。
+
+![](https://assets-docs.dify.ai/2025/01/26978571a8d5f7188a952606f62e6a32.png)
+
+运行命令 `ollama run deepseek-r1:7b` 安装 DeepSeek R1 模型。
+
+![](https://assets-docs.dify.ai/2025/01/9297451d07d7704f73d6db0a83842f5f.png)
+
+### 2. 安装 Dify 社区版
+
+访问 Dify GitHub 项目地址，运行以下命令完成拉取代码仓库和安装流程。
+
+```bash
+git clone https://github.com/langgenius/dify.git
+cd dify/docker
+cp .env.example .env
+docker compose up -d # 如果版本是 Docker Compose V1，使用以下命令：docker-compose up -d
+```
+
+运行命令后，你应该会看到所有容器的状态和端口映射。详细说明请参考 [Docker Compose 部署](https://docs.dify.ai/zh-hans/getting-started/install-self-hosted/docker-compose)。
+
+Dify 社区版默认使用 80 端口，点击链接 `http://your_server_ip` 即可访问你的私有化 Dify 平台。
+
+### 3. 将 DeepSeek 接入至 Dify
+
+点击 Dify 平台右上角**头像 → 设置 → 模型供应商**，选择 Ollama，轻点“添加模型”。
+
+![](https://assets-docs.dify.ai/2025/01/44e7b97087155d05d757c03e3f4f483b.png)
+
+> 模型供应商内的 DeepSeek 对应在线 API 服务；本地部署的 DeepSeek 模型对应 Ollama 客户端。请确保 DeepSeek 模型已成功部署由 Ollama 客户端部署，详细部署说明请参考上文。
+
+选择 LLM 模型类型。
+
+- Model Name，填写具体部署的模型型号。上文部署的模型型号为 deepseek-r1 7b，因此填写 `deepseek-r1:7b`
+- Base URL，填写 Ollama 客户端的运行地址，通常为 `http://your_server_ip:11434`。如遇连接问题，请参考[常见问题](https://docs.dify.ai/zh-hans/learn-more/use-cases/private-ai-ollama-deepseek-dify#id-1.-docker-bu-shu-shi-de-lian-jie-cuo-wu)。
+- 其它选项保持默认值。根据 [DeepSeek 模型说明](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B)，最大生成长度为 32,768 Tokens。
+
+![](https://assets-docs.dify.ai/2025/01/6f3b53427e46786ba7d1374739344142.png)
+
+## 搭建 AI 应用
+
+### DeepSeek AI Chatbot（简单应用）
+
+1. 轻点 Dify 平台首页左侧的"创建空白应用"，选择"聊天助手"类型应用并进行简单的命名。
+
+![](https://assets-docs.dify.ai/2025/01/7f56bc3c836c7248043b656fa95e474e.png)
+
+2. 在右上角的应用类型，选择 Ollama 框架内的 `deepseek-r1:7b` 模型。
+
+![](https://assets-docs.dify.ai/2025/01/dbd7170abd35f545481ecc0beef85333.png)
+
+3. 在预览对话框中输入内容，验证 AI 应用是否能够正常运行。生成答复后意味着 AI 应用的搭建已完成。
+
+![](https://assets-docs.dify.ai/2025/01/619fbbd48e55a1e6a598b4039dd631f5.png)
+
+4. 轻点应用右上方的发布按钮，获取 AI 应用链接并分享给他人或嵌入至其它网站内。
+
+### DeepSeek AI Chatflow / Workflow（进阶应用）
+
+> Chatflow / Workflow 应用可以帮助你搭建功能更加复杂的 AI 应用，例如具备文件识别、图像识别、语音识别等能力。详细说明请参考[工作流文档](https://docs.dify.ai/zh-hans/guides/workflow)。
+
+1. 轻点 Dify 平台首页左侧的"创建空白应用"，选择"Chatflow" 或 "Workflow" 类型应用并进行简单的命名。
+
+![](https://assets-docs.dify.ai/2025/01/cb8637be4dca5a0e684fd9a21df3711f.png)
+
+2. 添加 LLM 节点，选择 Ollama 框架内的 `deepseek-r1:7b` 模型，并在系统提示词内添加 `{{#sys.query#}}` 变量以连接起始节点。如遇 API 异常，可以通过[负载均衡](https://docs.dify.ai/zh-hans/guides/model-configuration/load-balancing)功能或[异常处理](https://docs.dify.ai/zh-hans/guides/workflow/error-handling)节点进行处理。
+
+![](https://assets-docs.dify.ai/2025/01/c21f076398eb09d773d3e543561293e6.png)
+
+3. 添加结束节点完成配置。你可以在预览框中输入内容以进行测试。生成答复后意味着 AI 应用的搭建已完成。
+
+![](https://assets-docs.dify.ai/2025/01/820c37c70cb029cba60ca289e8d6e89a.png)
+
+## 常见问题
+
+### 1. Docker 部署时的连接错误
+
+当使用 Docker 部署 Dify 和 Ollama 时，可能遇到以下错误：
+
+```bash
+httpconnectionpool(host=127.0.0.1, port=11434): max retries exceeded with url:/cpi/chat
+(Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f8562812c20>:
+fail to establish a new connection:[Errno 111] Connection refused'))
+httpconnectionpool(host=localhost, port=11434): max retries exceeded with url:/cpi/chat
+(Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f8562812c20>:
+fail to establish a new connection:[Errno 111] Connection refused'))
+```
+
+**错误原因**：此错误发生是因为 Ollama 服务在 Docker 容器中无法访问。localhost 通常指向容器本身，而不是主机或其他容器。要解决此问题，需要将 Ollama 服务暴露到网络中。
+
+**macOS 环境配置方法：**
+
+如果 Ollama 作为 macOS 应用运行，需要使用 launchctl 设置环境变量：
+
+1. 通过调用 `launchctl setenv` 设置环境变量：
+
+    ```bash
+    launchctl setenv OLLAMA_HOST "0.0.0.0"
+    ```
+
+2. 重启 Ollama 应用程序。
+
+3. 如果以上步骤无效，可以使用以下方法：
+
+    问题是在 docker 内部，你应该连接到 `host.docker.internal`，才能访问 docker 的主机，所以将 `localhost` 替换为 `host.docker.internal` 服务就可以生效了：
+
+    ```bash
+    http://host.docker.internal:11434
+    ```
+
+**Linux 环境配置方法：**
+
+如果 Ollama 作为 systemd 服务运行，应该使用 `systemctl` 设置环境变量：
+
+1. 通过调用 `systemctl edit ollama.service` 编辑 systemd 服务。这将打开一个编辑器。
+
+2. 对于每个环境变量，在 `[Service]` 部分下添加一行 `Environment`：
+
+    ```ini
+    [Service]
+    Environment="OLLAMA_HOST=0.0.0.0"
+    ```
+
+3. 保存并退出。
+
+4. 重载 `systemd` 并重启 Ollama：
+
+   ```bash
+   systemctl daemon-reload
+   systemctl restart ollama
+   ```
+
+**Windows 环境配置方法：**
+
+在 Windows 上，Ollama 继承了你的用户和系统环境变量。
+
+1. 首先通过任务栏点击 Ollama 退出程序
+
+2. 从控制面板编辑系统环境变量
+
+3. 为你的用户账户编辑或新建变量，比如 `OLLAMA_HOST`、`OLLAMA_MODELS` 等。
+
+4. 点击 OK / 应用保存
+
+5. 在一个新的终端窗口运行 `ollama`
+
+### 2. 如何修改 Ollama 服务地址和端口号？
+
+Ollama 默认绑定 `127.0.0.1` 端口 11434，你可以通过 `OLLAMA_HOST` 环境变量更改绑定地址。

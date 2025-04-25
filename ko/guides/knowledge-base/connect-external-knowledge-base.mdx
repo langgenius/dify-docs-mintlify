@@ -1,0 +1,123 @@
+---
+title: 连接外部知识库
+version: '简体中文'
+---
+
+> 为做出区别，独立于 Dify 平台之外的知识库在本文内均被统称为 **“外部知识库”** 。
+
+## 功能简介
+
+对于内容检索有着更高要求的进阶开发者而言，Dify 平台内置的知识库功能和文本检索和召回机制**存在限制，无法轻易变更文本召回结果。**
+
+出于对文本检索和召回的精确度有着更高追求，以及对内部资料的管理需求，部分团队选择自主研发 RAG 算法并独立维护文本召回系统、或将内容统一托管至云厂商的知识库服务（例如 [AWS Bedrock](https://aws.amazon.com/bedrock/)）。
+
+作为中立的 LLM 应用开发平台，Dify 致力于给予开发者更多选择权。
+
+**连接外部知识库**功能可以将 Dify 平台与外部知识库建立连接。通过 API 服务，AI 应用能够获取更多信息来源。这意味着：
+
+* Dify 平台能够直接获取托管在云服务提供商知识库内的文本内容，开发者无需将内容重复搬运至 Dify 中的知识库；
+* Dify 平台能够直接获取自建知识库内经算法处理后的文本内容，开发者仅需关注自建知识库的信息检索机制，并不断优化与提升信息召回的准确度。
+
+<Frame caption="外部知识库连接原理">
+  <img src="https://assets-docs.dify.ai/2025/03/f5fb91d18740c1e2d3938d4d106c4d3c.png" alt="" />
+</Frame>
+
+以下是连接外部知识的详细步骤：
+
+<Steps>
+    <Step title="建立符合要求的外部知识库 API" titleSize="h2" >
+        为了确保你的外部知识库与 Dify 连接成功，请在建立 API 服务前仔细阅读由 Dify 编写的[外部知识库 API 规范](/zh-hans/guides/knowledge-base/knowledge-and-documents-maintenance/maintain-dataset-via-api)。
+    </Step>
+    <Step title="关联外部知识库">
+        > 目前， Dify 连接外部知识库时仅具备检索权限，暂不支持对外部知识库进行优化与修改，开发者需自行维护外部知识库。
+
+        前往 **“知识库”** 页，点击右上角的 **“外部知识库 API”**，轻点 **“添加外部知识库 API”**。
+
+        按照页面提示，依次填写以下内容：
+
+        * 知识库的名称，允许自定义名称，用于区分所连接的不同外部知识 API；
+        * API 接口地址，外部知识库的连接地址，示例 `api-endpoint/retrieval`；详细说明请参考[外部知识库 API](/zh-hans/guides/knowledge-base/knowledge-and-documents-maintenance/maintain-dataset-via-api)；
+        * API Key，外部知识库连接密钥，详细说明请参考[外部知识库 API](/zh-hans/guides/knowledge-base/knowledge-and-documents-maintenance/maintain-dataset-via-api)；
+
+        <Frame caption="">
+        <img src="https://assets-docs.dify.ai/2025/03/727221d849615cd2e52b3fd1e6c10129.png" alt="" />
+        </Frame>  
+    </Step>
+    <Step title="连接外部知识库">
+        前往 **“知识库”** 页，点击添加知识库卡片下方的 **“连接外部知识库”** 跳转至参数配置页面。
+
+        <Frame caption="">
+        <img src="https://assets-docs.dify.ai/2025/03/efae240731f7fa9693da809c08878188.png" alt="" />
+        </Frame>  
+
+        填写以下参数：
+
+        * **知识库名称与描述**
+        * **外部知识库 API** 选择在第二步中关联的外部知识库 API；Dify 将通过 API 连接的方式，调用存储在外部知识库的文本内容；
+        * **外部知识库 ID** 指定需要被关联的特定的外部知识库 ID，详细说明请参考[外部知识库 API](/zh-hans/guides/knowledge-base/knowledge-and-documents-maintenance/maintain-dataset-via-api)。
+        *   **调整召回设置**
+
+            **Top K：** 用户发起提问时，将请求外部知识 API 获取相关性较高的内容分段。该参数用于筛选与用户问题相似度较高的文本片段。默认值为 3，数值越高，召回存在相关性的文本分段也就越多。
+
+            **Score 阈值：** 文本片段筛选的相似度阈值，只召回超过设置分数的文本片段，默认值为 0.5。数值越高说明对于文本与问题要求的相似度越高，预期被召回的文本数量也越少，结果也会相对而言更加精准。
+
+        <Frame caption="">
+        <img src="https://assets-docs.dify.ai/2025/03/d6345c3af3c2b3befb25fba4dc553a73.png" alt="" />
+        </Frame>
+
+    </Step>
+    <Step title="测试外部知识库连接与召回">
+        建立与外部知识库的连接后，开发者可以在 **“召回测试”** 中模拟可能的问题关键词，预览从外部知识库召回的文本分段。若对于召回结果不满意，可以尝试修改召回参数或自行调整外部知识库的检索设置。
+
+        <Frame caption="">
+        <img src="https://assets-docs.dify.ai/2025/03/c5977a5d48dc116589cf2f99e67ccfaa.png" alt="" />
+        </Frame>
+    </Step>
+    <Step title="在应用内集成外部知识库">
+        - **Chatbot / Agent 类型应用**
+
+        在 Chatbot / Agent 类型应用内的编排页中的 **“上下文”** 内，选中带有 `EXTERNAL` 标签的外部知识库。
+
+        <Frame caption="">
+        <img src="https://assets-docs.dify.ai/2025/03/e7df9d7360186ee0f0e156c166f84a3b.png" alt="" />
+        </Frame>
+
+        - **Chatflow / Workflow 类型应用**
+
+        在 Chatflow / Workflow 类型应用内添加 **“知识检索”** 节点，选中带有 `EXTERNAL` 标签的外部知识库。
+
+        <Frame caption="">
+        <img src="https://assets-docs.dify.ai/2025/03/4e1cbdcf4a9e6e7c2535a53e478054e3.png" alt="" /><figcaption></figcaption>
+        </Frame>  
+
+    </Step>
+    <Step title="管理外部知识库" titleSize="p">
+        在 **“知识库”** 页，外部知识库的卡片右上角会带有 **EXTERNAL** 标签。进入需要修改的知识库，点击 **“设置”** 修改以下内容：
+
+        * **知识库名称和描述**
+        * **可见范围** 提供 「 只有我 」 、 「 所有团队成员 」 和 「部分团队成员」 三种权限范围。不具有权限的人将无法访问该知识库。若选择将知识库公开至其它成员，则意味着其它成员同样具备该知识库的查看、编辑和删除权限。
+        *   **召回设置**
+
+            **Top K:** 用户发起提问时，将请求外部知识 API 获取相关性较高的内容分段。该参数用于筛选与用户问题相似度较高的文本片段。默认值为 3，数值越高，召回存在相关性的文本分段也就越多。
+
+            **Score 阈值：** 文本片段筛选的相似度阈值，只召回超过设置分数的文本片段，默认值为 0.5。数值越高说明对于文本与问题要求的相似度越高，预期被召回的文本数量也越少，结果也会相对而言更加精准。
+
+        外部知识库所关联的 **“外部知识库 API”** 和 **“外部知识 ID”** 不支持修改，如需修改请关联新的 “外部知识库 API” 并重新进行连接。
+    </Step>
+</Steps>
+
+## 连接示例
+
+[如何连接 AWS Bedrock 知识库？](/zh-hans/learn-more/use-cases/how-to-connect-aws-bedrock)
+
+## 常见问题
+
+**连接外部知识库 API 时异常，出现报错如何处理？**
+
+以下是返回信息各个错误码所对应的错误提示与解决办法：
+
+| 错误码  | 错误提示                        | 解决办法                           |
+| ---- | --------------------------- | ------------------------------ |
+| 1001 | 无效的 Authorization header 格式 | 请检查请求的 Authorization header 格式 |
+| 1002 | 验证异常                        | 请检查所填写的 API Key 是否正确           |
+| 2001 | 知识库不存在                      | 请检查外部知识库                       |

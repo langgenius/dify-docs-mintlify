@@ -1,0 +1,192 @@
+{
+  "openapi": "3.0.1",
+  "info": { "title": "Dify-test", "description": "", "version": "1.0.0" },
+  "tags": [],
+  "paths": {
+    "/retrieval": {
+      "post": {
+        "summary": "知识召回 API",
+        "deprecated": false,
+        "description": "该 API 用于连接团队内独立维护的知识库，如需了解更多操作指引，请参考阅读[连接外部知识库](/zh-cn/user-guide/knowledge-base/knowledge-base-creation/connect-external-knowledge-base)。你可以在 Authorization HTTP 头部中使用 API-Key 来验证权限，认证逻辑由开发者在检索 API 中定义，如下所示:\n\n```text\nAuthorization: Bearer {API_KEY}\n```",
+        "tags": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "knowledge_id": {
+                    "type": "string",
+                    "description": "你的知识库唯一 ID"
+                  },
+                  "query": { "type": "string", "description": "用户的提问" },
+                  "retrival_setting": {
+                    "type": "object",
+                    "properties": {
+                      "top_k": {
+                        "type": "integer",
+                        "description": "检索结果的最大数量"
+                      },
+                      "score_threshold": {
+                        "type": "number",
+                        "description": "结果与查询相关性的分数限制，范围 0~1",
+                        "format": "float",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    },
+                    "description": "知识库的检索参数",
+                    "required": ["top_k", "score_threshold"]
+                  }
+                },
+                "required": ["knowledge_id", "query", "retrival_setting"]
+              },
+              "example": {
+                "knowledge_id": "your-knowledge-id",
+                "query": "your question",
+                "retrival_setting": { "top_k": 2, "score_threshold": 0.5 }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "如果操作成功，服务将发回 HTTP 200 响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "records": {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "type": "string",
+                          "description": "包含知识库中数据源的一段文本。"
+                        },
+                        "score": {
+                          "type": "number",
+                          "format": "float",
+                          "description": "结果与查询相关性的分数,范围: 0~1"
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": " 文档标题"
+                        },
+                        "metadata": {
+                          "type": "string",
+                          "description": "包含数据源中文档的元数据属性及其值。"
+                        }
+                      },
+                      "title": "从知识库查询的记录列表",
+                      "required": ["content", "score", "title"]
+                    }
+                  },
+                  "required": ["records"]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "records": [
+                        {
+                          "metadata": {
+                            "path": "s3://dify/knowledge.txt",
+                            "description": "dify 知识文档"
+                          },
+                          "score": 0.98,
+                          "title": "knowledge.txt",
+                          "content": "外部知识的文件"
+                        },
+                        {
+                          "metadata": {
+                            "path": "s3://dify/introduce.txt",
+                            "description": "Dify 介绍"
+                          },
+                          "score": 0.66,
+                          "title": "introduce.txt",
+                          "content": "The Innovation Engine for GenAI Applications"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "403": {
+            "description": "请求被拒绝因为缺失访问权限。请检查你的权限并在此发起请求。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "integer",
+                      "description": "错误码"
+                    },
+                    "error_msg": {
+                      "type": "string",
+                      "description": "API 异常描述"
+                    }
+                  },
+                  "required": ["error_code", "error_msg"]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Erros",
+                    "value": {
+                      "error_code": 1001,
+                      "error_msg": "无效的鉴权头格式，预期应为 'Bearer <api-key>' 格式。"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          },
+          "500": {
+            "description": "发生了内部服务器错误，请再次连接。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "",
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "integer",
+                      "description": "错误码"
+                    },
+                    "error_msg": {
+                      "type": "string",
+                      "description": " API 异常描述"
+                    }
+                  },
+                  "required": ["error_code", "error_msg"]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Erros",
+                    "value": {
+                      "error_code": 1001,
+                      "error_msg": "Invalid Authorization header format. Expected 'Bearer <api-key>' format."
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": [{ "bearer": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": { "bearer": { "type": "http", "scheme": "bearer" } }
+  },
+  "servers": [{ "url": "your-endpoint", "description": "test-environment" }]
+}
