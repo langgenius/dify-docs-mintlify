@@ -1,0 +1,43 @@
+# Installation
+> `npm install --save @types/text-table`
+
+# Summary
+This package contains type definitions for text-table (https://github.com/substack/text-table).
+
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/text-table.
+## [index.d.ts](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/text-table/index.d.ts)
+````ts
+/**
+ * Generates borderless text table strings suitable for printing to stdout.
+ */
+declare function table(
+    /** An array of arrays containing strings, numbers, or other printable values. */
+    rows: Array<Array<{}>>,
+    /** A configuration object to customize table output. */
+    options?: table.Options,
+): string;
+
+declare namespace table {
+    interface Options {
+        /** Separator to use between columns, (default: ' '). */
+        hsep?: string | undefined;
+
+        /** An array of alignment types for each column, default ['l','l',...]. */
+        align?: Array<"l" | "r" | "c" | "." | null | undefined> | undefined;
+
+        /** A callback function to use when calculating the string length. */
+        stringLength?(str: string): number;
+    }
+}
+
+export = table;
+
+````
+
+### Additional Details
+ * Last updated: Tue, 07 Nov 2023 15:11:36 GMT
+ * Dependencies: none
+
+# Credits
+These definitions were written by [Saad Quadri](https://github.com/saadq).

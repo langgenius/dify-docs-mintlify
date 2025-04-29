@@ -1,0 +1,92 @@
+{
+  "name": "unified-args",
+  "version": "11.0.1",
+  "description": "create CLIs for unified processors",
+  "license": "MIT",
+  "keywords": [
+    "arguments",
+    "cli",
+    "engine",
+    "processor",
+    "unified"
+  ],
+  "repository": "unifiedjs/unified-args",
+  "bugs": "https://github.com/unifiedjs/unified-args/issues",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/unified"
+  },
+  "author": "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
+  "contributors": [
+    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)",
+    "Christian Murphy <christian.murphy.42@gmail.com"
+  ],
+  "sideEffects": false,
+  "type": "module",
+  "exports": "./index.js",
+  "files": [
+    "lib/",
+    "index.d.ts",
+    "index.js"
+  ],
+  "dependencies": {
+    "@types/text-table": "^0.2.0",
+    "chalk": "^5.0.0",
+    "chokidar": "^3.0.0",
+    "comma-separated-tokens": "^2.0.0",
+    "json5": "^2.0.0",
+    "minimist": "^1.0.0",
+    "strip-ansi": "^7.0.0",
+    "text-table": "^0.2.0",
+    "unified-engine": "^11.0.0"
+  },
+  "devDependencies": {
+    "@types/minimist": "^1.0.0",
+    "@types/unist": "^3.0.0",
+    "c8": "^8.0.0",
+    "execa": "^8.0.0",
+    "prettier": "^3.0.0",
+    "remark": "^14.0.0",
+    "remark-cli": "^11.0.0",
+    "remark-preset-wooorm": "^9.0.0",
+    "type-coverage": "^2.0.0",
+    "typescript": "^5.0.0",
+    "unified": "^11.0.0",
+    "vfile-reporter-json": "^4.0.0",
+    "xo": "^0.56.0"
+  },
+  "scripts": {
+    "build": "tsc --build --clean && tsc --build && type-coverage",
+    "format": "remark . --frail --output --quiet && prettier . --log-level warn --write && xo --fix",
+    "prepack": "npm run build && npm run format",
+    "test": "npm run build && npm run format && npm run test-coverage",
+    "test-api": "node --conditions development test/index.js",
+    "test-coverage": "c8 --100 --check-coverage --reporter lcov npm run test-api"
+  },
+  "prettier": {
+    "bracketSpacing": false,
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "none",
+    "useTabs": false
+  },
+  "remarkConfig": {
+    "plugins": [
+      "remark-preset-wooorm"
+    ]
+  },
+  "typeCoverage": {
+    "atLeast": 100,
+    "detail": true,
+    "ignoreCatch": true,
+    "strict": true
+  },
+  "xo": {
+    "prettier": true,
+    "rules": {
+      "unicorn/prefer-at": "off",
+      "unicorn/prefer-string-replace-all": "off"
+    }
+  }
+}
