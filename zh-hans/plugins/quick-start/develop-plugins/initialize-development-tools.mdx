@@ -1,51 +1,68 @@
 ---
-title: 初始化开发工具
+title: 安装插件开发工具
 ---
 
+在开始开发 Dify 插件之前，请准备以下先决条件：
+* [Dify 插件 CLI 工具](https://github.com/langgenius/dify-plugin-daemon?tab=readme-ov-file#cli)
+* Python 3.12+
 
-开发 Dify 插件需要进行以下准备。
+### **1. 安装 Dify 插件 CLI 工具**
 
-* Dify 插件脚手架工具
-* Python 环境，版本号 ≥ 3.12
+Dify 插件 CLI 工具可以通过 Homebrew（在 Linux 和 macOS 上）或独立的二进制可执行文件（在 Windows、Linux 和 macOS 上）进行安装。
 
-> Dify 插件开发脚手架工具又称为 `dify-plugin-daemon`，可以被视作**插件开发 SDK**。
+#### 通过 Homebrew 安装
 
-### **1. 安装 Dify 插件开发脚手架工具**
+对于 macOS 和 Linux 用户，建议使用 [Homebrew](https://brew.sh/) 安装 Dify 插件 CLI。
 
-访问 [Dify Plugin CLI](https://github.com/langgenius/dify-plugin-daemon/releases) 项目地址，下载并安装最新版本号和对应操作系统的工具。
-
-本文**以装载 M 系列芯片的 macOS** 为例。下载 `dify-plugin-darwin-arm64` 文件后，赋予其执行权限。
-
-```bash
-chmod +x dify-plugin-darwin-arm64
-```
-
-运行以下命令检查安装是否成功。
+首先添加 [Dify 插件 CLI 工具的 Homebrew 配方](https://github.com/langgenius/homebrew-dify)，然后使用 `brew install` 命令进行安装。
 
 ```bash
-./dify-plugin-darwin-arm64 version
+brew tap langgenius/dify
+brew install dify
 ```
 
-> 若提示 “Apple 无法验证” 错误，请前往 **“设置 → 隐私与安全性 → 安全性”**，轻点 “仍要打开” 按钮。
+要检查安装是否成功，请运行 `dify version`，应该会显示版本代码。
+```bash
+dify version
+```
 
-运行命令后，终端若返回类似 `v0.0.1-beta.15` 的版本号信息，则说明安装成功。
+要升级 Dify 插件 CLI 工具，请运行以下命令：
+
+```bash
+brew upgrade dify
+```
+
+#### 通过二进制可执行文件安装
+
+1. 下载二进制可执行文件
+
+在 [Dify 插件 CLI 工具](https://github.com/langgenius/dify-plugin-daemon/releases) 的发布页面的资产列表中，选择并下载适合操作系统（Linux / macOS / Windows）和芯片架构（`amd64` 为 x86 芯片 / `arm64` 为 ARM 或 Apple 的 M 芯片）的二进制可执行文件。
+
+以 **macOS M 芯片** 为例。下载 `dify-plugin-darwin-arm64` 文件，并通过以下命令授予其执行权限：
+```bash
+chmod +x ./dify-plugin-darwin-arm64
+mv ./dify-plugin-darwin-arm64 ./dify
+```
+
+要检查安装是否成功，请运行 `./dify version`，应该会显示版本代码。
+```bash
+./dify version
+```
+
+> 如果系统显示“Apple 无法验证”的错误，请前往 **设置 → 隐私与安全 → 安全性**，点击“仍要打开”按钮。
 
 <Info>
-
-如果想要在系统全局使用 `dify` 命令运行脚手架工具，建议将该二进制文件重命名为 `dify` 并拷贝至 `/usr/local/bin` 系统路径内。
-
-配置完成后，在终端输入 `dify version` 命令后将输出版本号信息。
-
-![](https://assets-docs.dify.ai/2025/02/74e57a57c1ae1cc70f4a45084cbbb37e.png)
+    **提示：**
+    为了在系统范围内全局使用 `dify` 命令，建议将二进制文件重命名为 `dify` 并复制到 `/usr/local/bin` 系统路径中。
 </Info>
 
-### **2. 初始化 Python 环境**
+### **2. 安装 Python**
 
-详细说明请参考 [Python 安装教程](https://pythontest.com/python/installing-python-3-11/)，或询问 LLM 安装版本号 ≥ 3.12 的 Python 环境，
+需要 Python 版本 3.12 或更高版本。有关详细说明，请参考官方 [Python 安装](https://docs.python.org/3.12/using/index.html) 指南。
 
-### 3. 开发插件
+### 3. **开发插件**
 
-请参考以下内容查看不同类型的插件开发示例。
+请参考以下内容以获得不同类型插件开发的示例。
 
 <Card title="tool-plugin" icon="link" href="tool-plugin">
   工具插件

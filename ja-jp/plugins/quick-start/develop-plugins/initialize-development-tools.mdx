@@ -2,58 +2,67 @@
 title: 開発環境のセットアップ
 ---
 
+Difyプラグインの開発を始める前に、以下の前提条件を準備してください：
+* [DifyプラグインCLIツール](https://github.com/langgenius/dify-plugin-daemon?tab=readme-ov-file#cli)
+* Python 3.12+
 
-Difyプラグインを開発する前に、次の準備を整えましょう。
+### **1. DifyプラグインCLIツールのインストール**
 
-* Difyプラグイン用のスキャフォールディングツール
-* バージョン3.12以上のPython環境
+DifyプラグインCLIツールは、Homebrew（LinuxおよびmacOS用）またはスタンドアロンのバイナリ実行ファイル（Windows、Linux、macOS用）でインストールできます。
 
-### **1. Difyプラグインスキャフォールディングツールのインストール方法**
+#### Homebrewでのインストール
 
-> Dify プラグイン開発スキャフォールディングツール、別名 `dify-plugin-daemon` は、プラグイン開発 SDK として見なすことができます。
+macOSおよびLinuxユーザーには、[Homebrew](https://brew.sh/)を使用してDifyプラグインCLIをインストールすることをお勧めします。
 
-[DifyプラグインのGitHubページ](https://github.com/langgenius/dify-plugin-daemon/releases) へアクセスし、ご利用のオペレーティングシステムに適したバージョンをダウンロードしてください。
+[DifyプラグインCLIツールのHomebrewフォーミュラ](https://github.com/langgenius/homebrew-dify)をタップし、次に`brew install`でインストールします。
 
-**Mシリーズチップ搭載のmacOS**向けのダウンロード例：プロジェクトページから`dify-plugin-darwin-arm64`をダウンロードし、ターミナルを開いてファイルのあるディレクトリに移動した後、以下のコマンドで実行権限を付与します：
-
-```
-chmod +x dify-plugin-darwin-arm64
-```
-
-インストールが成功したかどうかを確認するには、次のコマンドを実行します。
-
-```
-./dify-plugin-darwin-arm64 version
+```bash
+brew tap langgenius/dify
+brew install dify
 ```
 
-> システムが「Appleによって検証されていません」と警告を出す場合は、**設定 → セキュリティとプライバシー → セキュリティ**ボタンを開き、「とにかく開く」を選択してください。
+インストールを確認するには、`dify version`を実行し、バージョンコードが表示されるはずです。
+```bash
+dify version
+```
 
-コマンドを実行し、`v0.0.1-beta.15`などのバージョン情報が表示されれば、インストール完了です。
+DifyプラグインCLIツールをアップグレードするには、次のコマンドを実行します：
+
+```bash
+brew upgrade dify
+```
+
+#### バイナリ実行ファイルでのインストール
+
+1. バイナリ実行ファイルをダウンロード
+
+[DifyプラグインCLIツールのリリースページ](https://github.com/langgenius/dify-plugin-daemon/releases)のアセットリストから、OSシステム（Linux / macOS / Windows）とチップアーキテクチャ（`amd64`はx86チップ用、`arm64`はARMまたはAppleのMチップ用）に適したバイナリ実行ファイルを選択してダウンロードします。
+
+**macOSのMチップ**を例にとると、`dify-plugin-darwin-arm64`ファイルをダウンロードし、次のコマンドを実行して実行権限を付与します：
+```bash
+chmod +x ./dify-plugin-darwin-arm64
+mv ./dify-plugin-darwin-arm64 ./dify
+```
+
+インストールを確認するには、`./dify version`を実行し、バージョンコードが表示されるはずです。
+```bash
+./dify version
+```
+
+> システムが「Appleは確認できません」と表示する場合は、**設定 → プライバシーとセキュリティ → セキュリティ**に移動し、「今すぐ開く」ボタンをクリックします。
 
 <Info>
-**Tips:**
-
-`dify`コマンドをシステム全体で利用したい場合は、ダウンロードしたバイナリファイルの名前を`dify`に変更し、`/usr/local/bin`にコピーすることをお勧めします。
-
-この設定を行うと、ターミナルから`dify version`と入力するだけで、インストールされたバージョンを確認できます。
-
-<img
-src="https://assets-docs.dify.ai/2025/01/74e57a57c1ae1cc70f4a45084cbbb37e.png"
-alt=""
-/>
+    **ヒント:**
+    `dify`コマンドをグローバルにシステム全体で使用するには、バイナリファイルの名前を`dify`に変更し、`/usr/local/bin`システムパスにコピーすることを推奨します。
 </Info>
 
-### **2. Initialize Python Environment**
+### **2. Pythonのインストール**
 
-For detailed instructions, please refer to the [Python installation](https://pythontest.com/python/installing-python-3-11/) tutorial, or ask the LLM for complete installation instructions.
+Python 3.12以上のバージョンが必要です。詳細な手順については、公式の[Pythonインストールガイド](https://docs.python.org/3.12/using/index.html)を参照してください。
 
-### **2. Python環境の設定**
+### **3. プラグインの開発**
 
-Pythonのインストール方法については、[Pythonインストール](https://pythontest.com/python/installing-python-3-11/)チュートリアルを参照するか、LLMに詳細な手順を尋ねてみてください。
-
-### **3. プラグインの開発について**
-
-さまざまなタイプのプラグイン開発の具体例については、以下のリンクをご参照ください。
+さまざまな種類のプラグイン開発の例については、以下のコンテンツを参照してください。
 
 <Card title="tool-plugin.md" icon="link" href="tool-plugin.md">
   tool-plugin.md

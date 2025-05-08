@@ -373,11 +373,11 @@
 | 163 | extension-plugin.md | extension-plugin |
 | 163 | 扩展 Agent 策略 | ../../schema-definition/agent |
 | 163 | 扩展 Agent 策略 | ../../schema-definition/agent |
-| 164 | 初始化开发工具 | plugins/quick-start/develop-plugins/initialize-development-tools |
+| 164 | 安装插件开发工具 | plugins/quick-start/develop-plugins/initialize-development-tools |
 | 164 | agent-strategy-plugin.md | agent-strategy-plugin |
 | 164 | bundle.md | bundle |
 | 165 | Tool 插件 | plugins/quick-start/develop-plugins/tool-plugin |
-| 165 | 初始化开发工具 | initialize-development-tools |
+| 165 | 安装插件开发工具 | initialize-development-tools |
 | 165 | 接口文档 | ../../schema-definition/ |
 | 165 | ProviderConfig | ../../schema-definition/general-specifications.md#providerconfig |
 | 165 | 工具接口文档 | ../../schema-definition/tool |
@@ -390,8 +390,8 @@
 | 165 | 反向调用 Dify 能力 | ../../schema-definition/reverse-invocation-of-the-dify-service/ |
 | 165 | 工具 | ../../schema-definition/tool |
 | 165 | 模型 | ../../schema-definition/model/ |
-| 165 | 初始化开发工具 | initialize-development-tools |
-| 165 | 初始化开发工具 | initialize-development-tools |
+| 165 | 安装插件开发工具 | initialize-development-tools |
+| 165 | 安装插件开发工具 | initialize-development-tools |
 | 165 | 接口文档 | ../../schema-definition/ |
 | 165 | Bundle 插件：将多个插件打包 | bundle |
 | 165 | Manifest | ../../schema-definition/manifest |
@@ -399,7 +399,7 @@
 | 165 | 反向调用 Dify 能力 | ../../schema-definition/reverse-invocation-of-the-dify-service/ |
 | 165 | 工具 | ../../schema-definition/tool |
 | 165 | 模型 | ../../schema-definition/model/ |
-| 165 | 初始化开发工具 | initialize-development-tools |
+| 165 | 安装插件开发工具 | initialize-development-tools |
 | 165 | Manifest | ../../schema-definition/manifest |
 | 166 | Model 插件 | plugins/quick-start/develop-plugins/model-plugin/README |
 | 166 | 创建模型供应商 | create-model-providers |
@@ -407,11 +407,11 @@
 | 166 | 自定义 | customizable-model |
 | 166 | 调试插件 | ../../debug-plugins |
 | 167 | 创建模型供应商 | plugins/quick-start/develop-plugins/model-plugin/create-model-providers |
-| 167 | 初始化开发工具 | ../initialize-development-tools |
+| 167 | 安装插件开发工具 | ../initialize-development-tools |
 | 167 | 模型接口文档 | ../../../schema-definition/model/model-schema |
 | 167 | 接入预定义模型 | ../../../../guides/model-configuration/predefined-model |
 | 167 | 接入自定义模型 | ../../../../guides/model-configuration/customizable-model |
-| 167 | 初始化开发工具 | ../initialize-development-tools |
+| 167 | 安装插件开发工具 | ../initialize-development-tools |
 | 168 | 接入预定义模型 | plugins/quick-start/develop-plugins/model-plugin/integrate-the-predefined-model |
 | 168 | 模型供应商 | create-model-providers |
 | 168 | AIModelEntity | ../../../schema-definition/model/model-designing-rules.md#aimodelentity |
@@ -546,7 +546,7 @@
 | 196 | 发布至个人 GitHub 仓库 | plugins/publish-plugins/publish-plugin-on-personal-github-repo |
 | 196 | 打包插件 | broken-reference |
 | 197 | 本地发布与分享 | plugins/publish-plugins/package-plugin-file-and-publish |
-| 197 | 初始化开发工具 | ../quick-start/develop-plugins/initialize-development-tools |
+| 197 | 安装插件开发工具 | ../quick-start/develop-plugins/initialize-development-tools |
 | 197 | 远程连接测试 | ../quick-start/develop-plugins/extension-plugin.md#tiao-shi-cha-jian |
 | 198 | 常见问题 | plugins/faq |
 | 202 | 后端 | development/backend/README |
@@ -700,7 +700,7 @@
 | 122 | 使用全套开源工具构建 LLM 应用实战：在 Dify 调用 Baichuan 开源模型能力 | learn-more/use-cases/practical-implementation-of-building-llm-applications-using-a-full-set-of-open-source-tools |
 | 126 | 开发 Slack Bot 插件 | plugins/best-practice/develop-a-slack-bot-plugin |
 | 126 | 开发 Slack Bot 插件 | plugins/best-practice/develop-a-slack-bot-plugin |
-| 128 | 初始化开发工具 | ../initialize-development-tools |
+| 128 | 安装插件开发工具 | ../initialize-development-tools |
 | 128 | 快速开始：开发 Extension 插件 | ../extension-plugin |
 | 128 | 反向调用：App | ../../../schema-definition/reverse-invocation-of-the-dify-service/app |
 | 128 | 开发 Extension 插件 | ../extension-plugin |
@@ -747,7 +747,7 @@
 
 | 行号 | 链接文本 | 链接 URL |
 |------|----------|----------|
-| 42 | 初始化开发工具 | ../initialize-development-tools |
+| 42 | 安装插件开发工具 | ../initialize-development-tools |
 | 64 | 快速开始：开发 Extension 插件 | ../extension-plugin |
 | 76 | 反向调用：App | ../../../schema-definition/reverse-invocation-of-the-dify-service/app |
 | 316 | 开发 Extension 插件 | ../extension-plugin |
