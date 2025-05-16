@@ -1,94 +1,41 @@
 ---
-title: 工具
+title: 工具简介
 ---
 
-<Warning>
-“工具”已全面升级为“插件”生态，详细的使用说明请参考[插件开发](https://docs.dify.ai/zh-hans/plugins/quick-start/install-plugins)。以下内容已归档。
-</Warning>
+工具可以帮助用户可以扩展 LLM 的能力，在 Dify 平台上创建更强大的 AI 应用，例如新增联网搜索、科学技术或图片绘制能力。例如你可以为 Agent 类型应用添加合适的工具，它可以通过任务推理、步骤拆解、调用工具完成更加复杂的任务。
 
-### 工具定义
+## 工具类型
 
-工具可以扩展 LLM 的能力，比如联网搜索、科学计算或绘制图片，赋予并增强了 LLM 连接外部世界的能力。Dify 提供了两种工具类型：**第一方工具**和**自定义工具**。
+Dify 支持以下四种工具类型：
 
-你可以直接使用 Dify 生态提供的第一方内置工具，或者轻松导入自定义的 API 工具（目前支持 OpenAPI / Swagger 和 OpenAI Plugin 规范）。
+1. **插件（Plugins）** - 对开发者更加友好，可扩展性更强的第三方服务扩展模块。详细说明请参考[插件简介](/zh-hans/plugins/introduction)。
+2. **自定义工具（Custom Tools）** - 用户可以导入自定义的 API 工具（OpenAPI 格式）。开发说明请参考[快速接入工具](/zh-hans/guides/tools/quick-tool-integration)。
+3. **Workflow as Tool** - 将 Dify 内构建好的工作流应用转为工具并在应用中调用。
+4. **MCP 服务器（HTTP）** - 支持 HTTP 协议的 MCP 服务器。
 
-### 工具定义
+## 配置插件
 
-工具可以扩展 LLM 的能力，比如联网搜索、科学计算或绘制图片，赋予并增强了 LLM 连接外部世界的能力。Dify 提供了两种工具类型：**第一方工具**和**自定义工具**。
+参考以下文档，了解如何配置插件。
 
-你可以直接使用 Dify 生态提供的第一方内置工具，或者轻松导入自定义的 API 工具（目前支持 OpenAPI / Swagger 和 OpenAI Plugin 规范）。
 
-#### 工具的作用：
+### 使用工具
 
-1. 工具使用户可以在 Dify 上创建更强大的 AI 应用，如你可以为智能助理型应用（Agent）编排合适的工具，它可以通过任务推理、步骤拆解、调用工具完成复杂任务。
-2. 方便将你的应用与其他系统或服务连接，与外部环境交互，如代码执行、对专属信息源的访问等。
-
-### 如何配置第一方工具
-
-![](https://assets-docs.dify.ai/2025/04/a432b5067adff5513e49d9302e1e4e05.png)
-
-Dify 目前已支持：
-
-| 工具           | 工具描述                                                                             |
-|----------------|--------------------------------------------------------------------------------------|
-| 谷歌搜索       | 用于执行 Google SERP 搜索并提取片段和网页的工具。输入应该是一个搜索查询             |
-| 维基百科       | 用于执行维基百科搜索并提取片段和网页的工具。                                         |
-| DALL-E 绘画    | 用于通过自然语言输入生成高质量图片                                                   |
-| 网页抓取       | 用于爬取网页数据的工具                                                               |
-| WolframAlpha   | 一个强大的计算知识引擎，能根据问题直接给出标准化答案，同时具有强大的数学计算功能     |
-| 图表生成       | 用于生成可视化图表的工具，你可以通过它来生成柱状图、折线图、饼图等各类图表          |
-| 当前时间       | 用于查询当前时间的工具                                                               |
-| 雅虎财经       | 获取并整理出最新的新闻、股票报价等一切你想要的财经信息。                             |
-| Stable Diffusion | 一个可以在本地部署的图片生成的工具，你可以使用 stable-diffusion-webui 来部署它     |
-| Vectorizer     | 一个将 PNG 和 JPG 图像快速轻松地转换为 SVG 矢量图的工具。                           |
-| YouTube        | 一个用于获取油管频道视频统计数据的工具                                               |
-
-<Info>
-欢迎你为 Dify 贡献自己开发的工具，关于如何贡献的具体方法请查看 [Dify 开发贡献文档](https://github.com/langgenius/dify/blob/main/CONTRIBUTING.md)，你的任何支持对我们都是极为宝贵的。
-</Info>
-
-#### 第一方工具授权
-
-若你需要直接使用 Dify 生态提供的第一方内置工具，你需要在使用前配置相应的凭据。
-
-![](https://assets-docs.dify.ai/2025/04/a784c7ee71d45f4a987210d0938a779f.png)
-
-凭据校验成功后工具会显示“已授权”状态。配置凭据后，工作区中的所有成员都可以在编排应用程序时使用此工具。
-
-![](https://assets-docs.dify.ai/2025/04/e4dd64a7b49c11db81fb11eaefa2f6c1.png)
-
-### 如何创建自定义工具
-
-你可以在“工具-自定义工具”内导入自定义的 API 工具，目前支持 OpenAPI / Swagger 和 ChatGPT Plugin 规范。你可以将 OpenAPI schema 内容直接粘贴或从 URL 内导入。关于 OpenAPI / Swagger 规范你可以查看[官方文档说明](https://swagger.io/specification/)。
-
-工具目前支持两种鉴权方式：无鉴权 和 API Key。
-
-![](https://assets-docs.dify.ai/2025/04/0caedfe38c05ad2c225ccc5dcdef12dc.png)
-
-在导入 Schema 内容后系统会主动解析文件内的参数，并可预览工具具体的参数、 方法、路径。你也可以在此对工具参数进行测试。
-
-![](https://assets-docs.dify.ai/2025/04/4f343dcfaff5cf6b63d9422c29359a6f.png)
-
-完成自定义工具创建之后，工作区中的所有成员都可以在“工作室”内编排应用程序时使用此工具。
-
-![](https://assets-docs.dify.ai/2025/04/969c49092f61529829c50cc03e7fa9e9.png)
-
-#### Cloudflare Workers
-
-你也可以使用 [dify-tools-worker](https://github.com/crazywoola/dify-tools-worker) 来快速部署自定义工具。该工具提供了：
-
-* 可以导入 Dify 的路由 `https://difytoolsworker.yourname.workers.dev/doc`, 提供了 OpenAPI 兼容的接口文档
-* API 的实现代码，可以直接部署到 Cloudflare Workers
-
-### 如何在应用内使用工具
-
-目前，你可以在“工作室”中创建**智能助手型应用**时，将已配置好凭据的工具在其中使用。
+目前，你可以在"工作室"中创建**智能助手型应用**时，将已配置好凭据的工具在其中使用。
 
 ![](https://assets-docs.dify.ai/2025/04/70c01de59cce8fce27b62040ab729e78.png)
 
 以下图为例，在财务分析应用内添加工具后，智能助手将在需要时自主调用工具，从工具中查询财务报告数据，并将数据分析后完成与用户之间的对话。
 
 ![](https://assets-docs.dify.ai/2025/04/cbeb1e1435fa56c43c3be957aac1c5f2.png)
+
+### 管理工具
+
+在 Dify 的工具页面，您可以：
+
+- 查看和管理所有类型的工具
+- 使用"All Tags"按钮筛选不同类型的工具
+- 使用搜索功能快速定位特定工具
+- 查看工具的详细信息和使用说明
 
 {/*
 Contributing Section

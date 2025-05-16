@@ -3,7 +3,7 @@
     "theme": "mint",
     "name": "Dify Docs",
     "colors": {
-        "primary": "#0034FF",
+        "primary": "#0060FF",
         "light": "#688FE8",
         "dark": "#0034FF"
     },
@@ -769,10 +769,24 @@
                                         "group": "工具",
                                         "pages": [
                                             "zh-hans/guides/tools/readme",
-                                            "zh-hans/guides/tools/quick-tool-integration",
-                                            "zh-hans/guides/tools/advanced-tool-integration",
                                             {
-                                                "group": "工具配置详情",
+                                                "group": "接入工具",
+                                                "pages": [
+                                                    "zh-hans/guides/tools/integrate-tool/plugin",
+                                                    "zh-hans/guides/tools/integrate-tool/customize-tool",
+                                                    "zh-hans/guides/tools/integrate-tool/mcp",
+                                                    "zh-hans/guides/tools/integrate-tool/workflow"
+                                                ]
+                                            },
+                                            {
+                                                "group": "开发工具",
+                                                "pages": [
+                                                    "zh-hans/guides/tools/quick-tool-integration",
+                                                    "zh-hans/guides/tools/advanced-tool-integration"
+                                                ]
+                                            },
+                                            {
+                                                "group": "工具（插件）配置详情",
                                                 "pages": [
                                                     "zh-hans/guides/tools/tool-configuration/google",
                                                     "zh-hans/guides/tools/tool-configuration/bing",
