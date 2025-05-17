@@ -222,7 +222,7 @@ def loop(dict):
         )
 
 
-if __name__ == "__main__":
+def main_contributing_in_page():
     process = {
         # Help Documentation
         "zh_help": {
@@ -263,4 +263,13 @@ if __name__ == "__main__":
             "language": "ja"
         },
     }
-    loop(process)
+    try:
+        loop(process)
+        return "success"
+    except Exception as e:
+        return (f"{str(e)}")
+    
+if __name__ == "__main__":
+    result_message = main_contributing_in_page()
+    print("\n--- Script Execution Result ---")
+    print(result_message)

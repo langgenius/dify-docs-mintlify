@@ -592,6 +592,14 @@
                                         ]
                                     }
                                 ]
+                            },
+                            {
+                                "group": "About This Documentation",
+                                "pages": [
+                                    "plugin_dev_en/0411-doc-contribution-guide.en",
+                                    "plugin_dev_en/0412-doc-writing-dimensions-guide.en",
+                                    "plugin_dev_en/0412-doc-understanding-the-dimensions.en"
+                                ]
                             }
                         ]
                     },
@@ -1221,6 +1229,14 @@
                                         ]
                                     }
                                 ]
+                            },
+                            {
+                                "group": "关于本文档",
+                                "pages": [
+                                    "plugin_dev_zh/0411-doc-contribution-guide.zh",
+                                    "plugin_dev_zh/0412-doc-writing-dimensions-guide.zh",
+                                    "plugin_dev_zh/0412-doc-understanding-the-dimensions.zh"
+                                ]
                             }
                         ]
                     },
@@ -1812,6 +1828,14 @@
                                             "plugin_dev_ja/0412-model-schema.ja"
                                         ]
                                     }
+                                ]
+                            },
+                            {
+                                "group": "ドキュメントについて",
+                                "pages": [
+                                    "plugin_dev_ja/0411-doc-contribution-guide.ja",
+                                    "plugin_dev_ja/0412-doc-writing-dimensions-guide.ja",
+                                    "plugin_dev_ja/0412-doc-understanding-the-dimensions.ja"
                                 ]
                             }
                         ]

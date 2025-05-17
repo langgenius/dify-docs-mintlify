@@ -1,7 +1,4 @@
 ._DS_Store
 .DS_Store
 .venv
-plugin_dev_zh_*
-plugin_dev_ja_*
-plugin_dev_en_*
-/tool
+__pycache__/

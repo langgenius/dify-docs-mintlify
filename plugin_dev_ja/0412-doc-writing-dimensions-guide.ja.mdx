@@ -1,0 +1,273 @@
+---
+dimensions:
+  type:
+    primary: reference
+    detail: core
+  level: intermediate
+standard_title: 'Doc writing Dimensions guide'
+language: ja
+title: 'Frontmatterメタデータガイド'
+summary: 'Difyドキュメントシステムのメタデータ構造を使用して、ドキュメントプロパティを正しく定義し、自動組織化と並べ替えを可能にする方法を学びます。'
+---
+
+このドキュメントは、Dify開発者ドキュメントのコアメタデータを迅速に定義するのに役立ちます。これらのフィールドを正確に記入することは、ドキュメントの自動化された構造と並べ替えを実装するための鍵です。
+
+## クイックスタート
+
+<Tabs>
+  <Tab title="AI支援の利用">
+    <Steps>
+      <Step title="ドキュメントコンテンツの準備">
+        ドキュメントコンテンツの作成を完了します。
+      </Step>
+      <Step title="AIでメタデータを生成">
+        あなたのドキュメントと[**dimensionsシステムの説明**](/plugin_dev_ja/0412-doc-understanding-the-dimensions.ja)の内容を、お好みの大規模言語モデルに提供し、適切なFrontmatterの生成を依頼します。
+      </Step>
+      <Step title="手動での調整">
+        実際の状況と以下の詳細な説明に基づいて、生成されたメタデータに必要な調整と最適化を行います。
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="手動定義">
+    以下の詳細な説明を読み、ドキュメントコンテンツの特性に基づいて適切なメタデータフィールドを定義します。
+  </Tab>
+</Tabs>
+
+## 必須Frontmatterフィールド
+
+各Markdownドキュメントの先頭に以下のYAML Frontmatterを追加してください：
+
+```yaml
+---
+# --- コアシステムメタデータ（構造と並べ替えに影響）---
+dimensions:
+  type:
+    primary: <以下のオプションを参照>
+    detail: <以下のオプションを参照>
+  level: <以下のオプションを参照>
+standard_title: '英語による説明的なタイトル、ファイル名生成に使用' # 例：'Getting Started Dify Plugin'
+language: 'ja' # または 'en', 'zh'など（ISO 639-2コード）
+
+# --- ページコンテンツメタデータ（オプションだが推奨）---
+title: 'ドキュメントのH1タイトルまたはページタイトル'
+description: 'ドキュメントコンテンツの簡潔なSEO説明'
+# summary: 'より詳細な要約（オプション）'
+# tags: ['キーワード']（オプション）
+---
+```
+
+## `dimensions`フィールドの理解
+
+<Tabs>
+  <Tab title="type.primary">
+    <CardGroup cols={2}>
+      <Card title="conceptual" icon="lightbulb">
+        **概念、理論**（何/なぜ）
+        <br />概念と基本理論の説明に焦点を当てる
+      </Card>
+      <Card title="implementation" icon="code">
+        **開発プラクティス、コード**（どのように）
+        <br />実装手順とコード例の提供に焦点を当てる
+      </Card>
+      <Card title="operational" icon="gears">
+        **運用、デプロイメント**（どのように実行する）
+        <br />システム運用と保守に焦点を当てる
+      </Card>
+      <Card title="reference" icon="book">
+        **API、設定リファレンス**（正確な検索）
+        <br />技術仕様とリファレンス情報の提供に焦点を当てる
+      </Card>
+    </CardGroup>
+  </Tab>
+  
+  <Tab title="type.detail">
+    `primary`カテゴリの下位区分：
+    
+    <AccordionGroup>
+      <Accordion title="conceptualの下位区分" icon="lightbulb">
+        <ul>
+          <li><code>introduction</code>: 導入コンテンツ</li>
+          <li><code>principles</code>: 設計原則</li>
+          <li><code>architecture</code>: アーキテクチャの説明</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="implementationの下位区分" icon="code">
+        <ul>
+          <li><code>basic</code>: 基本的な実装</li>
+          <li><code>standard</code>: 標準的な実装</li>
+          <li><code>high</code>: 高度な実装（優先度が下がる可能性あり）</li>
+          <li><code>advanced</code>: 高度な実装（優先度が下がる可能性あり）</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="operationalの下位区分" icon="gears">
+        <ul>
+          <li><code>setup</code>: 環境設定</li>
+          <li><code>deployment</code>: デプロイメント操作</li>
+          <li><code>maintenance</code>: メンテナンス管理</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="referenceの下位区分" icon="book">
+        <ul>
+          <li><code>core</code>: コアリファレンス</li>
+          <li><code>configuration</code>: 設定リファレンス</li>
+          <li><code>examples</code>: 例示リファレンス</li>
+        </ul>
+      </Accordion>
+    </AccordionGroup>
+    
+    <Note>
+      より多くのオプションについては、[dimensionsシステムの説明](/plugin_dev_ja/0412-doc-understanding-the-dimensions.ja)ドキュメントを参照してください
+    </Note>
+  </Tab>
+  
+  <Tab title="level">
+    <CardGroup cols={3}>
+      <Card title="beginner" icon="seedling">
+        **初心者**
+        <br />初心者向けのコンテンツ
+      </Card>
+      <Card title="intermediate" icon="tree">
+        **一般ユーザー**
+        <br />ある程度の背景知識を持つユーザー向けのコンテンツ
+      </Card>
+      <Card title="advanced" icon="mountain">
+        **上級ユーザー**
+        <br />専門ユーザー向けの詳細なコンテンツ（通常、並べ替えで優先度が下がる）
+      </Card>
+    </CardGroup>
+  </Tab>
+</Tabs>
+
+## その他の重要なフィールド
+
+<ResponseField name="standard_title" type="string" required>
+  **英語**を使用して、ドキュメントのコアコンテンツを明確に説明します。システムはこれを使用してファイル名の一部を生成します（例：`Getting Started Dify Plugin`）。
+</ResponseField>
+
+<ResponseField name="language" type="string" required>
+  ISO 639-2の2文字言語コード（例：`en`、`zh`、`ja`）。
+</ResponseField>
+
+<ResponseField name="title" type="string" recommended>
+  ページに表示されるドキュメントのメインタイトル、通常はローカライズされた言語で記述されます。
+</ResponseField>
+
+<ResponseField name="description" type="string" recommended>
+  検索エンジンとプレビュー用の簡潔なSEO説明。
+</ResponseField>
+
+## 完全な例
+
+<CodeGroup>
+  ```yaml 導入ドキュメントの例
+  ---
+  dimensions:
+    type:
+      primary: conceptual
+      detail: introduction
+    level: beginner
+  standard_title: 'Getting Started Dify Plugin'
+  language: ja
+  title: 'Difyプラグイン開発へようこそ'
+  description: 'Difyプラグインの概念、機能、開発価値の紹介。プラグインタイプの簡単な説明と開発者ドキュメントの内容の概要を含みます。'
+  ---
+  ```
+
+  ```yaml ツール開発ドキュメントの例
+  ---
+  dimensions:
+    type:
+      primary: implementation
+      detail: standard
+    level: intermediate
+  standard_title: 'Developing Tool Plugin'
+  language: ja
+  title: 'ツールプラグインの開発'
+  description: 'Difyツールプラグインの作成と設定に関する詳細なガイダンス。APIコール、データ処理、ユーザーインターフェイス統合に関する実践ガイドを含みます。'
+  ---
+  ```
+
+  ```yaml リファレンスドキュメントの例
+  ---
+  dimensions:
+    type:
+      primary: reference
+      detail: configuration
+    level: intermediate
+  standard_title: 'Plugin Manifest Configuration'
+  language: ja
+  title: 'プラグイン設定マニフェストリファレンス'
+  description: 'プラグイン設定ファイル（manifest.json）のパラメータ、フォーマット要件、ユースケースに関する包括的な説明。'
+  ---
+  ```
+</CodeGroup>
+
+<Tip>
+  **例の解釈：** 最初の例は、初心者向けのDifyプラグインの概念に関する導入ドキュメントで、言語は日本語です。システムはメタデータに基づいて、ドキュメント構造内に自動的に正しく配置します。
+</Tip>
+
+## ドキュメント自動化処理
+
+<Tabs>
+  <Tab title="ローカル開発">
+    `tools/main_docs_bundle.py`を実行すると、ドキュメントはFrontmatterに基づいて以下の操作を自動的に完了します：
+    
+    <Steps>
+      <Step title="ファイル名の変更">
+        システムはdimensionsとstandard_titleに基づいて標準化されたファイル名を自動的に生成します。
+      </Step>
+      <Step title="ナビゲーションの更新">
+        ドキュメントはdocs.jsonナビゲーション設定に自動的に挿入されます。
+      </Step>
+      <Step title="インタラクティブコンポーネントの追加">
+        貢献とフィードバックボタンなどのインタラクティブコンポーネントを自動的に更新します。
+      </Step>
+    </Steps>
+    
+    <Info>
+      ローカル環境でドキュメントを開発する場合、ドキュメント設定が正しく反映されるようにこのスクリプトを実行することをお勧めします。
+    </Info>
+  </Tab>
+  
+  <Tab title="GitHub編集">
+    
+    GitHubで直接編集する場合は、自動化ステップについて**心配しないでください**。私たちは、次の状況で`tools/main_docs_bundle.py`を自動的に実行するようにGitHub Actionなどの自動化ツールを設定しています：
+    
+    - Pull Requestを提出するとき
+    - 変更がメインブランチにマージされるとき
+    
+    <Check>
+      コンテンツ作成に集中できます。GitHubワークフローがファイル名の変更、ナビゲーションの更新、インタラクティブコンポーネントの生成などの技術的な詳細を処理します。
+    </Check>
+  </Tab>
+</Tabs>
+
+<Card title="もっと詳しく知りたいですか？" icon="book-open" href="/plugin_dev_ja/0412-doc-understanding-the-dimensions.ja">
+  Dimensionsシステムの設計哲学、並べ替えメカニズムの完全な詳細、または役割とガバナンスに興味がある場合は、Dimensionsシステムの詳細な説明ドキュメントをお読みください。
+</Card>
+
+{/*
+Contributing Section
+DO NOT edit this section!
+It will be automatically generated by the script.
+*/}
+
+<CardGroup cols="2">
+    <Card
+        title="このページを編集する"
+        icon="pen-to-square"
+        href="https://github.com/langgenius/dify-docs-mintlify/edit/main/plugin_dev_ja/0412-doc-writing-dimensions-guide.ja.mdx"
+    >
+        直接貢献することでドキュメントの改善にご協力ください
+    </Card>
+    <Card
+        title="問題を報告する"
+        icon="github"
+        href="https://github.com/langgenius/dify-docs-mintlify/issues/new?title=ドキュメントの問題%3A%20doc-writing-dimensions-guide&body=%23%23%20問題の説明%0A%3C%21--%20発見した問題について簡単に説明してください%20--%3E%0A%0A%23%23%20ページリンク%0Ahttps%3A%2F%2Fgithub.com%2Flanggenius%2Fdify-docs-mintlify%2Fblob%2Fmain%2Fplugin_dev_ja%2F0412-doc-writing-dimensions-guide.ja.mdx%0A%0A%23%23%20提案される変更%0A%3C%21--%20特定の変更案がある場合は、ここで説明してください%20--%3E%0A%0A%3C%21--%20ドキュメントの品質向上にご協力いただきありがとうございます！%20--%3E"
+    >
+        エラーを見つけたり提案がありますか？お知らせください
+    </Card>
+</CardGroup>

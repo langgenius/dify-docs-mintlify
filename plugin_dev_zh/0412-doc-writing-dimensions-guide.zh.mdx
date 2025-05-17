@@ -1,0 +1,273 @@
+---
+dimensions:
+  type:
+    primary: reference
+    detail: core
+  level: intermediate
+standard_title: 'Doc writing Dimensions guide'
+language: zh
+title: 'Frontmatter 元数据指南'
+summary: '了解如何使用 Dify 文档系统的元数据结构，正确定义文档属性，实现自动化组织和排序。'
+---
+
+本文档帮助您快速为 Dify 开发者文档定义核心元数据。正确填写这些字段是实现文档自动化结构和排序的关键。
+
+## 快速开始
+
+<Tabs>
+  <Tab title="使用大模型辅助">
+    <Steps>
+      <Step title="准备文档内容">
+        完成您的文档内容撰写。
+      </Step>
+      <Step title="使用AI生成元数据">
+        将您的文档和 [**dimensions** 系统详解](/plugin_dev_zh/0412-doc-understanding-the-dimensions.zh) 的内容交给您偏好的大模型，请求生成适合的 Frontmatter。
+      </Step>
+      <Step title="手动优化">
+        根据实际情况和下面的详细说明，对生成的元数据进行必要的调整和优化。
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="手动定义">
+    阅读下方的详细说明，根据您的文档内容特点，自行定义适合的元数据字段。
+  </Tab>
+</Tabs>
+
+## 必要 Frontmatter 字段
+
+请在每篇 Markdown 文档的开头添加以下 YAML Frontmatter：
+
+```yaml
+---
+# --- 系统核心元数据 (影响结构和排序) ---
+dimensions:
+  type:
+    primary: <见下方选项>
+    detail: <见下方选项>
+  level: <见下方选项>
+standard_title: '英文描述性标题，用于生成文件名' # e.g., 'Getting Started Dify Plugin'
+language: 'zh' # 或 'en', 'ja', etc. (ISO 639-2 代码)
+
+# --- 页面内容元数据 (可选，但推荐) ---
+title: '文档的 H1 标题或页面标题'
+description: '文档内容的简短 SEO 描述'
+# summary: '更详细的摘要 (可选)'
+# tags: ['关键词'] (可选)
+---
+```
+
+## `dimensions` 字段详解
+
+<Tabs>
+  <Tab title="type.primary">
+    <CardGroup cols={2}>
+      <Card title="conceptual" icon="lightbulb">
+        **概念、理论** (是什么/为什么)
+        <br />重点解释概念和基础理论
+      </Card>
+      <Card title="implementation" icon="code">
+        **开发实践、代码** (如何做)
+        <br />重点提供实现步骤和代码示例
+      </Card>
+      <Card title="operational" icon="gears">
+        **运维、部署** (如何运行)
+        <br />重点关注系统运行和维护
+      </Card>
+      <Card title="reference" icon="book">
+        **API、配置参考** (精确查找)
+        <br />重点提供技术规格和参考信息
+      </Card>
+    </CardGroup>
+  </Tab>
+  
+  <Tab title="type.detail">
+    在 `primary` 类别下的细分：
+    
+    <AccordionGroup>
+      <Accordion title="conceptual 下的细分" icon="lightbulb">
+        <ul>
+          <li><code>introduction</code>: 入门介绍</li>
+          <li><code>principles</code>: 设计原则</li>
+          <li><code>architecture</code>: 架构说明</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="implementation 下的细分" icon="code">
+        <ul>
+          <li><code>basic</code>: 基础实现</li>
+          <li><code>standard</code>: 标准实现</li>
+          <li><code>high</code>: 高级实现 (可能后置)</li>
+          <li><code>advanced</code>: 深度实现 (可能后置)</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="operational 下的细分" icon="gears">
+        <ul>
+          <li><code>setup</code>: 环境设置</li>
+          <li><code>deployment</code>: 部署操作</li>
+          <li><code>maintenance</code>: 维护管理</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="reference 下的细分" icon="book">
+        <ul>
+          <li><code>core</code>: 核心参考</li>
+          <li><code>configuration</code>: 配置参考</li>
+          <li><code>examples</code>: 示例参考</li>
+        </ul>
+      </Accordion>
+    </AccordionGroup>
+    
+    <Note>
+      更多选项请参考 [dimensions 系统详解](/plugin_dev_zh/0412-doc-understanding-the-dimensions.zh) 文档
+    </Note>
+  </Tab>
+  
+  <Tab title="level">
+    <CardGroup cols={3}>
+      <Card title="beginner" icon="seedling">
+        **新手入门**
+        <br />适合初学者的入门内容
+      </Card>
+      <Card title="intermediate" icon="tree">
+        **常规用户**
+        <br />适合有一定基础的用户
+      </Card>
+      <Card title="advanced" icon="mountain">
+        **高级用户**
+        <br />适合专业用户的深入内容 (通常会被后置排序)
+      </Card>
+    </CardGroup>
+  </Tab>
+</Tabs>
+
+## 其他重要字段
+
+<ResponseField name="standard_title" type="string" required>
+  使用**英文**，清晰描述文档核心内容。系统将用它生成部分文件名 (例如 `Getting Started Dify Plugin`)。
+</ResponseField>
+
+<ResponseField name="language" type="string" required>
+  ISO 639-2 双字母语言代码 (如 `en`, `zh`, `ja`)。
+</ResponseField>
+
+<ResponseField name="title" type="string" recommended>
+  文档在页面上显示的主标题，通常是本地化语言。
+</ResponseField>
+
+<ResponseField name="description" type="string" recommended>
+  简短的SEO描述，用于搜索引擎和预览。
+</ResponseField>
+
+## 完整示例
+
+<CodeGroup>
+  ```yaml 入门文档示例
+  ---
+  dimensions:
+    type:
+      primary: conceptual
+      detail: introduction
+    level: beginner
+  standard_title: 'Getting Started Dify Plugin'
+  language: zh
+  title: '欢迎开始 Dify 插件开发'
+  description: '介绍Dify插件的概念、功能和开发价值，包括插件类型的简要说明，以及开发者文档的内容概览。'
+  ---
+  ```
+
+  ```yaml 工具开发文档示例
+  ---
+  dimensions:
+    type:
+      primary: implementation
+      detail: standard
+    level: intermediate
+  standard_title: 'Developing Tool Plugin'
+  language: zh
+  title: '开发工具插件'
+  description: '详细指导如何创建和配置Dify工具插件，包括API调用、数据处理和用户界面集成方面的实践指南。'
+  ---
+  ```
+
+  ```yaml 参考文档示例
+  ---
+  dimensions:
+    type:
+      primary: reference
+      detail: configuration
+    level: intermediate
+  standard_title: 'Plugin Manifest Configuration'
+  language: zh
+  title: '插件配置清单参考'
+  description: '全面说明插件配置文件(manifest.json)的各项参数设置、格式要求和应用场景。'
+  ---
+  ```
+</CodeGroup>
+
+<Tip>
+  **解读示例:** 第一个例子是一篇面向初学者的、关于 Dify 插件概念的入门介绍文档，语言为中文。系统会根据元数据自动将其正确放置在文档结构中。
+</Tip>
+
+## 文档自动化处理
+
+<Tabs>
+  <Tab title="本地开发">
+    运行 `tools/main_docs_bundle.py`，文档将被自动根据 Frontmatter 完成以下操作：
+    
+    <Steps>
+      <Step title="重命名文件">
+        系统将根据 dimensions 和 standard_title 自动生成标准化文件名。
+      </Step>
+      <Step title="更新导航">
+        文档将被自动注入到 docs.json 导航配置中。
+      </Step>
+      <Step title="添加交互组件">
+        自动刷新贡献和反馈按钮等交互组件。
+      </Step>
+    </Steps>
+    
+    <Info>
+      在本地环境开发文档时，建议运行该脚本确保文档配置正确生效。
+    </Info>
+  </Tab>
+  
+  <Tab title="GitHub 编辑">
+    
+    如果您在 GitHub 上直接进行编辑，**无需担心**自动化步骤。我们已经配置了 GitHub Action 等自动化工具，会在以下情况自动执行 `tools/main_docs_bundle.py`：
+    
+    - 当您提交 Pull Request 时
+    - 当您的更改被合并到主分支时
+    
+    <Check>
+      您可以专注于内容创作，GitHub 工作流会处理文件重命名、导航更新和交互组件生成等技术细节。
+    </Check>
+  </Tab>
+</Tabs>
+
+<Card title="想了解更多？" icon="book-open" href="/plugin_dev_zh/0412-doc-understanding-the-dimensions.zh">
+  如果您对 Dimensions 系统的设计理念、排序机制的完整细节或角色与治理感兴趣，请阅读完整的 Dimensions 系统详解文档。
+</Card>
+
+{/*
+Contributing Section
+DO NOT edit this section!
+It will be automatically generated by the script.
+*/}
+
+<CardGroup cols="2">
+    <Card
+        title="编辑此页面"
+        icon="pen-to-square"
+        href="https://github.com/langgenius/dify-docs-mintlify/edit/main/plugin_dev_zh/0412-doc-writing-dimensions-guide.zh.mdx"
+    >
+        通过直接提交修改来帮助改进文档内容
+    </Card>
+    <Card
+        title="提交问题"
+        icon="github"
+        href="https://github.com/langgenius/dify-docs-mintlify/issues/new?title=文档问题%3A%20doc-writing-dimensions-guide&body=%23%23%20问题描述%0A%3C%21--%20请简要描述您发现的问题%20--%3E%0A%0A%23%23%20页面链接%0Ahttps%3A%2F%2Fgithub.com%2Flanggenius%2Fdify-docs-mintlify%2Fblob%2Fmain%2Fplugin_dev_zh%2F0412-doc-writing-dimensions-guide.zh.mdx%0A%0A%23%23%20建议修改%0A%3C%21--%20如果有具体的修改建议，请在此说明%20--%3E%0A%0A%3C%21--%20感谢您对文档质量的关注！%20--%3E"
+    >
+        发现错误或有改进建议？请提交问题反馈
+    </Card>
+</CardGroup>

@@ -1,0 +1,273 @@
+---
+dimensions:
+  type:
+    primary: reference
+    detail: core
+  level: intermediate
+standard_title: 'Doc writing Dimensions guide'
+language: en
+title: 'Frontmatter Metadata Guide'
+summary: 'Learn how to use the metadata structure of the Dify documentation system to correctly define document properties and enable automated organization and sorting.'
+---
+
+This document helps you quickly define core metadata for Dify developer documentation. Correctly filling out these fields is key to implementing automated document structure and sorting.
+
+## Quick Start
+
+<Tabs>
+  <Tab title="Using AI Assistance">
+    <Steps>
+      <Step title="Prepare document content">
+        Complete writing your document content.
+      </Step>
+      <Step title="Generate metadata with AI">
+        Provide your document and the content from [**dimensions system explained**](/plugin_dev_en/0412-doc-understanding-the-dimensions.en) to your preferred large language model, and request it to generate appropriate Frontmatter.
+      </Step>
+      <Step title="Manual refinement">
+        Based on actual circumstances and the detailed explanations below, make necessary adjustments and optimizations to the generated metadata.
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Manual Definition">
+    Read the detailed instructions below and define appropriate metadata fields based on the characteristics of your document content.
+  </Tab>
+</Tabs>
+
+## Required Frontmatter Fields
+
+Please add the following YAML Frontmatter at the beginning of each Markdown document:
+
+```yaml
+---
+# --- Core System Metadata (affects structure and sorting) ---
+dimensions:
+  type:
+    primary: <see options below>
+    detail: <see options below>
+  level: <see options below>
+standard_title: 'Descriptive title in English, used for filename generation' # e.g., 'Getting Started Dify Plugin'
+language: 'en' # or 'zh', 'ja', etc. (ISO 639-2 code)
+
+# --- Page Content Metadata (optional but recommended) ---
+title: 'H1 title or page title of the document'
+description: 'Brief SEO description of the document content'
+# summary: 'More detailed summary (optional)'
+# tags: ['keywords'] (optional)
+---
+```
+
+## Understanding the `dimensions` Field
+
+<Tabs>
+  <Tab title="type.primary">
+    <CardGroup cols={2}>
+      <Card title="conceptual" icon="lightbulb">
+        **Concepts, theory** (what/why)
+        <br />Focuses on explaining concepts and fundamental theories
+      </Card>
+      <Card title="implementation" icon="code">
+        **Development practices, code** (how to)
+        <br />Focuses on providing implementation steps and code examples
+      </Card>
+      <Card title="operational" icon="gears">
+        **Operations, deployment** (how to run)
+        <br />Focuses on system operation and maintenance
+      </Card>
+      <Card title="reference" icon="book">
+        **API, configuration reference** (precise lookup)
+        <br />Focuses on technical specifications and reference information
+      </Card>
+    </CardGroup>
+  </Tab>
+  
+  <Tab title="type.detail">
+    Subdivisions under the `primary` category:
+    
+    <AccordionGroup>
+      <Accordion title="Subdivisions under conceptual" icon="lightbulb">
+        <ul>
+          <li><code>introduction</code>: Introductory content</li>
+          <li><code>principles</code>: Design principles</li>
+          <li><code>architecture</code>: Architectural explanation</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="Subdivisions under implementation" icon="code">
+        <ul>
+          <li><code>basic</code>: Basic implementation</li>
+          <li><code>standard</code>: Standard implementation</li>
+          <li><code>high</code>: Higher-level implementation (may be deprioritized)</li>
+          <li><code>advanced</code>: Advanced implementation (may be deprioritized)</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="Subdivisions under operational" icon="gears">
+        <ul>
+          <li><code>setup</code>: Environment setup</li>
+          <li><code>deployment</code>: Deployment operations</li>
+          <li><code>maintenance</code>: Maintenance management</li>
+        </ul>
+      </Accordion>
+      
+      <Accordion title="Subdivisions under reference" icon="book">
+        <ul>
+          <li><code>core</code>: Core reference</li>
+          <li><code>configuration</code>: Configuration reference</li>
+          <li><code>examples</code>: Example reference</li>
+        </ul>
+      </Accordion>
+    </AccordionGroup>
+    
+    <Note>
+      For more options, please refer to the [dimensions system explained](/plugin_dev_en/0412-doc-understanding-the-dimensions.en) document
+    </Note>
+  </Tab>
+  
+  <Tab title="level">
+    <CardGroup cols={3}>
+      <Card title="beginner" icon="seedling">
+        **Newcomer**
+        <br />Content suitable for beginners
+      </Card>
+      <Card title="intermediate" icon="tree">
+        **Regular user**
+        <br />Content for users with some background knowledge
+      </Card>
+      <Card title="advanced" icon="mountain">
+        **Advanced user**
+        <br />In-depth content for professional users (typically deprioritized in sorting)
+      </Card>
+    </CardGroup>
+  </Tab>
+</Tabs>
+
+## Other Important Fields
+
+<ResponseField name="standard_title" type="string" required>
+  Use **English** to clearly describe the core content of the document. The system will use this to generate part of the filename (e.g., `Getting Started Dify Plugin`).
+</ResponseField>
+
+<ResponseField name="language" type="string" required>
+  ISO 639-2 two-letter language code (such as `en`, `zh`, `ja`).
+</ResponseField>
+
+<ResponseField name="title" type="string" recommended>
+  The main title of the document displayed on the page, typically in the localized language.
+</ResponseField>
+
+<ResponseField name="description" type="string" recommended>
+  A brief SEO description for search engines and previews.
+</ResponseField>
+
+## Complete Examples
+
+<CodeGroup>
+  ```yaml Introductory Document Example
+  ---
+  dimensions:
+    type:
+      primary: conceptual
+      detail: introduction
+    level: beginner
+  standard_title: 'Getting Started Dify Plugin'
+  language: en
+  title: 'Welcome to Dify Plugin Development'
+  description: 'Introduction to Dify plugin concepts, functionality, and development value, including a brief explanation of plugin types and an overview of developer documentation content.'
+  ---
+  ```
+
+  ```yaml Tool Development Document Example
+  ---
+  dimensions:
+    type:
+      primary: implementation
+      detail: standard
+    level: intermediate
+  standard_title: 'Developing Tool Plugin'
+  language: en
+  title: 'Developing Tool Plugins'
+  description: 'Detailed guidance on creating and configuring Dify tool plugins, including practical guides on API calls, data processing, and user interface integration.'
+  ---
+  ```
+
+  ```yaml Reference Document Example
+  ---
+  dimensions:
+    type:
+      primary: reference
+      detail: configuration
+    level: intermediate
+  standard_title: 'Plugin Manifest Configuration'
+  language: en
+  title: 'Plugin Configuration Manifest Reference'
+  description: 'Comprehensive explanation of the parameters, format requirements, and use cases for the plugin configuration file (manifest.json).'
+  ---
+  ```
+</CodeGroup>
+
+<Tip>
+  **Example Interpretation:** The first example is a beginner-oriented introductory document about Dify plugin concepts in English. The system will automatically place it correctly in the document structure based on the metadata.
+</Tip>
+
+## Document Automation Processing
+
+<Tabs>
+  <Tab title="Local Development">
+    Run `tools/main_docs_bundle.py`, and the document will automatically complete the following operations based on the Frontmatter:
+    
+    <Steps>
+      <Step title="Rename Files">
+        The system will automatically generate standardized filenames based on dimensions and standard_title.
+      </Step>
+      <Step title="Update Navigation">
+        Documents will be automatically injected into the docs.json navigation configuration.
+      </Step>
+      <Step title="Add Interactive Components">
+        Automatically refresh contribution and feedback buttons and other interactive components.
+      </Step>
+    </Steps>
+    
+    <Info>
+      When developing documentation in a local environment, it's recommended to run this script to ensure document configurations take effect correctly.
+    </Info>
+  </Tab>
+  
+  <Tab title="GitHub Editing">
+    
+    If you edit directly on GitHub, **don't worry** about the automation steps. We have configured GitHub Actions and other automation tools to automatically execute `tools/main_docs_bundle.py` in the following situations:
+    
+    - When you submit a Pull Request
+    - When your changes are merged into the main branch
+    
+    <Check>
+      You can focus on content creation, and the GitHub workflow will handle technical details such as file renaming, navigation updates, and interactive component generation.
+    </Check>
+  </Tab>
+</Tabs>
+
+<Card title="Want to learn more?" icon="book-open" href="/plugin_dev_en/0412-doc-understanding-the-dimensions.en">
+  If you're interested in the design philosophy of the Dimensions system, the complete details of the sorting mechanism, or roles and governance, please read the full Dimensions system detailed explanation document.
+</Card>
+
+{/*
+Contributing Section
+DO NOT edit this section!
+It will be automatically generated by the script.
+*/}
+
+<CardGroup cols="2">
+    <Card
+        title="Edit this page"
+        icon="pen-to-square"
+        href="https://github.com/langgenius/dify-docs-mintlify/edit/main/plugin_dev_en/0412-doc-writing-dimensions-guide.en.mdx"
+    >
+        Help improve our documentation by contributing directly
+    </Card>
+    <Card
+        title="Report an issue"
+        icon="github"
+        href="https://github.com/langgenius/dify-docs-mintlify/issues/new?title=Documentation%20Issue%3A%20doc-writing-dimensions-guide&body=%23%23%20Issue%20Description%0A%3C%21--%20Please%20briefly%20describe%20the%20issue%20you%20found%20--%3E%0A%0A%23%23%20Page%20Link%0Ahttps%3A%2F%2Fgithub.com%2Flanggenius%2Fdify-docs-mintlify%2Fblob%2Fmain%2Fplugin_dev_en%2F0412-doc-writing-dimensions-guide.en.mdx%0A%0A%23%23%20Suggested%20Changes%0A%3C%21--%20If%20you%20have%20specific%20suggestions%20for%20changes%2C%20please%20describe%20them%20here%20--%3E%0A%0A%3C%21--%20Thank%20you%20for%20helping%20improve%20our%20documentation%21%20--%3E"
+    >
+        Found an error or have suggestions? Let us know
+    </Card>
+</CardGroup>
