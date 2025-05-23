@@ -10,7 +10,7 @@ title: 模型接口
 description: 本文档详细介绍了Dify模型插件开发所需的接口规范，包括模型供应商实现、五种模型类型（LLM、TextEmbedding、Rerank、Speech2text、Text2speech）的接口定义以及相关数据结构如PromptMessage、LLMResult等的完整规范。文档适用于开发者实现各种模型集成的开发参考。
 ---
 
-这里介绍供应商和各模型类型需要实现的接口方法和参数说明。在开发模型插件前，您可能需要首先阅读[模型设计规则](/plugin-dev-zh/0411-model-designing-rules)和[模型插件介绍](/plugin-dev-zh/0131-model-plugin-introduction.zh)。
+这里介绍供应商和各模型类型需要实现的接口方法和参数说明。在开发模型插件前，您可能需要首先阅读[模型设计规则](/plugin-dev-zh/0411-model-designing-rules)和[模型插件介绍](/plugin-dev-zh/0131-model-plugin-introduction)。
 
 ### 模型供应商
 
@@ -685,7 +685,7 @@ class RerankDocument(BaseModel):
 ## 相关资源
 
 - [模型设计规则](/plugin-dev-zh/0411-model-designing-rules) - 了解模型配置的规范
-- [模型插件介绍](/plugin-dev-zh/0131-model-plugin-introduction.zh) - 快速了解模型插件的基本概念
+- [模型插件介绍](/plugin-dev-zh/0131-model-plugin-introduction) - 快速了解模型插件的基本概念
 - [快速接入一个新模型](/plugin-dev-zh/0211-getting-started-new-model) - 学习为已有的供应商添加新模型
 - [创建新模型提供者](/plugin-dev-zh/0222-creating-new-model-provider) - 学习如何开发全新的模型供应商
 

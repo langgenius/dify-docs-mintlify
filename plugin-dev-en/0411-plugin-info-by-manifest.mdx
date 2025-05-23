@@ -98,7 +98,7 @@ privacy: "./privacy.md"
 *   `plugins` (object, required): A list of `yaml` files for the specific capabilities extended by the plugin. Absolute path within the plugin package. For example, if you need to extend a model, you need to define a file similar to `openai.yaml`, fill in the file path here, and the file at this path must actually exist, otherwise packaging will fail.
     *   Format
         *   `tools` (list[string]): Plugin extension for [Tool](/plugin-dev-en/0222-tool-plugin) providers.
-        *   `models` (list[string]): Plugin extension for [Model](/plugin-dev-en/0131-model-plugin-introduction.en) providers.
+        *   `models` (list[string]): Plugin extension for [Model](/plugin-dev-en/0131-model-plugin-introduction) providers.
         *   `endpoints` (list[string]): Plugin extension for [Endpoints](/plugin-dev-en/0432-develop-a-slack-bot-plugin) providers. (Note: Link updated to closest available English document)
         *   `agent_strategies` (list[string]): Plugin extension for [Agent Strategy](/plugin-dev-en/9433-agent-strategy-plugin) providers.
     *   Restrictions

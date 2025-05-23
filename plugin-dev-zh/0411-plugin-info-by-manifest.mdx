@@ -96,7 +96,7 @@ privacy: "./privacy.md"
 * `plugins`(object, required)：插件扩展的具体能力的`yaml`文件列表，插件包内的绝对路径，如需要扩展模型，则需要定义一个类似于 `openai.yaml`的文件，并将该文件路径填写在此处，且该路径上的文件必须真实存在，否则打包将失败。
   * 格式
     * `tools`(list\[string])：插件扩展的[工具](/plugin-dev-zh/0222-tool-plugin)供应商
-    * `models`(list\[string])：插件扩展的[模型](/plugin-dev-zh/0131-model-plugin-introduction.zh)供应商
+    * `models`(list\[string])：插件扩展的[模型](/plugin-dev-zh/0131-model-plugin-introduction)供应商
     * `endpoints`(list\[string])：插件扩展的 [Endpoints](/plugin-dev-zh/0432-endpoint) 供应商
     * `agent_strategies` (list\[string])：插件扩展的 [Agent 策略](/plugin-dev-zh/9433-agent-strategy-plugin)供应商
   * 限制
