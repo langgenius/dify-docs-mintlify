@@ -48,9 +48,17 @@ title: Deploy with Docker Compose
 Clone the Dify source code to your local machine:
 
 ```bash
-# Assuming current latest version is 0.15.3
-git clone https://github.com/langgenius/dify.git --branch 0.15.3
+git clone --branch "$(curl -s https://api.github.com/repos/langgenius/dify/releases/latest | jq -r .tag_name)" https://github.com/langgenius/dify.git
 ```
+
+Or you can download ZIP archive instead:
+
+```bash
+wget -O dify.zip "$(curl -s https://api.github.com/repos/langgenius/dify/releases/latest | jq -r '.zipball_url')"
+unzip dify.zip && rm dify.zip
+```
+
+You can also download the ZIP archive on other device, manually upload it to the target server.
 
 ### Starting Dify
 
@@ -122,12 +130,30 @@ With these steps, you should be able to install Dify successfully.
 
 ### Upgrade Dify
 
+Before upgrading, make sure your data backed up:
+
+```bash
+cp -r dify "dify.bak.$(date +%Y%m%d%H%M%S)"
+```
+
 Enter the docker directory of the dify source code and execute the following commands:
 
 ```bash
 cd dify/docker
 docker compose down
 git pull origin main
+docker compose pull
+docker compose up -d
+```
+
+If you used the ZIP archive for deployment:
+
+```bash
+wget -O dify-latest.zip "$(curl -s https://api.github.com/repos/langgenius/dify/releases/latest | jq -r '.zipball_url')"
+unzip dify-latest.zip && rm dify-latest.zip
+rsync -a dify-latest/ dify/
+rm -rf dify-latest/
+cd dify/docker
 docker compose pull
 docker compose up -d
 ```
