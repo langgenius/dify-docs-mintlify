@@ -33,7 +33,7 @@ title: 创建步骤
 
 #### ETL
 
-在 RAG 的生产级应用中，为了获得更好的数据召回效果，需要对多源数据进行预处理和清洗，即 ETL （_extract, transform, load_）。为了增强非结构化/半结构化数据的预处理能力，Dify 支持了可选的 ETL 方案：**Dify ETL** 和[**Unstructured ETL**](https://docs.unstructured.io/welcome)[**Unstructured ETL** ](https://unstructured.io/)。Unstructured 能够高效地提取并转换你的数据为干净的数据用于后续的步骤。Dify 各版本的 ETL 方案选择：
+在 RAG 的生产级应用中，为了获得更好的数据召回效果，需要对多源数据进行预处理和清洗，即 ETL （_extract, transform, load_）。为了增强非结构化/半结构化数据的预处理能力，Dify 支持了可选的 ETL 方案：**Dify ETL** 和[**Unstructured ETL**](https://docs.unstructured.io/welcome)。Unstructured 能够高效地提取并转换你的数据为干净的数据用于后续的步骤。Dify 各版本的 ETL 方案选择：
 
 * SaaS 版不可选，默认使用 Unstructured ETL；
 * 社区版可选，默认使用 Dify ETL ，可通过[环境变量](/zh-hans/getting-started/install-self-hosted/environments)开启 Unstructured ETL；

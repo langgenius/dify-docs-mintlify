@@ -757,9 +757,8 @@
                                                 "pages": [
                                                     "zh-hans/guides/workflow/debug-and-preview/preview-and-run",
                                                     "zh-hans/guides/workflow/debug-and-preview/step-run",
-                                                    "zh-hans/guides/workflow/debug-and-preview/log",
-                                                    "zh-hans/guides/workflow/debug-and-preview/checklist",
-                                                    "zh-hans/guides/workflow/debug-and-preview/history"
+                                                    "zh-hans/guides/workflow/debug-and-preview/history-and-logs",
+                                                    "zh-hans/guides/workflow/debug-and-preview/variable-inspect"
                                                 ]
                                             },
                                             "zh-hans/guides/workflow/publish",

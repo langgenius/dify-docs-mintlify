@@ -1,18 +1,69 @@
 ---
-title: 预览与运行
+title: 功能简介
 ---
 
-Dify Workflow 提供了一套完整的运行调试功能，在对话型应用中点击「预览」进入调试模式。
+创建工作流后，开发者可在发布应用前调试应用以确保各个节点正常运行、验证变量内的数据是否能够正确流转。Dify 提供了完整的调试工具，帮助你快速定位问题、检查变量传递和查看详细日志。
 
-![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/debug-and-preview/91379dc42d0d815e52ddad0cc5450a46.png)
+本文介绍工作流应用调试的完整流程，包括单节点调试、变量检查、运行历史查看以及整体测试方法。
 
-在工作流应用中点击「运行」进入调试模式。
+![](https://assets-docs.dify.ai/2025/06/8e7933b45a69241a9861a09fa47d5c62.png)
 
-![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/debug-and-preview/b92d7536392b1e1f2423d0e3aa113915.png)
+## 调试工作流应用
 
-进入调试模式内在界面右侧调试已配置好的工作流。
+### 单节点调试
 
-![](https://assets-docs.dify.ai/dify-enterprise-mintlify/zh_CN/guides/workflow/debug-and-preview/4c81791508592e0f8019b8ebf8f119ea.png)
+当工作流中某个节点出现问题导致工作流应用无法正常运行时，单独调试该节点以快速定位问题。
+
+点击节点右上角的调试按钮，输入测试数据并查看输出结果。在调试过程中，建议从简单的测试数据开始，逐步增加数据复杂度，确保节点在各种输入情况下都能正常工作。
+
+关于详细的单节点调试方法，请参考[调试节点](/zh-hans/guides/workflow/debug-and-preview/debug-node)。
+
+![](https://assets-docs.dify.ai/2025/06/44decb6644b140e46ed2e1e9246f48f7.png)
+
+### 逐步调试节点
+
+逐步调试节点指的是基于上游节点的变量，检查下游节点是否正确处理变量内的数据并输出预期处理结果。
+
+详细使用方法请参考[变量检查](/zh-hans/guides/workflow/debug-and-preview/variable-inspect)。
+
+![](https://assets-docs.dify.ai/2025/06/887630764b180a60becb6a4fcee2c622.png)
+
+### 查看节点运行记录
+
+执行节点后将生成详细的运行记录，帮助开发者排查问题。点击节点详情页中的“上次运行”查看执行日志，包括输入参数、输出结果、执行时间和错误信息。详细说明请参考[调试历史 - 节点运行记录](/zh-hans/guides/workflow/debug-and-preview/history-and-logs#节点运行记录)。
+
+![](https://assets-docs.dify.ai/2025/06/a6011d5966c78a4d1705f2af44ed8af1.png)
+
+### 调试整体流程
+
+完成所有节点的调试工作后，接下来运行整个工作流来验证端到端的执行效果。
+
+使用预览功能体验应用的最终用户界面，该模式将完整展示包括输入框、输出展示和交互流程。主要用于验证用户体验是否符合预期。系统在预览时会进行自动检查，确保所有节点配置正确且连接完整。
+
+![](https://assets-docs.dify.ai/2025/06/de00849b363ec9356e5764b88b4331fb.png)
+
+#### 检查清单
+
+系统会自动检查工作流配置，如果发现节点连接错误、必填参数缺失等问题，会在界面右上角进行提示，解决所有问题后方可运行应用。
+
+![](https://assets-docs.dify.ai/2025/06/85bafda1f786549c22404cd5ec711d0f.png)
+
+运行工作流时，在右侧面板查看每个节点的执行状态，包括输入参数、输出结果和执行日志。通过节点上的状态指示器（绿色表示成功）快速识别流程在哪个节点处异常而造成中断。
+
+建议在正式发布前进行多轮测试，使用不同类型和复杂度的数据来验证工作流的稳定性。
+
+![](https://assets-docs.dify.ai/2025/06/c09f788f77b5f8ebdd635ddba66a1b99.png)
+
+## 查看应用的运行日志
+
+发布应用后，开发者可以通过应用的**日志和监测功能**查看用户使用该应用的对话记录和性能数据。这些历史记录有助于查看用户的行为路径、分析应用性能变化和复盘问题原因。
+
+![](https://assets-docs.dify.ai/2025/06/6dd8e8a7186089a390679b6de4bb97b9.png)
+
+详细说明请参考以下文档：
+
+- [运行历史](/zh-hans/guides/workflow/debug-and-preview/history)
+- [监测](/zh-hans/guides/monitoring/README)
 
 {/*
 Contributing Section
