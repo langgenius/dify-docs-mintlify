@@ -45,8 +45,7 @@ title: Deploy with Docker Compose
 Clone the Dify source code to your local machine:
 
 ```bash
-# Assuming current latest version is 0.15.3
-git clone https://github.com/langgenius/dify.git --branch 0.15.3
+git clone --branch "$(curl -s https://api.github.com/repos/langgenius/dify/releases/latest | jq -r .tag_name)" https://github.com/langgenius/dify.git
 ```
 
 ### Starting Dify
